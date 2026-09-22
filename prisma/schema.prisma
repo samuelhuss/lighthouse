@@ -1,0 +1,190 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum RegistrationStatus {
+    PENDING_PAYMENT
+    PAYMENT_PROCESSING
+    PAID
+    PAYMENT_FAILED
+    CANCELLED
+    EXPIRED
+    REFUNDED
+}
+
+enum PaymentStatus {
+    PENDING
+    APPROVED
+    REJECTED
+    CANCELLED
+    REFUNDED
+}
+
+enum PaymentProvider {
+    MERCADO_PAGO
+}
+
+enum WebhookProvider {
+    MERCADO_PAGO
+}
+
+model Camp {
+    id          String    @id @default(uuid())
+    name        String
+    description String?
+    location    String?
+    startDate   DateTime?
+    endDate     DateTime?
+    maxCapacity Int
+    active      Boolean   @default(true)
+
+    batches       Batch[]
+    registrations Registration[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("camps")
+}
+
+model Batch {
+    id            String @id @default(uuid())
+    campId        String
+    name          String
+    priceCents    Int
+    capacity      Int
+    reservedCount Int    @default(0)
+
+    startsAt DateTime?
+    endsAt   DateTime?
+    active   Boolean   @default(true)
+
+    camp          Camp           @relation(fields: [campId], references: [id])
+    registrations Registration[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([campId])
+    @@map("batches")
+}
+
+model Registration {
+    id               String  @id @default(uuid())
+    campId           String
+    batchId          String?
+    registrationCode String  @unique
+
+    name      String
+    email     String
+    phone     String
+    cpf       String?
+    birthDate DateTime?
+
+    status RegistrationStatus
+
+    amountCents Int
+
+    paymentExpiresAt DateTime?
+    paidAt           DateTime?
+    privacyConsentAt DateTime?
+
+    camp  Camp   @relation(fields: [campId], references: [id])
+    batch Batch? @relation(fields: [batchId], references: [id])
+
+    payments Payment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([campId])
+    @@index([batchId])
+    @@index([status])
+    @@index([email])
+    @@map("registrations")
+}
+
+model Payment {
+    id             String @id @default(uuid())
+    registrationId String
+
+    provider PaymentProvider
+
+    providerPaymentId    String?
+    providerPreferenceId String?
+
+    externalReference String
+
+    amountCents Int
+
+    status       PaymentStatus
+    statusDetail String?
+
+    paymentMethod String?
+
+    rawResponse Json?
+
+    paidAt DateTime?
+
+    registration Registration @relation(fields: [registrationId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([provider, providerPaymentId])
+    @@index([registrationId])
+    @@index([externalReference])
+    @@map("payments")
+}
+
+model WebhookEvent {
+    id        String          @id @default(uuid())
+    provider  WebhookProvider
+    eventId   String
+    eventType String?
+
+    payload Json
+
+    processed   Boolean   @default(false)
+    processedAt DateTime?
+
+    createdAt DateTime @default(now())
+
+    @@unique([provider, eventId])
+    @@map("webhook_events")
+}
+
+model IdempotencyKey {
+    id         String   @id @default(uuid())
+    key        String
+    endpoint   String
+    statusCode Int?
+    response   Json?
+    createdAt  DateTime @default(now())
+
+    @@unique([key, endpoint])
+    @@map("idempotency_keys")
+}
+
+model AuditLog {
+    id String @id @default(uuid())
+
+    actorType String
+    actorId   String?
+
+    action String
+
+    entityType String
+    entityId   String?
+
+    metadata Json?
+
+    createdAt DateTime @default(now())
+
+    @@index([entityType, entityId])
+    @@map("audit_logs")
+}

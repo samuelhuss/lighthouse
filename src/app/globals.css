@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f1eb;
+  --foreground: #1b2b26;
+  --ink: #1b2b26;
+  --pine: #173f35;
+  --moss: #5d755a;
+  --clay: #c66b45;
+  --sand: #e8dfd1;
+  --paper: #fbfaf7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection { background: #c9d5bf; color: var(--ink); }
+
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float-in { animation: float-in 700ms ease-out both; }
