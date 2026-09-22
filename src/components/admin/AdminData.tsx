@@ -9,6 +9,7 @@ import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Pagination } from "@/components/ui/pagination";
 import { AdminJobControls } from "@/components/admin/AdminJobControls";
 
 type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number } };
@@ -199,6 +200,9 @@ export function DashboardView() {
 
 export function RegistrationsView() {
   const [items, setItems] = useState<Registration[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -206,15 +210,15 @@ export function RegistrationsView() {
 
   const load = () => {
     setError(null);
-    const params = new URLSearchParams({ limit: "100" });
+    const params = new URLSearchParams({ limit: String(limit), offset: String((page - 1) * limit) });
     if (status) params.set("status", status);
     if (debouncedSearch) params.set("search", debouncedSearch);
-    void adminFetch<{ items: Registration[] }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => setItems(body.items)).catch((e) => setError(e.message));
+    void adminFetch<{ items: Registration[]; pagination: { total: number } }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message));
   };
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(timer);
-  }, [debouncedSearch, status]);
+  }, [debouncedSearch, status, page, limit]);
 
   return (
     <>
@@ -229,12 +233,18 @@ export function RegistrationsView() {
       />
       <FilterBar
         search={search}
-        onSearchChange={setSearch}
+        onSearchChange={(value) => { setSearch(value); setPage(1); }}
         searchPlaceholder="Buscar por nome, e-mail ou código"
         status={status}
-        onStatusChange={setStatus}
+        onStatusChange={(value) => { setStatus(value); setPage(1); }}
         statusOptions={registrationStatusOptions}
       />
+      <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
+        <label htmlFor="registration-page-size">Por página</label>
+        <select id="registration-page-size" value={limit} onChange={(event) => { setLimit(Number(event.target.value)); setPage(1); }} className={selectClassName}>
+          {[20, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
+        </select>
+      </div>
       {error ? (
         <ErrorState message={error} retry={load} />
       ) : (
@@ -269,6 +279,7 @@ export function RegistrationsView() {
             </TableBody>
           </Table>
           {!items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhuma inscrição encontrada.</p>}
+          <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
         </Card>
       )}
     </>
@@ -277,6 +288,9 @@ export function RegistrationsView() {
 
 export function PaymentsView() {
   const [items, setItems] = useState<Array<{ id: string; status: string; amountCents: number; paymentMethod: string; externalReference: string; createdAt: string }>>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -284,15 +298,15 @@ export function PaymentsView() {
 
   const load = () => {
     setError(null);
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({ limit: String(limit), offset: String((page - 1) * limit) });
     if (status) params.set("status", status);
     if (debouncedSearch) params.set("search", debouncedSearch);
-    void adminFetch<{ items: typeof items }>(`/api/v1/admin/payments?${params.toString()}`).then((body) => setItems(body.items)).catch((e) => setError(e.message));
+    void adminFetch<{ items: typeof items; pagination: { total: number } }>(`/api/v1/admin/payments?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message));
   };
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(timer);
-  }, [debouncedSearch, status]);
+  }, [debouncedSearch, status, page, limit]);
 
   return (
     <>
@@ -307,12 +321,18 @@ export function PaymentsView() {
       />
       <FilterBar
         search={search}
-        onSearchChange={setSearch}
+        onSearchChange={(value) => { setSearch(value); setPage(1); }}
         searchPlaceholder="Buscar por código ou referência"
         status={status}
-        onStatusChange={setStatus}
+        onStatusChange={(value) => { setStatus(value); setPage(1); }}
         statusOptions={paymentStatusOptions}
       />
+      <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
+        <label htmlFor="payment-page-size">Por página</label>
+        <select id="payment-page-size" value={limit} onChange={(event) => { setLimit(Number(event.target.value)); setPage(1); }} className={selectClassName}>
+          {[20, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
+        </select>
+      </div>
       {error ? (
         <ErrorState message={error} retry={load} />
       ) : (
@@ -340,6 +360,7 @@ export function PaymentsView() {
             </TableBody>
           </Table>
           {!items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhum pagamento encontrado.</p>}
+          <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
         </Card>
       )}
     </>

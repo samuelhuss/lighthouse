@@ -33,8 +33,9 @@ export const adminUpdateRegistrationSchema = z.object({
 export type AdminUpdateRegistrationBody = z.infer<typeof adminUpdateRegistrationSchema>;
 
 export const listRegistrationsQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
+  page: z.coerce.number().int().min(1).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+  offset: z.coerce.number().int().min(0).optional(),
   status: z
     .enum([
       "PENDING_PAYMENT",

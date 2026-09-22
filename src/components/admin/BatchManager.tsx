@@ -3,10 +3,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import { LoaderCircle, Pencil, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
 type BatchForm = { name: string; price: string; capacity: string; startsAt: string; endsAt: string; active: boolean };
@@ -27,6 +28,7 @@ export function BatchManager() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -54,11 +56,12 @@ export function BatchManager() {
       endsAt: batch.endsAt?.slice(0, 16) ?? "",
       active: batch.active,
     });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setDialogOpen(true);
   }
   function reset() {
     setEditingId(null);
     setForm(emptyForm);
+    setDialogOpen(false);
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -94,23 +97,24 @@ export function BatchManager() {
     <>
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="text-xl font-semibold text-slate-900">Lotes</h1>
-        <Button variant="adminOutline" size="sm" onClick={() => void load()}>
-          <RefreshCw size={14} />
-          Atualizar
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="adminOutline" size="sm" onClick={() => void load()}>
+            <RefreshCw size={14} />
+            Atualizar
+          </Button>
+          <Button variant="admin" size="sm" onClick={() => { reset(); setDialogOpen(true); }}>
+            <Plus size={14} />
+            Novo lote
+          </Button>
+        </div>
       </div>
-      <div className="grid gap-4 xl:grid-cols-[.8fr_1.2fr]">
-        <Card>
-          <CardHeader className="flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-semibold text-slate-900">{editingId ? "Editar lote" : "Novo lote"}</CardTitle>
-            {editingId && (
-              <button type="button" onClick={reset} className="text-xs font-medium text-slate-500 hover:text-slate-900">
-                Cancelar edição
-              </button>
-            )}
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={submit} className="space-y-4">
+      <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) reset(); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingId ? "Editar lote" : "Novo lote"}</DialogTitle>
+            <DialogDescription>Defina preço, capacidade e período de disponibilidade.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={submit} className="mt-6 space-y-4">
               <div>
                 <Label htmlFor="batch-name">Nome</Label>
                 <Input id="batch-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1.5" placeholder="1º Lote" />
@@ -139,15 +143,18 @@ export function BatchManager() {
                 <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="h-4 w-4 rounded border-slate-300" />
                 Lote ativo
               </label>
-              {error && <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-              <Button type="submit" variant="admin" className="w-full" disabled={saving}>
+            {error && <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+            <DialogFooter>
+              <Button type="button" variant="adminOutline" onClick={reset}>Cancelar</Button>
+              <Button type="submit" variant="admin" disabled={saving}>
                 {saving ? <LoaderCircle className="animate-spin" size={15} /> : editingId ? <Pencil size={15} /> : <Plus size={15} />}
                 {editingId ? "Salvar alterações" : "Criar lote"}
               </Button>
-            </form>
-          </CardContent>
-        </Card>
-        <div className="space-y-3">
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <div className="space-y-3">
           {loading && <div className="h-32 animate-pulse rounded-lg border border-slate-200 bg-white" />}
           {!loading && items.map((batch) => (
             <Card key={batch.id}>
@@ -170,7 +177,6 @@ export function BatchManager() {
           ))}
           {!loading && !items.length && <p className="rounded-lg border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">Nenhum lote cadastrado.</p>}
         </div>
-      </div>
     </>
   );
 }

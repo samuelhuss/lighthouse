@@ -1176,3 +1176,51 @@ UPDATE direto no banco
 ```
 
 O Admin Panel deverá sempre refletir o estado real do PostgreSQL e dos pagamentos confirmados pelo backend.
+
+---
+
+# 49. Contrato de listagens administrativas
+
+As listagens de inscrições e pagamentos devem usar paginação no servidor. A interface não deve carregar todos os registros para filtrar ou paginar no navegador.
+
+Parâmetros:
+
+```text
+limit  = quantidade por página (20 por padrão; máximo 100)
+offset = deslocamento a partir do primeiro registro (0 por padrão)
+search = busca por nome, e-mail, código ou referência
+status = filtro de status
+```
+
+Exemplo:
+
+```http
+GET /api/v1/admin/registrations?limit=20&offset=40&search=joao
+GET /api/v1/admin/payments?limit=20&offset=40&status=APPROVED
+```
+
+A resposta deve conter `items` e `pagination`:
+
+```json
+{
+  "items": [],
+  "pagination": {
+    "page": 3,
+    "limit": 20,
+    "offset": 40,
+    "total": 87
+  }
+}
+```
+
+Ao alterar busca, status ou tamanho da página, o frontend deve voltar para a primeira página. A navegação visual deve usar os componentes `Table` e `Pagination` de `src/components/ui`, mantendo a lógica de dados na API.
+
+# 50. Dialogs e formulários administrativos
+
+Criação e edição de lotes devem ocorrer em `Dialog`, usando o mesmo formulário e a mesma validação da API. O fechamento deve cancelar a edição sem alterar dados; o salvamento deve fechar o dialog somente após resposta bem-sucedida.
+
+Componentes base obrigatórios no painel:
+
+```text
+Button, Input, Label, Badge, Card, Table, Pagination, Dialog
+```

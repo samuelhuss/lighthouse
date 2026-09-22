@@ -56,8 +56,8 @@ export const registrationRepository = {
   },
 
   async list(params: {
-    page: number;
     limit: number;
+    offset: number;
     status?: RegistrationStatus;
     batchId?: string;
     search?: string;
@@ -80,7 +80,7 @@ export const registrationRepository = {
       prisma.registration.findMany({
         where,
         orderBy: { createdAt: "desc" },
-        skip: (params.page - 1) * params.limit,
+        skip: params.offset,
         take: params.limit,
       }),
       prisma.registration.count({ where }),

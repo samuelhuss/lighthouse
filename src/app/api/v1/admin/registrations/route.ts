@@ -19,7 +19,8 @@ export async function GET(request: Request) {
 
     const url = new URL(request.url);
     const query = listRegistrationsQuerySchema.parse(Object.fromEntries(url.searchParams));
-    const result = await registrationRepository.list(query);
+    const offset = query.offset ?? ((query.page ?? 1) - 1) * query.limit;
+    const result = await registrationRepository.list({ ...query, offset });
 
     return NextResponse.json(
       {
@@ -36,8 +37,9 @@ export async function GET(request: Request) {
           createdAt: registration.createdAt,
         })),
         pagination: {
-          page: query.page,
+          page: Math.floor(offset / query.limit) + 1,
           limit: query.limit,
+          offset,
           total: result.total,
         },
       },
