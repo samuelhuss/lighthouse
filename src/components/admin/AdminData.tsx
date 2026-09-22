@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AdminJobControls } from "@/components/admin/AdminJobControls";
 
 type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number } };
@@ -38,7 +39,6 @@ const paymentStatusOptions = [
   ["CANCELLED", "Cancelado"],
   ["REFUNDED", "Reembolsado"],
 ] as const;
-const selectClassName = "h-9 rounded-md border border-slate-200 bg-white px-2.5 text-sm text-slate-700 outline-none focus-visible:border-slate-400 focus-visible:ring-2 focus-visible:ring-slate-200";
 
 function useDebouncedValue<T>(value: T, delay = 350): T {
   const [debounced, setDebounced] = useState(value);
@@ -70,18 +70,13 @@ function FilterBar({
         <Search size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <Input value={search} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="pl-8" />
         {search && (
-          <button type="button" onClick={() => onSearchChange("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700" aria-label="Limpar busca">
-            <X size={14} />
-          </button>
+          <Button type="button" variant="adminGhost" size="icon" onClick={() => onSearchChange("")} className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2" aria-label="Limpar busca" title="Limpar busca"><X size={14} /></Button>
         )}
       </div>
-      <select value={status} onChange={(e) => onStatusChange(e.target.value)} className={selectClassName}>
-        {statusOptions.map(([value, label]) => (
-          <option key={value} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+      <Select value={status || "all"} onValueChange={(value) => onStatusChange(value === "all" ? "" : value)}>
+        <SelectTrigger className="sm:w-44"><SelectValue placeholder="Todos os status" /></SelectTrigger>
+        <SelectContent>{statusOptions.map(([value, label]) => <SelectItem key={value || "all"} value={value || "all"}>{label}</SelectItem>)}</SelectContent>
+      </Select>
     </div>
   );
 }
@@ -266,9 +261,10 @@ export function RegistrationsView() {
       />
       <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
         <label htmlFor="registration-page-size">Por página</label>
-        <select id="registration-page-size" value={limit} onChange={(event) => { setLimit(Number(event.target.value)); setPage(1); }} className={selectClassName}>
-          {[20, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
-        </select>
+        <Select value={String(limit)} onValueChange={(value) => { setLimit(Number(value)); setPage(1); }}>
+          <SelectTrigger id="registration-page-size" className="w-20"><SelectValue /></SelectTrigger>
+          <SelectContent>{[20, 50, 100].map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
+        </Select>
       </div>
       {error ? (
         <ErrorState message={error} retry={load} />
@@ -313,7 +309,7 @@ export function RegistrationsView() {
 }
 
 export function PaymentsView() {
-  const [items, setItems] = useState<Array<{ id: string; status: string; amountCents: number; paymentMethod: string; externalReference: string; createdAt: string }>>([]);
+  const [items, setItems] = useState<Array<{ id: string; status: string; registrationStatus: string; amountCents: number; paymentMethod: string; externalReference: string; createdAt: string }>>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -357,9 +353,10 @@ export function PaymentsView() {
       />
       <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
         <label htmlFor="payment-page-size">Por página</label>
-        <select id="payment-page-size" value={limit} onChange={(event) => { setLimit(Number(event.target.value)); setPage(1); }} className={selectClassName}>
-          {[20, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
-        </select>
+        <Select value={String(limit)} onValueChange={(value) => { setLimit(Number(value)); setPage(1); }}>
+          <SelectTrigger id="payment-page-size" className="w-20"><SelectValue /></SelectTrigger>
+          <SelectContent>{[20, 50, 100].map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
+        </Select>
       </div>
       {error ? (
         <ErrorState message={error} retry={load} />
@@ -370,7 +367,8 @@ export function PaymentsView() {
               <TableRow>
                 <TableHead>Payment ID</TableHead>
                 <TableHead>Inscrição</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Status do pagamento</TableHead>
+                <TableHead>Status da inscrição</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead>Criado em</TableHead>
               </TableRow>
@@ -381,6 +379,7 @@ export function PaymentsView() {
                   <TableCell className="font-mono text-xs">{item.id.slice(0, 12)}...</TableCell>
                   <TableCell className="font-mono text-xs">{item.externalReference}</TableCell>
                   <TableCell><StatusBadge status={item.status} /></TableCell>
+                  <TableCell><StatusBadge status={item.registrationStatus} /></TableCell>
                   <TableCell>{money(item.amountCents)}</TableCell>
                   <TableCell className="text-slate-500">{new Date(item.createdAt).toLocaleDateString("pt-BR")}</TableCell>
                 </TableRow>

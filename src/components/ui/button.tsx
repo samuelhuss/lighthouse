@@ -13,9 +13,9 @@ const buttonVariants = cva(
         ghost: "text-[var(--pine)] hover:bg-[var(--sand)]",
         destructive: "bg-red-700 text-white hover:bg-red-800",
         link: "text-[var(--clay)] underline-offset-4 hover:underline",
-        admin: "rounded-md bg-slate-900 text-white hover:bg-slate-800",
-        adminOutline: "rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
-        adminGhost: "rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900",
+        admin: "rounded-md bg-amber-400 text-slate-950 hover:bg-amber-300 focus-visible:ring-amber-300",
+        adminOutline: "rounded-md border border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:bg-amber-50 focus-visible:ring-amber-200",
+        adminGhost: "rounded-md text-slate-500 hover:bg-amber-50 hover:text-slate-900 focus-visible:ring-amber-200",
       },
       size: {
         default: "h-11 px-5",

@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { BarChart3, CreditCard, Layers3, LogOut, Menu, Users, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const navigation = [
   { href: "/admin", label: "Dashboard", icon: BarChart3 },
@@ -35,9 +36,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <Link href="/admin" className="text-sm font-semibold tracking-tight text-slate-900">
             Acampamento
           </Link>
-          <button className="lg:hidden" aria-label="Fechar menu" onClick={() => setOpen(false)}>
+          <Button variant="adminGhost" size="icon" className="lg:hidden" aria-label="Fechar menu" onClick={() => setOpen(false)}>
             <X size={18} className="text-slate-500" />
-          </button>
+          </Button>
         </div>
         <nav className="space-y-0.5 p-3">
           {navigation.map(({ href, label, icon: Icon }) => (
@@ -48,7 +49,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
                 pathname === href
-                  ? "bg-slate-100 font-medium text-slate-900"
+                  ? "bg-amber-50 font-medium text-slate-900 ring-1 ring-inset ring-amber-200"
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
               )}
             >
@@ -57,19 +58,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
         </nav>
-        <button
+        <Button
+          variant="adminGhost"
+          size="sm"
           onClick={logout}
-          className="absolute bottom-4 left-3 flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+          className="absolute bottom-4 left-3"
         >
           <LogOut size={16} />
           Sair
-        </button>
+        </Button>
       </aside>
       <div className="lg:pl-60">
         <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-8">
-          <button className="lg:hidden" aria-label="Abrir menu" onClick={() => setOpen(true)}>
+          <Button variant="adminGhost" size="icon" className="lg:hidden" aria-label="Abrir menu" onClick={() => setOpen(true)}>
             <Menu size={20} className="text-slate-500" />
-          </button>
+          </Button>
           <div className="ml-auto flex items-center gap-2.5">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-white">
               AD

@@ -1222,5 +1222,16 @@ Criação e edição de lotes devem ocorrer em `Dialog`, usando o mesmo formulá
 Componentes base obrigatórios no painel:
 
 ```text
-Button, Input, Label, Badge, Card, Table, Pagination, Dialog
+Button, Input, Label, Select, Checkbox, Badge, Card, Table, Pagination, Dialog, Skeleton
 ```
+
+# 51. Status de pagamentos
+
+A tabela de pagamentos deve exibir dois estados independentes:
+
+```text
+Status do pagamento: PENDING, APPROVED, REJECTED, CANCELLED ou REFUNDED
+Status da inscrição: PENDING_PAYMENT, PAID, EXPIRED, CANCELLED ou outro status persistido
+```
+
+Uma inscrição expirada não transforma automaticamente o pagamento em `EXPIRED`, pois `EXPIRED` pertence ao domínio da inscrição. A interface deve mostrar ambos os badges para evitar interpretar um pagamento pendente como aprovado ou uma inscrição expirada como pagamento expirado.

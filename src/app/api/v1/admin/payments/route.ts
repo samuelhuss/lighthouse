@@ -36,11 +36,11 @@ export async function GET(request: Request) {
     };
 
     const [payments, total] = await Promise.all([
-      prisma.payment.findMany({ where, include: { registration: true }, orderBy: { createdAt: "desc" }, skip: offset, take: limit }),
+      prisma.payment.findMany({ where, include: { registration: { select: { registrationCode: true, name: true, status: true } } }, orderBy: { createdAt: "desc" }, skip: offset, take: limit }),
       prisma.payment.count({ where }),
     ]);
 
-    return NextResponse.json({ items: payments, pagination: { page: Math.floor(offset / limit) + 1, limit, offset, total } }, { status: 200, headers: { "x-request-id": requestId } });
+    return NextResponse.json({ items: payments.map((payment) => ({ ...payment, registrationStatus: payment.registration.status })), pagination: { page: Math.floor(offset / limit) + 1, limit, offset, total } }, { status: 200, headers: { "x-request-id": requestId } });
   } catch (error) {
     return errorResponse(error, requestId);
   }

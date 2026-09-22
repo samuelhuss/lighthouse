@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div className="w-full overflow-x-auto">
-      <table className={cn("w-full text-left text-sm", className)} {...props} />
+    <div className="w-full overflow-x-auto overscroll-x-contain [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin]">
+      <table className={cn("w-full min-w-[720px] text-left text-sm", className)} {...props} />
     </div>
   );
 }
