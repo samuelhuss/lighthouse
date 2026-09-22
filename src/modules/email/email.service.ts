@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logger";
@@ -80,11 +81,18 @@ export const emailService = {
   },
 
   async sendCampaign(input: { subject: string; message: string }) {
-    const recipients = await prisma.registration.findMany({ where: { marketingConsentAt: { not: null } }, select: { id: true, name: true, email: true } });
+    const registrations = await prisma.registration.findMany({ where: { marketingConsentAt: { not: null } }, orderBy: { createdAt: "asc" }, select: { id: true, name: true, email: true } });
+    const uniqueRecipients = new Map<string, (typeof registrations)[number]>();
+    for (const registration of registrations) {
+      const email = registration.email.trim().toLowerCase();
+      if (email && !uniqueRecipients.has(email)) uniqueRecipients.set(email, registration);
+    }
+    const recipients = [...uniqueRecipients.entries()].map(([email, registration]) => ({ ...registration, email }));
+    const campaignKey = createHash("sha256").update(`${input.subject}\0${input.message}`).digest("hex").slice(0, 24);
     let sent = 0;
     let failed = 0;
     for (const recipient of recipients) {
-      const result = await send({ recipient: recipient.email, registrationId: recipient.id, type: "CAMPAIGN", idempotencyKey: `campaign:${input.subject}:${recipient.id}`, subject: input.subject, html: `<h1>${escapeHtml(input.subject)}</h1><p>Olá, ${escapeHtml(recipient.name)}!</p>${paragraphHtml(input.message)}<p>Você recebeu esta mensagem porque autorizou comunicações sobre o acampamento.</p>` });
+      const result = await send({ recipient: recipient.email, registrationId: recipient.id, type: "CAMPAIGN", idempotencyKey: `campaign:${campaignKey}:${recipient.email}`, subject: input.subject, html: `<h1>${escapeHtml(input.subject)}</h1><p>Olá, ${escapeHtml(recipient.name)}!</p>${paragraphHtml(input.message)}<p>Você recebeu esta mensagem porque autorizou comunicações sobre o acampamento.</p>` });
       if (result.sent) sent += 1; else if (!result.skipped) failed += 1;
     }
     return { audience: recipients.length, sent, failed, configured: configured() };
