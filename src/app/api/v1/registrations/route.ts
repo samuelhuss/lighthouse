@@ -56,6 +56,7 @@ export async function POST(request: Request) {
           amountCents: batch.priceCents,
           paymentExpiresAt: new Date(Date.now() + paymentExpirationMinutes * 60 * 1000),
           privacyConsentAt: new Date(),
+          marketingConsentAt: body.marketingConsent ? new Date() : null,
         },
       });
 
@@ -115,6 +116,20 @@ export async function POST(request: Request) {
     await saveIdempotentResponse(key, endpoint, 201, response);
 
     log.info({ registrationCode: result.registration.code }, "registration_created");
+
+    try {
+      const { emailService } = await import("@/modules/email/email.service");
+      await emailService.sendRegistrationCreated({
+        registrationId: result.registration.id,
+        name: body.name,
+        email: body.email,
+        registrationCode: result.registration.code,
+        paymentUrl: result.payment.paymentUrl,
+        paymentExpiresAt: result.registration.paymentExpiresAt,
+      });
+    } catch (emailError) {
+      log.error({ err: emailError }, "registration_email_failed");
+    }
 
     return NextResponse.json(response, {
       status: 201,
