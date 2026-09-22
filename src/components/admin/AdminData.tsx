@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AdminJobControls } from "@/components/admin/AdminJobControls";
 
 type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number } };
@@ -126,6 +127,28 @@ function ErrorState({ message, retry }: { message: string; retry: () => void }) 
   );
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-4" aria-label="Carregando dashboard">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {[0, 1, 2, 3].map((item) => <Card key={item}><CardContent className="space-y-3 p-5"><Skeleton className="h-3 w-24" /><Skeleton className="h-8 w-16" /></CardContent></Card>)}
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card><CardContent className="space-y-3 p-5"><Skeleton className="h-3 w-32" /><Skeleton className="h-9 w-40" /><Skeleton className="h-3 w-48" /></CardContent></Card>
+        <Card><CardContent className="space-y-4 p-5"><div className="flex justify-between"><Skeleton className="h-3 w-24" /><Skeleton className="h-4 w-16" /></div><Skeleton className="h-2 w-full" /></CardContent></Card>
+      </div>
+    </div>
+  );
+}
+
+function TableSkeleton({ columns = 5 }: { columns?: number }) {
+  return (
+    <div className="space-y-3 p-5" aria-label="Carregando tabela">
+      {[0, 1, 2, 3, 4].map((row) => <div key={row} className="flex items-center gap-4" style={{ animationDelay: `${row * 45}ms` }}><Skeleton className="h-4 w-24" /><Skeleton className="h-4 flex-1" /><Skeleton className="h-4 w-20" />{columns > 3 && <Skeleton className="h-4 w-16" />} {columns > 4 && <Skeleton className="h-4 w-24" />}</div>)}
+    </div>
+  );
+}
+
 export function DashboardView() {
   const [data, setData] = useState<Dashboard | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -139,7 +162,7 @@ export function DashboardView() {
   }, []);
 
   if (error) return <><PageHeader title="Dashboard" /><ErrorState message={error} retry={load} /></>;
-  if (!data) return <><PageHeader title="Dashboard" /><div className="h-32 animate-pulse rounded-lg border border-slate-200 bg-white" /></>;
+  if (!data) return <><PageHeader title="Dashboard" /><DashboardSkeleton /></>;
 
   const stats = [
     ["Inscrições", data.registrations.total],
@@ -162,8 +185,8 @@ export function DashboardView() {
         }
       />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map(([label, value]) => (
-          <Card key={label}>
+        {stats.map(([label, value], index) => (
+          <Card key={label} className="admin-rise" style={{ animationDelay: `${index * 55}ms` }}>
             <CardContent className="p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
               <p className="mt-2 text-2xl font-semibold text-slate-900">{value}</p>
@@ -172,14 +195,14 @@ export function DashboardView() {
         ))}
       </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="admin-rise" style={{ animationDelay: "220ms" }}>
           <CardContent className="p-5">
             <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Receita confirmada</p>
             <p className="mt-2 text-3xl font-semibold text-slate-900">{money(data.revenue.paidCents)}</p>
             <p className="mt-4 text-xs text-slate-400">Somente pagamentos aprovados</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="admin-rise" style={{ animationDelay: "275ms" }}>
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Capacidade</p>
@@ -203,6 +226,7 @@ export function RegistrationsView() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -210,10 +234,11 @@ export function RegistrationsView() {
 
   const load = () => {
     setError(null);
+    setLoading(true);
     const params = new URLSearchParams({ limit: String(limit), offset: String((page - 1) * limit) });
     if (status) params.set("status", status);
     if (debouncedSearch) params.set("search", debouncedSearch);
-    void adminFetch<{ items: Registration[]; pagination: { total: number } }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message));
+    void adminFetch<{ items: Registration[]; pagination: { total: number } }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message)).finally(() => setLoading(false));
   };
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
@@ -248,7 +273,7 @@ export function RegistrationsView() {
       {error ? (
         <ErrorState message={error} retry={load} />
       ) : (
-        <Card className="overflow-hidden py-0">
+        <Card className={`overflow-hidden py-0 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
           <Table>
             <TableHeader>
               <TableRow>
@@ -278,7 +303,8 @@ export function RegistrationsView() {
               ))}
             </TableBody>
           </Table>
-          {!items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhuma inscrição encontrada.</p>}
+          {!loading && !items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhuma inscrição encontrada.</p>}
+          {loading && !items.length && <TableSkeleton />}
           <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
         </Card>
       )}
@@ -291,6 +317,7 @@ export function PaymentsView() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
@@ -298,10 +325,11 @@ export function PaymentsView() {
 
   const load = () => {
     setError(null);
+    setLoading(true);
     const params = new URLSearchParams({ limit: String(limit), offset: String((page - 1) * limit) });
     if (status) params.set("status", status);
     if (debouncedSearch) params.set("search", debouncedSearch);
-    void adminFetch<{ items: typeof items; pagination: { total: number } }>(`/api/v1/admin/payments?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message));
+    void adminFetch<{ items: typeof items; pagination: { total: number } }>(`/api/v1/admin/payments?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message)).finally(() => setLoading(false));
   };
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
@@ -336,7 +364,7 @@ export function PaymentsView() {
       {error ? (
         <ErrorState message={error} retry={load} />
       ) : (
-        <Card className="overflow-hidden py-0">
+        <Card className={`overflow-hidden py-0 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
           <Table>
             <TableHeader>
               <TableRow>
@@ -359,7 +387,8 @@ export function PaymentsView() {
               ))}
             </TableBody>
           </Table>
-          {!items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhum pagamento encontrado.</p>}
+          {!loading && !items.length && <p className="p-10 text-center text-sm text-slate-500">Nenhum pagamento encontrado.</p>}
+          {loading && !items.length && <TableSkeleton />}
           <Pagination page={page} total={total} limit={limit} onPageChange={setPage} />
         </Card>
       )}

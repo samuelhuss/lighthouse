@@ -32,3 +32,27 @@ body {
 }
 
 .animate-float-in { animation: float-in 700ms ease-out both; }
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes admin-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skeleton-shimmer {
+  background-image: linear-gradient(100deg, #f1f5f9 20%, #e2e8f0 38%, #f1f5f9 56%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.admin-rise { animation: admin-rise 420ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer,
+  .admin-rise,
+  .animate-float-in { animation: none; }
+}

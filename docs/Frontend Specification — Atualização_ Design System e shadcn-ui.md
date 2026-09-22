@@ -516,6 +516,20 @@ em grandes áreas da aplicação.
 
 ---
 
+# 67. Loading e animações
+
+Estados de carregamento devem preservar a geometria do conteúdo final. Usar `Skeleton` para cards, tabelas e listas; evitar blocos genéricos que causem salto de layout.
+
+Animações devem ser curtas e funcionais:
+
+- entrada escalonada para grupos de cards e linhas;
+- shimmer discreto durante carregamento;
+- transições de opacidade ao atualizar dados;
+- spinner somente em ações que bloqueiam o botão.
+
+Toda animação deve respeitar `prefers-reduced-motion: reduce`. A ausência de movimento não pode remover informação, foco ou feedback de estado.
+---
+
 # 54. Tooltip
 
 Utilizar:

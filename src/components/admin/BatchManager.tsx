@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
 type BatchForm = { name: string; price: string; capacity: string; startsAt: string; endsAt: string; active: boolean };
@@ -155,9 +156,16 @@ export function BatchManager() {
         </DialogContent>
       </Dialog>
       <div className="space-y-3">
-          {loading && <div className="h-32 animate-pulse rounded-lg border border-slate-200 bg-white" />}
+          {loading && [0, 1, 2].map((item) => (
+            <Card key={item} aria-label="Carregando lote">
+              <CardContent className="flex items-center justify-between gap-4 p-5">
+                <div className="space-y-2"><Skeleton className="h-4 w-36" /><Skeleton className="h-3 w-48" /></div>
+                <Skeleton className="h-9 w-20" />
+              </CardContent>
+            </Card>
+          ))}
           {!loading && items.map((batch) => (
-            <Card key={batch.id}>
+            <Card key={batch.id} className="admin-rise">
               <CardContent className="flex flex-col justify-between gap-3 p-5 sm:flex-row sm:items-center">
                 <div>
                   <div className="flex items-center gap-2">
