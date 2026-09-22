@@ -10,6 +10,10 @@ const envSchema = z.object({
   MERCADOPAGO_ACCESS_TOKEN: z.string().min(1, "MERCADOPAGO_ACCESS_TOKEN is required"),
   MERCADOPAGO_WEBHOOK_SECRET: z.string().min(1, "MERCADOPAGO_WEBHOOK_SECRET is required"),
 
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional(),
+  EMAIL_REPLY_TO: z.string().email().or(z.literal("")).optional(),
+
   GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string().optional(),
   GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: z.string().optional(),
   GOOGLE_SHEET_ID: z.string().optional(),

@@ -12,6 +12,7 @@ export const createRegistrationSchema = z.object({
   privacyConsent: z.literal(true, {
     message: "É necessário aceitar a política de privacidade.",
   }),
+  marketingConsent: z.boolean().optional().default(false),
 });
 
 export type CreateRegistrationBody = z.infer<typeof createRegistrationSchema>;

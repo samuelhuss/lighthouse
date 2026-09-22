@@ -89,14 +89,16 @@ model Registration {
 
     amountCents Int
 
-    paymentExpiresAt DateTime?
-    paidAt           DateTime?
-    privacyConsentAt DateTime?
+    paymentExpiresAt   DateTime?
+    paidAt             DateTime?
+    privacyConsentAt   DateTime?
+    marketingConsentAt DateTime?
 
     camp  Camp   @relation(fields: [campId], references: [id])
     batch Batch? @relation(fields: [batchId], references: [id])
 
-    payments Payment[]
+    payments  Payment[]
+    emailLogs EmailLog[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -106,6 +108,25 @@ model Registration {
     @@index([status])
     @@index([email])
     @@map("registrations")
+}
+
+model EmailLog {
+    id             String   @id @default(uuid())
+    registrationId String?
+    recipient      String
+    type           String
+    idempotencyKey String   @unique
+    resendId       String?
+    status         String
+    errorMessage   String?
+    createdAt      DateTime @default(now())
+
+    registration Registration? @relation(fields: [registrationId], references: [id])
+
+    @@index([registrationId])
+    @@index([recipient])
+    @@index([type])
+    @@map("email_logs")
 }
 
 model Payment {

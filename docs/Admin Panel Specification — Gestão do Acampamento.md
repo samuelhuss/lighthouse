@@ -1261,3 +1261,17 @@ updatedAt e dados resumidos da inscrição relacionada
 ```
 
 Nunca exibir `rawResponse`, access tokens ou segredos de webhook no painel.
+
+# 54. Emails transacionais e campanhas
+
+O sistema utiliza Resend quando `RESEND_API_KEY` e `EMAIL_FROM` estão configurados.
+
+Emails transacionais:
+
+- inscrição criada: envia o link de pagamento;
+- pagamento aprovado: confirma a vaga;
+- cada evento usa uma chave idempotente e não deve gerar duplicidade.
+
+Campanhas são enviadas pela tela `/admin/emails` somente para registros com `marketingConsentAt` preenchido. O aceite de privacidade (`privacyConsentAt`) não substitui o consentimento de marketing. O disparo exige confirmação explícita digitando `ENVIAR`.
+
+O histórico de tentativas fica em `email_logs`, sem armazenar o conteúdo completo da mensagem. Falhas de email não podem desfazer uma inscrição ou um pagamento.

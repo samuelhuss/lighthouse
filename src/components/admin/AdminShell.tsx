@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BarChart3, CreditCard, Layers3, LogOut, Menu, Users, X } from "lucide-react";
+import { BarChart3, CreditCard, Layers3, LogOut, Mail, Menu, Users, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ const navigation = [
   { href: "/admin/inscricoes", label: "Inscrições", icon: Users },
   { href: "/admin/pagamentos", label: "Pagamentos", icon: CreditCard },
   { href: "/admin/lotes", label: "Lotes", icon: Layers3 },
+  { href: "/admin/emails", label: "Emails", icon: Mail },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

@@ -96,5 +96,17 @@ export const paymentService = {
         await batchService.releaseSlot(tx, paymentRecord.registration.batchId);
       }
     });
+
+    if (paymentStatus === "APPROVED") {
+      const { emailService } = await import("@/modules/email/email.service");
+      await emailService.sendPaymentApproved({
+        paymentId: paymentRecord.id,
+        registrationId: paymentRecord.registrationId,
+        name: paymentRecord.registration.name,
+        email: paymentRecord.registration.email,
+        registrationCode: paymentRecord.registration.registrationCode,
+        amountCents: paymentRecord.amountCents,
+      });
+    }
   },
 };

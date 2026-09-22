@@ -46,6 +46,16 @@ npm run db:seed
 npm run dev
 ```
 
+## Emails com Resend
+
+Configure `RESEND_API_KEY` e `EMAIL_FROM` no ambiente para ativar os emails transacionais. `EMAIL_REPLY_TO` é opcional.
+
+- A criação da inscrição envia o link de pagamento.
+- O pagamento aprovado envia a confirmação da vaga.
+- A tela `/admin/emails` permite campanhas somente para inscritos que marcaram o consentimento de novidades.
+
+Sem `RESEND_API_KEY`, os fluxos de inscrição e pagamento continuam funcionando, mas os emails ficam desativados. Antes de enviar em produção, valide o domínio remetente no Resend.
+
 ## Testes automatizados
 
 ```bash
