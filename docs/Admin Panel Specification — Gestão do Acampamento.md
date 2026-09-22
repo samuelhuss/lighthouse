@@ -1235,3 +1235,29 @@ Status da inscrição: PENDING_PAYMENT, PAID, EXPIRED, CANCELLED ou outro status
 ```
 
 Uma inscrição expirada não transforma automaticamente o pagamento em `EXPIRED`, pois `EXPIRED` pertence ao domínio da inscrição. A interface deve mostrar ambos os badges para evitar interpretar um pagamento pendente como aprovado ou uma inscrição expirada como pagamento expirado.
+
+# 52. Dashboard administrativo
+
+O dashboard deve retornar, além dos KPIs principais:
+
+- últimas cinco inscrições;
+- inscrições criadas no dia;
+- pagamentos criados no dia;
+- ticket médio dos pagamentos aprovados;
+- estado de configuração do Google Sheets.
+
+Enquanto a sincronização do Google Sheets não estiver implementada, o painel deve indicar somente se as credenciais e o ID da planilha estão configurados. Não deve exibir uma falsa data de sincronização.
+
+# 53. Detalhes de pagamento
+
+Cada pagamento deve possuir uma página administrativa própria em `/admin/pagamentos/[id]`, acessível pela tabela. A API correspondente é `GET /api/v1/admin/payments/{id}`.
+
+Exibir:
+
+```text
+provider, providerPaymentId, providerPreferenceId, externalReference,
+amountCents, status, statusDetail, paymentMethod, paidAt, createdAt,
+updatedAt e dados resumidos da inscrição relacionada
+```
+
+Nunca exibir `rawResponse`, access tokens ou segredos de webhook no painel.

@@ -6,7 +6,7 @@ import { AlertCircle, ArrowUpRight, RefreshCw, Search, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AdminJobControls } from "@/components/admin/AdminJobControls";
 
-type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number } };
+type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number; averageTicketCents: number }; today: { registrations: number; payments: number }; latestRegistrations: Array<{ id: string; code: string; name: string; status: string; amountCents: number; createdAt: string }>; googleSheets: { configured: boolean } };
 type Registration = { id: string; code: string; name: string; email: string; status: string; amountCents: number; createdAt: string };
 type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
 
@@ -209,6 +209,16 @@ export function DashboardView() {
           </CardContent>
         </Card>
       </div>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {[["Inscrições hoje", data.today.registrations], ["Pagamentos hoje", data.today.payments], ["Ticket médio", money(data.revenue.averageTicketCents)], ["Google Sheets", data.googleSheets.configured ? "Configurado" : "Não configurado"]].map(([label, value], index) => <Card key={label} className="admin-rise" style={{ animationDelay: `${320 + index * 55}ms` }}><CardContent className="p-5"><p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p><p className="mt-2 text-xl font-semibold text-slate-900">{value}</p></CardContent></Card>)}
+      </div>
+      <Card className="mt-4 admin-rise" style={{ animationDelay: "540ms" }}>
+        <CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Últimas inscrições</CardTitle></CardHeader>
+        <CardContent className="space-y-2">
+          {data.latestRegistrations.map((registration) => <Link key={registration.id} href={`/admin/inscricoes/${registration.id}`} className="flex items-center justify-between rounded-md px-3 py-2 transition-colors hover:bg-amber-50"><span><span className="font-medium text-slate-900">{registration.name}</span><span className="ml-2 font-mono text-xs text-slate-400">{registration.code}</span></span><span className="flex items-center gap-3"><StatusBadge status={registration.status} /><span className="text-sm text-slate-600">{money(registration.amountCents)}</span></span></Link>)}
+          {!data.latestRegistrations.length && <p className="text-sm text-slate-500">Nenhuma inscrição registrada.</p>}
+        </CardContent>
+      </Card>
       <div className="mt-4">
         <AdminJobControls />
       </div>
@@ -225,6 +235,12 @@ export function RegistrationsView() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const [batchId, setBatchId] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortDir, setSortDir] = useState("desc");
+  const [batches, setBatches] = useState<Array<{ id: string; name: string }>>([]);
   const debouncedSearch = useDebouncedValue(search);
 
   const load = () => {
@@ -232,13 +248,18 @@ export function RegistrationsView() {
     setLoading(true);
     const params = new URLSearchParams({ limit: String(limit), offset: String((page - 1) * limit) });
     if (status) params.set("status", status);
+    if (batchId) params.set("batchId", batchId);
+    if (dateFrom) params.set("dateFrom", dateFrom);
+    if (dateTo) params.set("dateTo", `${dateTo}T23:59:59.999Z`);
+    params.set("sortBy", sortBy); params.set("sortDir", sortDir);
     if (debouncedSearch) params.set("search", debouncedSearch);
     void adminFetch<{ items: Registration[]; pagination: { total: number } }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message)).finally(() => setLoading(false));
   };
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(timer);
-  }, [debouncedSearch, status, page, limit]);
+  }, [debouncedSearch, status, batchId, dateFrom, dateTo, sortBy, sortDir, page, limit]);
+  useEffect(() => { void adminFetch<{ items: Array<{ id: string; name: string }> }>("/api/v1/admin/batches").then((body) => setBatches(body.items)).catch(() => undefined); }, []);
 
   return (
     <>
@@ -265,6 +286,13 @@ export function RegistrationsView() {
           <SelectTrigger id="registration-page-size" className="w-20"><SelectValue /></SelectTrigger>
           <SelectContent>{[20, 50, 100].map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
         </Select>
+      </div>
+      <div className="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <Select value={batchId || "all"} onValueChange={(value) => { setBatchId(value === "all" ? "" : value); setPage(1); }}><SelectTrigger><SelectValue placeholder="Todos os lotes" /></SelectTrigger><SelectContent><SelectItem value="all">Todos os lotes</SelectItem>{batches.map((batch) => <SelectItem key={batch.id} value={batch.id}>{batch.name}</SelectItem>)}</SelectContent></Select>
+        <Input type="date" value={dateFrom} onChange={(event) => { setDateFrom(event.target.value); setPage(1); }} aria-label="Data inicial" />
+        <Input type="date" value={dateTo} onChange={(event) => { setDateTo(event.target.value); setPage(1); }} aria-label="Data final" />
+        <Select value={sortBy} onValueChange={(value) => { setSortBy(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{[["createdAt", "Data"], ["name", "Nome"], ["status", "Status"], ["amountCents", "Valor"], ["paidAt", "Pagamento"]].map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select>
+        <Select value={sortDir} onValueChange={(value) => { setSortDir(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="desc">Mais recentes</SelectItem><SelectItem value="asc">Mais antigos</SelectItem></SelectContent></Select>
       </div>
       {error ? (
         <ErrorState message={error} retry={load} />
@@ -376,7 +404,7 @@ export function PaymentsView() {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-mono text-xs">{item.id.slice(0, 12)}...</TableCell>
+                  <TableCell className="font-mono text-xs"><Link href={`/admin/pagamentos/${item.id}`} className="hover:text-amber-700 hover:underline">{item.id.slice(0, 12)}...</Link></TableCell>
                   <TableCell className="font-mono text-xs">{item.externalReference}</TableCell>
                   <TableCell><StatusBadge status={item.status} /></TableCell>
                   <TableCell><StatusBadge status={item.registrationStatus} /></TableCell>

@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const query = listRegistrationsQuerySchema.parse(Object.fromEntries(url.searchParams));
     const offset = query.offset ?? ((query.page ?? 1) - 1) * query.limit;
-    const result = await registrationRepository.list({ ...query, offset });
+    const result = await registrationRepository.list({ ...query, offset, sortBy: query.sortBy, sortDir: query.sortDir });
 
     return NextResponse.json(
       {

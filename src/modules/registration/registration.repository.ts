@@ -61,10 +61,15 @@ export const registrationRepository = {
     status?: RegistrationStatus;
     batchId?: string;
     search?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
+    sortBy: "createdAt" | "name" | "status" | "amountCents" | "paidAt";
+    sortDir: "asc" | "desc";
   }) {
     const where: Prisma.RegistrationWhereInput = {
       ...(params.status ? { status: params.status } : {}),
       ...(params.batchId ? { batchId: params.batchId } : {}),
+      ...(params.dateFrom || params.dateTo ? { createdAt: { ...(params.dateFrom ? { gte: params.dateFrom } : {}), ...(params.dateTo ? { lte: params.dateTo } : {}) } } : {}),
       ...(params.search
         ? {
             OR: [
@@ -79,7 +84,7 @@ export const registrationRepository = {
     const [items, total] = await Promise.all([
       prisma.registration.findMany({
         where,
-        orderBy: { createdAt: "desc" },
+        orderBy: { [params.sortBy]: params.sortDir },
         skip: params.offset,
         take: params.limit,
       }),

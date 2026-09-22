@@ -49,6 +49,10 @@ export const listRegistrationsQuerySchema = z.object({
     .optional(),
   batchId: z.string().uuid().optional(),
   search: z.string().trim().min(1).optional(),
+  dateFrom: z.coerce.date().optional(),
+  dateTo: z.coerce.date().optional(),
+  sortBy: z.enum(["createdAt", "name", "status", "amountCents", "paidAt"]).default("createdAt"),
+  sortDir: z.enum(["asc", "desc"]).default("desc"),
 });
 
 export type ListRegistrationsQuery = z.infer<typeof listRegistrationsQuerySchema>;
