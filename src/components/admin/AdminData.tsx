@@ -56,6 +56,7 @@ function FilterBar({
   status,
   onStatusChange,
   statusOptions,
+  onClear,
 }: {
   search: string;
   onSearchChange: (value: string) => void;
@@ -63,20 +64,27 @@ function FilterBar({
   status: string;
   onStatusChange: (value: string) => void;
   statusOptions: ReadonlyArray<readonly [string, string]>;
+  onClear?: () => void;
 }) {
+  const hasFilters = Boolean(search || status);
   return (
-    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <div className="relative flex-1 sm:max-w-xs">
-        <Search size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-        <Input value={search} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="pl-8" />
-        {search && (
-          <Button type="button" variant="adminGhost" size="icon" onClick={() => onSearchChange("")} className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2" aria-label="Limpar busca" title="Limpar busca"><X size={14} /></Button>
-        )}
+    <div className="mb-4 rounded-lg border border-slate-200 bg-white p-3">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+        <div className="relative flex-1 lg:max-w-md">
+          <label className="mb-1.5 block text-xs font-medium text-slate-500">Busca</label>
+          <Search size={14} className="pointer-events-none absolute left-2.5 top-[2.15rem] -translate-y-1/2 text-slate-400" />
+          <Input value={search} onChange={(e) => onSearchChange(e.target.value)} placeholder={searchPlaceholder} className="pl-8" />
+        </div>
+        <div className="w-full sm:w-52">
+          <label className="mb-1.5 block text-xs font-medium text-slate-500">Status</label>
+          <Select value={status || "all"} onValueChange={(value) => onStatusChange(value === "all" ? "" : value)}>
+            <SelectTrigger aria-label="Filtrar por status"><SelectValue placeholder="Todos os status" /></SelectTrigger>
+            <SelectContent>{statusOptions.map(([value, label]) => <SelectItem key={value || "all"} value={value || "all"}>{label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        {hasFilters && onClear && <Button type="button" variant="adminGhost" size="sm" onClick={onClear} className="self-end"><X size={14} />Limpar filtros</Button>}
       </div>
-      <Select value={status || "all"} onValueChange={(value) => onStatusChange(value === "all" ? "" : value)}>
-        <SelectTrigger className="sm:w-44"><SelectValue placeholder="Todos os status" /></SelectTrigger>
-        <SelectContent>{statusOptions.map(([value, label]) => <SelectItem key={value || "all"} value={value || "all"}>{label}</SelectItem>)}</SelectContent>
-      </Select>
+      {hasFilters && <p className="mt-2 text-xs text-slate-400">Filtros ativos aplicados à busca.</p>}
     </div>
   );
 }
@@ -210,7 +218,7 @@ export function DashboardView() {
         </Card>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {[["Inscrições hoje", data.today.registrations], ["Pagamentos hoje", data.today.payments], ["Ticket médio", money(data.revenue.averageTicketCents)], ["Google Sheets", data.googleSheets.configured ? "Configurado" : "Não configurado"]].map(([label, value], index) => <Card key={label} className="admin-rise" style={{ animationDelay: `${320 + index * 55}ms` }}><CardContent className="p-5"><p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p><p className="mt-2 text-xl font-semibold text-slate-900">{value}</p></CardContent></Card>)}
+        {[["Inscrições hoje", data.today.registrations], ["Pagamentos aprovados hoje", data.today.payments], ["Ticket médio", money(data.revenue.averageTicketCents)], ["Google Sheets", data.googleSheets.configured ? "Configurado" : "Não configurado"]].map(([label, value], index) => <Card key={label} className="admin-rise" style={{ animationDelay: `${320 + index * 55}ms` }}><CardContent className="p-5"><p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p><p className="mt-2 text-xl font-semibold text-slate-900">{value}</p></CardContent></Card>)}
       </div>
       <Card className="mt-4 admin-rise" style={{ animationDelay: "540ms" }}>
         <CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Últimas inscrições</CardTitle></CardHeader>
@@ -279,6 +287,7 @@ export function RegistrationsView() {
         status={status}
         onStatusChange={(value) => { setStatus(value); setPage(1); }}
         statusOptions={registrationStatusOptions}
+        onClear={() => { setSearch(""); setStatus(""); setPage(1); }}
       />
       <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
         <label htmlFor="registration-page-size">Por página</label>
@@ -287,12 +296,15 @@ export function RegistrationsView() {
           <SelectContent>{[20, 50, 100].map((size) => <SelectItem key={size} value={String(size)}>{size}</SelectItem>)}</SelectContent>
         </Select>
       </div>
-      <div className="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-        <Select value={batchId || "all"} onValueChange={(value) => { setBatchId(value === "all" ? "" : value); setPage(1); }}><SelectTrigger><SelectValue placeholder="Todos os lotes" /></SelectTrigger><SelectContent><SelectItem value="all">Todos os lotes</SelectItem>{batches.map((batch) => <SelectItem key={batch.id} value={batch.id}>{batch.name}</SelectItem>)}</SelectContent></Select>
-        <Input type="date" value={dateFrom} onChange={(event) => { setDateFrom(event.target.value); setPage(1); }} aria-label="Data inicial" />
-        <Input type="date" value={dateTo} onChange={(event) => { setDateTo(event.target.value); setPage(1); }} aria-label="Data final" />
-        <Select value={sortBy} onValueChange={(value) => { setSortBy(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{[["createdAt", "Data"], ["name", "Nome"], ["status", "Status"], ["amountCents", "Valor"], ["paidAt", "Pagamento"]].map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select>
-        <Select value={sortDir} onValueChange={(value) => { setSortDir(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="desc">Mais recentes</SelectItem><SelectItem value="asc">Mais antigos</SelectItem></SelectContent></Select>
+      <div className="mb-4 rounded-lg border border-slate-200 bg-white p-3">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Filtros avançados</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div><label className="mb-1.5 block text-xs text-slate-500">Lote</label><Select value={batchId || "all"} onValueChange={(value) => { setBatchId(value === "all" ? "" : value); setPage(1); }}><SelectTrigger><SelectValue placeholder="Todos os lotes" /></SelectTrigger><SelectContent><SelectItem value="all">Todos os lotes</SelectItem>{batches.map((batch) => <SelectItem key={batch.id} value={batch.id}>{batch.name}</SelectItem>)}</SelectContent></Select></div>
+          <div><label className="mb-1.5 block text-xs text-slate-500">De</label><Input type="date" value={dateFrom} onChange={(event) => { setDateFrom(event.target.value); setPage(1); }} aria-label="Data inicial" /></div>
+          <div><label className="mb-1.5 block text-xs text-slate-500">Até</label><Input type="date" value={dateTo} onChange={(event) => { setDateTo(event.target.value); setPage(1); }} aria-label="Data final" /></div>
+          <div><label className="mb-1.5 block text-xs text-slate-500">Ordenar por</label><Select value={sortBy} onValueChange={(value) => { setSortBy(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{[["createdAt", "Data"], ["name", "Nome"], ["status", "Status"], ["amountCents", "Valor"], ["paidAt", "Pagamento"]].map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
+          <div><label className="mb-1.5 block text-xs text-slate-500">Ordem</label><Select value={sortDir} onValueChange={(value) => { setSortDir(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="desc">Decrescente</SelectItem><SelectItem value="asc">Crescente</SelectItem></SelectContent></Select></div>
+        </div>
       </div>
       {error ? (
         <ErrorState message={error} retry={load} />
@@ -378,6 +390,7 @@ export function PaymentsView() {
         status={status}
         onStatusChange={(value) => { setStatus(value); setPage(1); }}
         statusOptions={paymentStatusOptions}
+        onClear={() => { setSearch(""); setStatus(""); setPage(1); }}
       />
       <div className="mb-4 flex items-center justify-end gap-2 text-xs text-slate-500">
         <label htmlFor="payment-page-size">Por página</label>

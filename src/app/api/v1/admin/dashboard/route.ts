@@ -27,7 +27,7 @@ export async function GET(request: Request) {
         _sum: { amountCents: true },
       }),
       prisma.registration.count({ where: { createdAt: { gte: startOfDay } } }),
-      prisma.payment.count({ where: { createdAt: { gte: startOfDay } } }),
+      prisma.payment.count({ where: { createdAt: { gte: startOfDay }, status: "APPROVED" } }),
       prisma.payment.aggregate({ where: { status: "APPROVED" }, _avg: { amountCents: true } }),
       prisma.registration.findMany({
         orderBy: { createdAt: "desc" },

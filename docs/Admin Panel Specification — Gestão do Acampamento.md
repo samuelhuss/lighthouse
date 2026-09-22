@@ -1242,7 +1242,7 @@ O dashboard deve retornar, além dos KPIs principais:
 
 - últimas cinco inscrições;
 - inscrições criadas no dia;
-- pagamentos criados no dia;
+- pagamentos aprovados no dia;
 - ticket médio dos pagamentos aprovados;
 - estado de configuração do Google Sheets.
 
