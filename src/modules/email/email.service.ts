@@ -12,6 +12,14 @@ function paragraphHtml(value: string): string {
   return value.split(/\r?\n\s*\r?\n/).map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\r?\n/g, "<br />")}</p>`).join("");
 }
 
+export function renderEmailLayout(input: { subject: string; preview: string; content: string }): string {
+  return `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head><body style="margin:0;background:#f4f1eb;color:#1b2b26;font-family:Arial,sans-serif"><div style="display:none;max-height:0;overflow:hidden">${escapeHtml(input.preview)}</div><main style="max-width:600px;margin:0 auto;padding:32px 16px"><div style="overflow:hidden;border:1px solid #e8dfd1;border-radius:16px;background:#fbfaf7;box-shadow:0 16px 48px rgba(35,58,47,.08)"><header style="padding:28px 32px;background:#173f35;color:#fff"><div style="font-size:20px;font-weight:700;letter-spacing:-.3px">Acampamento<span style="color:#f4b942">.</span></div></header><section style="padding:32px;color:#1b2b26"><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c66b45">${escapeHtml(input.subject)}</div><div style="margin-top:20px;font-size:16px;line-height:1.7;color:#405b4e">${input.content}</div></section><footer style="border-top:1px solid #e8dfd1;padding:20px 32px;font-size:12px;line-height:1.5;color:#718477">Você recebeu este email por causa da sua inscrição no acampamento.</footer></div></main></body></html>`;
+}
+
+export function renderCampaignEmail(input: { subject: string; message: string; name: string }): string {
+  return renderEmailLayout({ subject: input.subject, preview: input.message, content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#173f35">Olá, ${escapeHtml(input.name)}!</h1>${paragraphHtml(input.message)}<p style="margin-top:28px;font-size:13px;color:#718477">Você recebeu esta mensagem porque autorizou comunicações sobre o acampamento.</p>` });
+}
+
 function configured() {
   const env = getEnv();
   return Boolean(env.RESEND_API_KEY && env.EMAIL_FROM);
@@ -65,7 +73,7 @@ export const emailService = {
       type: "REGISTRATION_CREATED",
       idempotencyKey: `registration-created:${input.registrationId}`,
       subject: "Sua inscrição foi criada",
-      html: `<h1>Olá, ${escapeHtml(input.name)}!</h1><p>Sua inscrição foi criada com o código <strong>${escapeHtml(input.registrationCode)}</strong>.</p><p>Finalize o pagamento para garantir sua vaga:</p><p><a href="${escapeHtml(input.paymentUrl)}">Continuar para o pagamento</a></p>${input.paymentExpiresAt ? `<p>O pagamento fica disponível até ${input.paymentExpiresAt.toLocaleString("pt-BR")}.</p>` : ""}`,
+      html: renderEmailLayout({ subject: "Sua inscrição foi criada", preview: "Finalize o pagamento para garantir sua vaga.", content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#173f35">Olá, ${escapeHtml(input.name)}!</h1><p>Sua inscrição foi criada com o código <strong>${escapeHtml(input.registrationCode)}</strong>.</p><p>Finalize o pagamento para garantir sua vaga:</p><p><a href="${escapeHtml(input.paymentUrl)}" style="display:inline-block;border-radius:8px;background:#f4b942;padding:12px 18px;color:#1b2b26;font-weight:700;text-decoration:none">Continuar para o pagamento</a></p>${input.paymentExpiresAt ? `<p>O pagamento fica disponível até ${input.paymentExpiresAt.toLocaleString("pt-BR")}.</p>` : ""}` }),
     });
   },
 
@@ -76,25 +84,29 @@ export const emailService = {
       type: "PAYMENT_APPROVED",
       idempotencyKey: `payment-approved:${input.paymentId}`,
       subject: "Pagamento confirmado",
-      html: `<h1>Pagamento confirmado</h1><p>Olá, ${escapeHtml(input.name)}. Recebemos seu pagamento de ${(input.amountCents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}.</p><p>Sua inscrição <strong>${escapeHtml(input.registrationCode)}</strong> está confirmada.</p>`,
+      html: renderEmailLayout({ subject: "Pagamento confirmado", preview: "Sua inscrição está confirmada.", content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#173f35">Pagamento confirmado</h1><p>Olá, ${escapeHtml(input.name)}. Recebemos seu pagamento de ${(input.amountCents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}.</p><p>Sua inscrição <strong>${escapeHtml(input.registrationCode)}</strong> está confirmada.</p>` }),
     });
   },
 
   async sendCampaign(input: { subject: string; message: string }) {
+    const recipients = await this.getCampaignAudience();
+    const campaignKey = createHash("sha256").update(`${input.subject}\0${input.message}`).digest("hex").slice(0, 24);
+    let sent = 0;
+    let failed = 0;
+    for (const recipient of recipients) {
+      const result = await send({ recipient: recipient.email, registrationId: recipient.id, type: "CAMPAIGN", idempotencyKey: `campaign:${campaignKey}:${recipient.email}`, subject: input.subject, html: renderCampaignEmail({ subject: input.subject, message: input.message, name: recipient.name }) });
+      if (result.sent) sent += 1; else if (!result.skipped) failed += 1;
+    }
+    return { audience: recipients.length, sent, failed, configured: configured() };
+  },
+
+  async getCampaignAudience() {
     const registrations = await prisma.registration.findMany({ where: { marketingConsentAt: { not: null } }, orderBy: { createdAt: "asc" }, select: { id: true, name: true, email: true } });
     const uniqueRecipients = new Map<string, (typeof registrations)[number]>();
     for (const registration of registrations) {
       const email = registration.email.trim().toLowerCase();
       if (email && !uniqueRecipients.has(email)) uniqueRecipients.set(email, registration);
     }
-    const recipients = [...uniqueRecipients.entries()].map(([email, registration]) => ({ ...registration, email }));
-    const campaignKey = createHash("sha256").update(`${input.subject}\0${input.message}`).digest("hex").slice(0, 24);
-    let sent = 0;
-    let failed = 0;
-    for (const recipient of recipients) {
-      const result = await send({ recipient: recipient.email, registrationId: recipient.id, type: "CAMPAIGN", idempotencyKey: `campaign:${campaignKey}:${recipient.email}`, subject: input.subject, html: `<h1>${escapeHtml(input.subject)}</h1><p>Olá, ${escapeHtml(recipient.name)}!</p>${paragraphHtml(input.message)}<p>Você recebeu esta mensagem porque autorizou comunicações sobre o acampamento.</p>` });
-      if (result.sent) sent += 1; else if (!result.skipped) failed += 1;
-    }
-    return { audience: recipients.length, sent, failed, configured: configured() };
+    return [...uniqueRecipients.entries()].map(([email, registration]) => ({ ...registration, email }));
   },
 };

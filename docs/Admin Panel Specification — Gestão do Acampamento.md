@@ -1274,4 +1274,12 @@ Emails transacionais:
 
 Campanhas são enviadas pela tela `/admin/emails` somente para registros com `marketingConsentAt` preenchido. O aceite de privacidade (`privacyConsentAt`) não substitui o consentimento de marketing. O disparo exige confirmação explícita digitando `ENVIAR`.
 
+Antes do disparo, `/admin/emails` deve mostrar:
+
+- preview do HTML final que será enviado;
+- remetente e assunto;
+- quantidade de destinatários únicos;
+- amostra de nomes e emails da audiência;
+- aviso de que somente consentimentos de marketing entram na campanha.
+
 O histórico de tentativas fica em `email_logs`, sem armazenar o conteúdo completo da mensagem. Falhas de email não podem desfazer uma inscrição ou um pagamento.
