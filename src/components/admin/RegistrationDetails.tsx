@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, LoaderCircle } from "lucide-react";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Detail = {
@@ -19,7 +20,7 @@ type Detail = {
   paidAt: string | null;
   paymentExpiresAt: string | null;
   batch: { name: string; priceCents: number } | null;
-  payments: Array<{ id: string; status: string; amountCents: number; providerPaymentId: string | null; createdAt: string; paidAt: string | null }>;
+  payments: Array<{ id: string; status: string; amountCents: number; providerPaymentId: string | null; checkoutUrl: string | null; createdAt: string; paidAt: string | null }>;
 };
 
 const money = (cents: number) => (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -125,6 +126,8 @@ export function RegistrationDetails({ id }: { id: string }) {
               <div className="flex items-center gap-3">
                 <span className="font-medium text-slate-900">{money(payment.amountCents)}</span>
                 <Badge variant={statusVariant[payment.status] ?? "default"}>{labels[payment.status] ?? payment.status}</Badge>
+                {payment.status === "PENDING" && payment.checkoutUrl && <Button asChild variant="adminOutline" size="sm"><a href={payment.checkoutUrl} target="_blank" rel="noreferrer">Checkout <ExternalLink size={14} /></a></Button>}
+                <Button asChild variant="adminGhost" size="sm"><Link href={`/admin/pagamentos/${payment.id}`}>Detalhes</Link></Button>
               </div>
             </div>
           ))}
