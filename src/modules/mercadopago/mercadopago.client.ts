@@ -38,7 +38,7 @@ export class MercadoPagoClient {
     };
 
     const response = (await this.preferenceClient.create({ body: payload })) as PreferenceResponse;
-    const initPoint = response.sandbox_init_point ?? response.init_point;
+    const initPoint = response.init_point ?? response.sandbox_init_point;
 
     if (!response.id || !initPoint) {
       throw new Error("Mercado Pago preference creation failed");
