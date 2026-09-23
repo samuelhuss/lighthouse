@@ -13,6 +13,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
       throw new RegistrationNotFoundError();
     }
 
+    const payment = await (await import("@/lib/prisma")).prisma.payment.findFirst({
+      where: { registrationId: registration.id },
+      orderBy: { createdAt: "desc" },
+      select: { checkoutUrl: true, status: true },
+    });
+
     return NextResponse.json(
       {
         code: registration.registrationCode,
@@ -21,6 +27,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
         amountCents: registration.amountCents,
         paidAt: registration.paidAt,
         paymentExpiresAt: registration.paymentExpiresAt,
+        paymentUrl: registration.status === "PENDING_PAYMENT" && payment?.status === "PENDING" ? payment.checkoutUrl : null,
       },
       { status: 200, headers: { "x-request-id": requestId } }
     );

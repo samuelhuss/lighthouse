@@ -16,6 +16,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         provider: true,
         providerPaymentId: true,
         providerPreferenceId: true,
+        checkoutUrl: true,
         externalReference: true,
         amountCents: true,
         status: true,

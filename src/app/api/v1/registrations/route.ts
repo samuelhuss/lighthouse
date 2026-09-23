@@ -83,6 +83,7 @@ export async function POST(request: Request) {
           registrationId: registration.id,
           provider: "MERCADO_PAGO",
           providerPreferenceId: preference.preferenceId,
+          checkoutUrl: preference.initPoint,
           externalReference: registration.registrationCode,
           amountCents: registration.amountCents,
           status: "PENDING",

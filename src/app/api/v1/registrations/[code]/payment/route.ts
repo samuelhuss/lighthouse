@@ -22,6 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
       {
         status: payment?.status ?? "PENDING",
         paidAt: registration.paidAt,
+        paymentUrl: registration.status === "PENDING_PAYMENT" && payment?.status === "PENDING" ? payment.checkoutUrl : null,
       },
       { status: 200, headers: { "x-request-id": requestId } }
     );

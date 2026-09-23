@@ -12,6 +12,7 @@ type Payment = {
   provider: string;
   providerPaymentId: string | null;
   providerPreferenceId: string | null;
+  checkoutUrl: string | null;
   externalReference: string;
   amountCents: number;
   status: string;
@@ -47,7 +48,7 @@ export function PaymentDetails({ id }: { id: string }) {
   return <>
     <div className="mb-6"><Link href="/admin/pagamentos" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900"><ArrowLeft size={15} />Voltar para pagamentos</Link><div className="mt-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><p className="font-mono text-xs text-slate-500">{payment.id}</p><h1 className="mt-1 text-xl font-semibold text-slate-900">Detalhes do pagamento</h1></div><Badge variant={variants[payment.status] ?? "default"}>{labels[payment.status] ?? payment.status}</Badge></div></div>
     <div className="grid gap-4 lg:grid-cols-2">
-      <Card><CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Pagamento</CardTitle></CardHeader><CardContent><dl className="grid gap-5 sm:grid-cols-2"><Field label="Provider" value={payment.provider} /><Field label="Valor" value={money(payment.amountCents)} /><Field label="Payment ID" value={payment.providerPaymentId ?? "—"} copyable /><Field label="Preference ID" value={payment.providerPreferenceId ?? "—"} copyable /><Field label="Referência externa" value={payment.externalReference} copyable /><Field label="Método" value={payment.paymentMethod ?? "—"} /><Field label="Detalhe do status" value={payment.statusDetail ?? "—"} /><Field label="Pago em" value={date(payment.paidAt)} /></dl></CardContent></Card>
+      <Card><CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Pagamento</CardTitle></CardHeader><CardContent><dl className="grid gap-5 sm:grid-cols-2"><Field label="Provider" value={payment.provider} /><Field label="Valor" value={money(payment.amountCents)} /><Field label="Payment ID" value={payment.providerPaymentId ?? "—"} copyable /><Field label="Preference ID" value={payment.providerPreferenceId ?? "—"} copyable /><Field label="Referência externa" value={payment.externalReference} copyable /><Field label="Método" value={payment.paymentMethod ?? "—"} /><Field label="Detalhe do status" value={payment.statusDetail ?? "—"} /><Field label="Pago em" value={date(payment.paidAt)} /></dl>{payment.status === "PENDING" && payment.checkoutUrl && <Button asChild variant="admin" size="sm" className="mt-6"><a href={payment.checkoutUrl} target="_blank" rel="noreferrer">Abrir Checkout</a></Button>}</CardContent></Card>
       <Card><CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Inscrição relacionada</CardTitle></CardHeader><CardContent><dl className="space-y-5"><Field label="Participante" value={payment.registration.name} /><Field label="E-mail" value={payment.registration.email} /><Field label="Código" value={payment.registration.registrationCode} /><Field label="Status da inscrição" value={payment.registration.status} /><Field label="Criado em" value={date(payment.createdAt)} /><Field label="Atualizado em" value={date(payment.updatedAt)} /></dl><Button asChild variant="adminOutline" size="sm" className="mt-6"><Link href={`/admin/inscricoes/${payment.registration.id}`}>Ver inscrição</Link></Button></CardContent></Card>
     </div>
   </>;

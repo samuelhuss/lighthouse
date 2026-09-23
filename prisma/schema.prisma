@@ -137,6 +137,7 @@ model Payment {
 
     providerPaymentId    String?
     providerPreferenceId String?
+    checkoutUrl          String?
 
     externalReference String
 
