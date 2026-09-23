@@ -28,7 +28,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
       <DialogOverlay />
       <DialogPrimitive.Content ref={ref} className={cn("relative z-50 w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-xl", className)} {...props}>
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300" aria-label="Fechar">
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1 text-[var(--moss)] hover:bg-[var(--sand)] hover:text-[var(--pine)] focus:outline-none focus:ring-2 focus:ring-[var(--amber)]" aria-label="Fechar">
           <X size={16} />
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>

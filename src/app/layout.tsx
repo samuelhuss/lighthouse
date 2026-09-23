@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Bebas_Neue } from "next/font/google";
+import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 
-const bodyFont = Inter({
+const bodyFont = Plus_Jakarta_Sans({
   variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const displayFont = Bebas_Neue({
+const displayFont = Outfit({
   variable: "--font-display",
-  weight: "400",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -20,8 +21,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html
+      lang="pt-BR"
+      className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
 }
