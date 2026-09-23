@@ -32,6 +32,11 @@ export async function expireRegistrations(now = new Date()): Promise<ExpireRegis
         await batchService.releaseSlot(tx, registration.batchId);
       }
 
+      await tx.payment.updateMany({
+        where: { registrationId: registration.id, status: "PENDING" },
+        data: { checkoutUrl: null },
+      });
+
       return true;
     });
 

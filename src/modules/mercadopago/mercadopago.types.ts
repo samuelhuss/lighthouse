@@ -18,6 +18,7 @@ export interface CreatePreferenceInput {
     failure: string;
     pending: string;
   };
+  expiresAt: Date;
 }
 
 export interface CreatePreferenceResult {

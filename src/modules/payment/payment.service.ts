@@ -52,6 +52,21 @@ export const paymentService = {
     const paymentStatus = mapMercadoPagoPaymentStatus(mpPayment.status);
     const nextRegistrationStatus = mapRegistrationStatusFromPayment(paymentStatus);
 
+    if (paymentRecord.registration.status === "EXPIRED") {
+      await prisma.payment.update({
+        where: { id: paymentRecord.id },
+        data: {
+          providerPaymentId: String(mpPayment.id),
+          status: paymentStatus,
+          statusDetail: mpPayment.statusDetail,
+          paymentMethod: mpPayment.paymentMethodId ?? paymentRecord.paymentMethod,
+          checkoutUrl: null,
+          rawResponse: mpPayment.raw as Prisma.InputJsonValue,
+        },
+      });
+      return;
+    }
+
     if (paymentRecord.registration.status === "PAID" && nextRegistrationStatus !== "REFUNDED") {
       await prisma.payment.update({
         where: { id: paymentRecord.id },
@@ -73,6 +88,7 @@ export const paymentService = {
           status: paymentStatus,
           statusDetail: mpPayment.statusDetail,
           paymentMethod: mpPayment.paymentMethodId ?? paymentRecord.paymentMethod,
+          checkoutUrl: paymentStatus === "PENDING" ? paymentRecord.checkoutUrl : null,
           paidAt: paymentStatus === "APPROVED" ? new Date() : paymentRecord.paidAt,
           rawResponse: mpPayment.raw as Prisma.InputJsonValue,
         },

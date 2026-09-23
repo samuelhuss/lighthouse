@@ -31,6 +31,9 @@ export class MercadoPagoClient {
       },
       external_reference: input.externalReference,
       back_urls: input.backUrls,
+      expires: true,
+      expiration_date_from: new Date().toISOString(),
+      expiration_date_to: input.expiresAt.toISOString(),
       ...(shouldAutoReturn ? { auto_return: "approved" } : {}),
     };
 

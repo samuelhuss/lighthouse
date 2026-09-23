@@ -76,6 +76,7 @@ export async function POST(request: Request) {
           failure: `${getEnv().NEXT_PUBLIC_APP_URL}/pagamento/erro?code=${encodeURIComponent(registrationCode)}`,
           pending: `${getEnv().NEXT_PUBLIC_APP_URL}/pagamento/pendente?code=${encodeURIComponent(registrationCode)}`,
         },
+        expiresAt: registration.paymentExpiresAt!,
       });
 
       const payment = await tx.payment.create({
