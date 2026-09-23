@@ -7,12 +7,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--clay)] text-white hover:bg-[#ad5735]",
-        secondary: "bg-[var(--sand)] text-[var(--pine)] hover:bg-[#ddd1c0]",
+        default: "bg-[var(--amber)] text-[var(--abyss)] hover:bg-[var(--gold)]",
+        secondary: "bg-[var(--sand)] text-[var(--pine)] hover:bg-[var(--gold)]",
         outline: "border border-[color:var(--pine)/25%] text-[var(--pine)] hover:bg-[var(--sand)]",
         ghost: "text-[var(--pine)] hover:bg-[var(--sand)]",
         destructive: "bg-red-700 text-white hover:bg-red-800",
-        link: "text-[var(--clay)] underline-offset-4 hover:underline",
+        link: "text-[var(--azure)] underline-offset-4 hover:underline",
         admin: "rounded-md bg-amber-400 text-slate-950 hover:bg-amber-300 focus-visible:ring-amber-300",
         adminOutline: "rounded-md border border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:bg-amber-50 focus-visible:ring-amber-200",
         adminGhost: "rounded-md text-slate-500 hover:bg-amber-50 hover:text-slate-900 focus-visible:ring-amber-200",

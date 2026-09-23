@@ -1,14 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f1eb;
-  --foreground: #1b2b26;
-  --ink: #1b2b26;
-  --pine: #173f35;
-  --moss: #5d755a;
-  --clay: #c66b45;
-  --sand: #e8dfd1;
-  --paper: #fbfaf7;
+  /* Lighthouse palette */
+  --abyss: #0e2043;   /* Shadow Abyss */
+  --pine: #223164;    /* Deep Midnight */
+  --azure: #3462ac;   /* Azure Crest */
+  --amber: #e8af2e;   /* Amber Blaze */
+  --gold: #e8c766;    /* Golden Sand */
+
+  --background: #faf6ec;
+  --foreground: #16223f;
+  --ink: #16223f;
+  --moss: #4c5a80;
+  --clay: var(--azure);
+  --sand: #f6e7bd;
+  --paper: #fffdf6;
 }
 
 @theme inline {
@@ -51,8 +57,16 @@ body {
 
 .admin-rise { animation: admin-rise 420ms ease-out both; }
 
+@keyframes beacon-pulse {
+  0%, 100% { opacity: .55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.beacon-pulse { animation: beacon-pulse 2.8s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   .skeleton-shimmer,
   .admin-rise,
+  .beacon-pulse,
   .animate-float-in { animation: none; }
 }

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock3, LoaderCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LighthouseMark } from "@/components/brand/LighthouseMark";
 
 type Registration = {
   code: string;
@@ -93,13 +94,13 @@ export function PaymentStatusPage({ kind }: { kind: PageKind }) {
   return (
     <main className="flex min-h-screen items-center bg-[var(--background)] px-6 py-12 lg:px-10">
       <div className="mx-auto w-full max-w-5xl">
-        <Link href="/" className="font-serif text-xl font-semibold text-[var(--pine)]">fora<span className="text-[var(--clay)]">.</span></Link>
+        <Link href="/" className="inline-flex items-center gap-2 font-serif text-xl font-semibold text-[var(--pine)]"><LighthouseMark size={26} /> Lighthouse</Link>
         <div className="mt-16 grid gap-14 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
           <div>
-            <div className={`flex h-14 w-14 items-center justify-center rounded-full ${view === "success" ? "bg-[var(--pine)] text-white" : view === "error" || view === "expired" ? "bg-[#f4d8ce] text-[#9b4328]" : "bg-[#e8dfd1] text-[var(--pine)]"}`}>
+            <div className={`flex h-14 w-14 items-center justify-center rounded-full ${view === "success" ? "bg-[var(--pine)] text-white" : view === "error" || view === "expired" ? "bg-red-100 text-red-700" : "bg-[var(--sand)] text-[var(--pine)]"}`}>
               {loading ? <LoaderCircle className="animate-spin" size={25} /> : <Icon size={27} />}
             </div>
-            <p className="mt-8 text-xs font-bold uppercase tracking-[.22em] text-[var(--clay)]">{content.eyebrow}</p>
+            <p className="mt-8 text-xs font-bold uppercase tracking-[.22em] text-[var(--azure)]">{content.eyebrow}</p>
             <h1 className="mt-5 font-serif text-5xl leading-[1.05] text-[var(--pine)] sm:text-6xl">{loading ? "Consultando sua inscrição." : content.title}</h1>
             <p className="mt-6 max-w-md text-lg leading-8 text-[var(--moss)]">{loading ? "Só um instante. Estamos conferindo a confirmação no servidor." : content.description}</p>
           </div>

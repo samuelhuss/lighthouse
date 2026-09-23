@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
-const bodyFont = DM_Sans({
+const bodyFont = Inter({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
-const displayFont = Fraunces({
+const displayFont = Bebas_Neue({
   variable: "--font-display",
+  weight: "400",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Acampamento 2026 | Uma pausa para viver junto",
-  description: "Um fim de semana de natureza, presença e comunidade.",
+  title: "Lighthouse | Acampamento da igreja 2026",
+  description: "Três dias de fé, comunhão e presença de Deus.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
