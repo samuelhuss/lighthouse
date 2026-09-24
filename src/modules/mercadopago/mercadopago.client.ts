@@ -19,6 +19,7 @@ export class MercadoPagoClient {
 
   async createPreference(input: CreatePreferenceInput): Promise<CreatePreferenceResult> {
     const shouldAutoReturn = input.backUrls.success.startsWith("https://");
+    const appBaseUrl = getEnv().NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
     const payload = {
       items: input.items.map((item) => ({
         id: item.id,
@@ -33,6 +34,7 @@ export class MercadoPagoClient {
       },
       external_reference: input.externalReference,
       back_urls: input.backUrls,
+      notification_url: `${appBaseUrl}/api/v1/webhooks/mercadopago`,
       expires: true,
       expiration_date_from: new Date().toISOString(),
       expiration_date_to: input.expiresAt.toISOString(),
