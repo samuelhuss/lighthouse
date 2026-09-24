@@ -40,43 +40,82 @@ export function AdminLogin() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6 py-12">
-      <div className="w-full max-w-sm">
-        <Link href="/" className="text-sm font-semibold tracking-tight text-slate-900">
-          Acampamento
-        </Link>
-        <Card className="mt-8 p-7">
-          <CardContent className="p-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-slate-900 text-white">
-              <ShieldCheck size={18} />
+    <main className="flex min-h-screen items-center justify-center bg-[#0e2043] relative overflow-hidden px-6 py-12">
+      {/* Background glow effects */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)]/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--azure)]/20 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="relative z-10 w-full max-w-[400px]">
+        <div className="flex justify-center mb-8">
+          <Link href="/" className="inline-flex flex-col items-center gap-3 transition hover:opacity-80">
+            <img src="/brand/lighthouse-icon.webp" alt="Lighthouse" className="h-12 w-auto opacity-90" />
+            <span className="text-xs font-bold tracking-[0.25em] uppercase text-white">Lighthouse '27</span>
+          </Link>
+        </div>
+
+        <div className="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
+          <div className="p-8 sm:p-10">
+            <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-6">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/90">
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-white">Administração</h1>
+                <p className="text-xs text-white/60 font-mono tracking-wider">ACESSO RESTRITO</p>
+              </div>
             </div>
-            <h1 className="mt-5 text-lg font-semibold text-slate-900">Acesso administrativo</h1>
-            <p className="mt-1.5 text-sm text-slate-500">Entre com sua conta autorizada para acompanhar o acampamento.</p>
-            <form onSubmit={submit} className="mt-6 space-y-4">
-              <div>
-                <Label htmlFor="email">E-mail</Label>
-                <Input id="email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="mt-1.5" autoComplete="email" />
+            
+            <form onSubmit={submit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-white/80 text-xs font-bold uppercase tracking-wider">E-mail</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  required 
+                  value={email} 
+                  onChange={(event) => setEmail(event.target.value)} 
+                  autoComplete="email"
+                  className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-[var(--gold)]/50 focus-visible:border-[var(--gold)]"
+                />
               </div>
-              <div>
-                <Label htmlFor="password">Senha</Label>
-                <Input id="password" type="password" required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-1.5" autoComplete="current-password" />
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-white/80 text-xs font-bold uppercase tracking-wider">Senha</Label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  required 
+                  value={password} 
+                  onChange={(event) => setPassword(event.target.value)} 
+                  autoComplete="current-password"
+                  className="h-12 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-[var(--gold)]/50 focus-visible:border-[var(--gold)]"
+                />
               </div>
-              {error && <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-              <Button type="submit" variant="admin" className="w-full" disabled={loading}>
+              
+              {error && (
+                <div className="rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-200">
+                  {error}
+                </div>
+              )}
+              
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="w-full h-12 mt-4 bg-[var(--gold)] hover:bg-white text-[#0e2043] font-bold tracking-wide transition-colors"
+              >
                 {loading ? (
-                  <>
-                    <LoaderCircle className="animate-spin" size={16} />
-                    Entrando...
-                  </>
+                  <span className="flex items-center gap-2">
+                    <LoaderCircle className="animate-spin" size={18} />
+                    Verificando...
+                  </span>
                 ) : (
-                  <>
-                    Entrar no painel <ArrowRight size={16} />
-                  </>
+                  <span className="flex items-center gap-2">
+                    Acessar Painel <ArrowRight size={18} />
+                  </span>
                 )}
               </Button>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </main>
   );

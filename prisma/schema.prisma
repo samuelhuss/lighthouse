@@ -107,6 +107,7 @@ model Registration {
     paidAt             DateTime?
     privacyConsentAt   DateTime?
     marketingConsentAt DateTime?
+    checkedInAt        DateTime?
 
     camp  Camp   @relation(fields: [campId], references: [id])
     batch Batch? @relation(fields: [batchId], references: [id])

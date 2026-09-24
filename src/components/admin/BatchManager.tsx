@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
 type BatchForm = { name: string; price: string; capacity: string; startsAt: string; endsAt: string; active: boolean };
@@ -156,7 +157,7 @@ export function BatchManager() {
           </form>
         </DialogContent>
       </Dialog>
-      <div className="space-y-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {loading && [0, 1, 2].map((item) => (
             <Card key={item} aria-label="Carregando lote">
               <CardContent className="flex items-center justify-between gap-4 p-5">
@@ -165,26 +166,87 @@ export function BatchManager() {
               </CardContent>
             </Card>
           ))}
-          {!loading && items.map((batch) => (
-            <Card key={batch.id} className="admin-rise">
-              <CardContent className="flex flex-col justify-between gap-3 p-5 sm:flex-row sm:items-center">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-slate-900">{batch.name}</p>
-                    <Badge variant={batch.active ? "success" : "default"}>{batch.active ? "Ativo" : "Inativo"}</Badge>
+          {!loading && items.map((batch, index) => {
+            const isSoldOut = batch.reservedCount >= batch.capacity;
+            const percentage = batch.capacity > 0 ? Math.round((batch.reservedCount / batch.capacity) * 100) : 0;
+            
+            return (
+              <div key={batch.id} className="relative group admin-rise" style={{ animationDelay: `${index * 100}ms` }}>
+                {/* Decorative Ticket Stub edge */}
+                <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-50/50 rounded-full z-10 border-r border-slate-200"></div>
+                <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-50/50 rounded-full z-10 border-l border-slate-200"></div>
+                
+                <div className={cn(
+                  "relative h-full overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-300 hover:shadow-xl",
+                  batch.active 
+                    ? "border-[var(--gold)]/50 ring-1 ring-[var(--gold)]/20" 
+                    : "border-slate-200 opacity-80 grayscale-[0.2]"
+                )}>
+                  {/* Top Header */}
+                  <div className={cn(
+                    "px-6 py-5 border-b border-dashed",
+                    batch.active ? "bg-[#0e2043] text-white border-white/20" : "bg-slate-100 text-slate-900 border-slate-300"
+                  )}>
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex flex-col">
+                        <span className={cn(
+                          "text-[10px] font-bold tracking-widest uppercase mb-1",
+                          batch.active ? "text-[var(--gold)]" : "text-slate-500"
+                        )}>
+                          Fase de Vendas
+                        </span>
+                        <h3 className="text-xl font-bold tracking-tight">{batch.name}</h3>
+                      </div>
+                      <Badge variant={batch.active ? "success" : "secondary"} className={batch.active ? "bg-emerald-500 text-white border-transparent" : ""}>
+                        {batch.active ? "Em vigor" : "Inativo"}
+                      </Badge>
+                    </div>
                   </div>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {money(batch.priceCents)} · {batch.reservedCount} / {batch.capacity} vagas
-                  </p>
+                  
+                  {/* Bottom Content */}
+                  <div className="p-6">
+                    <div className="flex flex-col mb-6">
+                      <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Valor do Ingresso</span>
+                      <span className="text-3xl font-extrabold text-slate-900">{money(batch.priceCents)}</span>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-xs font-semibold mb-2">
+                        <span className="text-slate-500 uppercase tracking-wider">Ocupação</span>
+                        <span className={isSoldOut ? "text-red-500" : "text-slate-900"}>
+                          {isSoldOut ? "ESGOTADO" : `${percentage}% preenchido`}
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden mb-2">
+                        <div 
+                          className={cn(
+                            "h-full rounded-full transition-all duration-1000",
+                            isSoldOut ? "bg-red-500" : batch.active ? "bg-[#0e2043]" : "bg-slate-400"
+                          )}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <div className="text-[11px] text-slate-400 font-mono">
+                          {batch.reservedCount} de {batch.capacity} vagas
+                        </div>
+                        <Button variant={batch.active ? "admin" : "adminOutline"} size="sm" onClick={() => edit(batch)} className={batch.active ? "bg-[var(--gold)] text-[#0e2043]" : ""}>
+                          <Pencil size={14} className="mr-1" />
+                          Editar
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <Button variant="adminOutline" size="sm" onClick={() => edit(batch)}>
-                  <Pencil size={14} />
-                  Editar
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-          {!loading && !items.length && <p className="rounded-lg border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">Nenhum lote cadastrado.</p>}
+              </div>
+            );
+          })}
+          {!loading && !items.length && (
+            <div className="col-span-full py-20 rounded-2xl border border-dashed border-slate-300 bg-white/50 text-center">
+              <p className="text-sm font-medium text-slate-600">Nenhum lote configurado.</p>
+              <p className="mt-1 text-xs text-slate-400">Configure um lote para iniciar as vendas.</p>
+            </div>
+          )}
         </div>
     </>
   );

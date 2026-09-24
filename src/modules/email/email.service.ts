@@ -123,7 +123,7 @@ export const emailService = {
       type: "PAYMENT_APPROVED",
       idempotencyKey: `payment-approved:${input.paymentId}`,
       subject: "Pagamento confirmado",
-      html: renderEmailLayout({ subject: "Pagamento confirmado", preview: "Sua inscrição está confirmada.", content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#223164">Pagamento confirmado</h1><p>Olá, ${escapeHtml(input.name)}. Recebemos seu pagamento de ${(input.amountCents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}.</p><p>Sua inscrição <strong>${escapeHtml(input.registrationCode)}</strong> está confirmada.</p>` }),
+      html: renderEmailLayout({ subject: "Pagamento confirmado", preview: "Sua inscrição está confirmada.", content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#223164">Pagamento confirmado</h1><p>Olá, ${escapeHtml(input.name)}. Recebemos seu pagamento de ${(input.amountCents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}.</p><p>Sua inscrição <strong>${escapeHtml(input.registrationCode)}</strong> está confirmada.</p><p>Para ver seu QR Code de acesso (Ingresso Oficial), clique no link abaixo:</p><p><a href="${getEnv().NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pagamento/sucesso?code=${escapeHtml(input.registrationCode)}" style="display:inline-block;border-radius:8px;background:#e8af2e;padding:12px 18px;color:#0e2043;font-weight:700;text-decoration:none;margin-top:8px;">Ver Meu Ingresso Oficial</a></p>` }),
     });
   },
 

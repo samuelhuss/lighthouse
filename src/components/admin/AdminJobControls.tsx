@@ -29,36 +29,77 @@ export function AdminJobControls() {
   }
 
   return (
-    <Card>
-      <CardContent className="p-5">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <p className="text-sm font-medium text-slate-900">Operações de manutenção</p>
-            <p className="mt-1 text-sm text-slate-500">Atualize inscrições vencidas e reconcilie pagamentos com o Mercado Pago.</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="adminOutline" onClick={() => void runJob("expire-registrations")} disabled={running !== null}>
-              {running === "expire-registrations" ? <LoaderCircle className="animate-spin" size={14} /> : <Clock3 size={14} />}
-              Expirar inscrições
-            </Button>
-            <Button size="sm" variant="adminOutline" onClick={() => void runJob("reconcile-payments")} disabled={running !== null}>
-              {running === "reconcile-payments" ? <LoaderCircle className="animate-spin" size={14} /> : <RefreshCw size={14} />}
-              Reconciliar pagamentos
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Expiration Job */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+                <Clock3 size={18} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">Limpeza de Inscrições</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Expira vagas não pagas no prazo.</p>
+              </div>
+            </div>
+            <Button size="sm" variant="adminOutline" className="h-8" onClick={() => void runJob("expire-registrations")} disabled={running !== null}>
+              {running === "expire-registrations" ? <LoaderCircle className="animate-spin" size={14} /> : "Executar"}
             </Button>
           </div>
         </div>
-        {message && (
-          <p className="mt-4 flex items-center gap-2 text-sm text-emerald-700">
-            <Check size={15} />
-            {message}
-          </p>
-        )}
-        {error && (
-          <p role="alert" className="mt-4 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+
+        {/* Reconciliation Job */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                <RefreshCw size={18} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">Sincronização Financeira</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Reconcilia Mercado Pago c/ sistema.</p>
+              </div>
+            </div>
+            <Button size="sm" variant="adminOutline" className="h-8" onClick={() => void runJob("reconcile-payments")} disabled={running !== null}>
+              {running === "reconcile-payments" ? <LoaderCircle className="animate-spin" size={14} /> : "Executar"}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Terminal Log */}
+      <div className="overflow-hidden rounded-xl bg-slate-900 shadow-inner border border-slate-800">
+        <div className="flex items-center border-b border-slate-800 bg-slate-950 px-4 py-2.5">
+          <div className="flex gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-red-500/80"></div>
+            <div className="h-2.5 w-2.5 rounded-full bg-amber-500/80"></div>
+            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/80"></div>
+          </div>
+          <span className="ml-4 text-xs font-mono text-slate-500">terminal_log.sh</span>
+        </div>
+        <div className="p-4 font-mono text-xs sm:text-sm h-32 overflow-y-auto">
+          <p className="text-slate-500 mb-2">$ Aguardando comandos do operador...</p>
+          {running && (
+            <p className="text-amber-400 mb-1 flex items-center gap-2">
+              <LoaderCircle className="animate-spin h-3 w-3" />
+              Executando tarefa de sistema: {running}...
+            </p>
+          )}
+          {message && (
+            <p className="text-emerald-400">
+              <span className="text-slate-500 mr-2">[{new Date().toLocaleTimeString()}]</span>
+              [SUCESSO] {message}
+            </p>
+          )}
+          {error && (
+            <p className="text-red-400">
+              <span className="text-slate-500 mr-2">[{new Date().toLocaleTimeString()}]</span>
+              [ERRO FATAL] {error}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

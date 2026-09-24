@@ -62,19 +62,34 @@ export function RegistrationDetails({ id }: { id: string }) {
   return (
     <>
       <div className="mb-6">
-        <Link href="/admin/inscricoes" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900">
+        <Link href="/admin/inscricoes" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-[var(--gold)] transition-colors">
           <ArrowLeft size={15} />
           Voltar para inscrições
         </Link>
-        <div className="mt-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-          <div>
-            <p className="font-mono text-xs text-slate-500">{data.registrationCode}</p>
-            <h1 className="mt-1 text-xl font-semibold text-slate-900">{data.name}</h1>
+      </div>
+      
+      <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0e2043] to-[#1a2d5c] shadow-2xl border border-[#0e2043]/50">
+        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+          <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div className="relative z-10 px-6 py-8 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/10 border border-white/20 text-3xl font-extrabold text-white shadow-inner">
+              {data.name.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-mono text-sm text-[var(--gold)] font-bold tracking-widest">{data.registrationCode}</span>
+                <Badge variant={statusVariant[data.status] ?? "default"} className="uppercase tracking-wider text-[10px]">{labels[data.status] ?? data.status}</Badge>
+              </div>
+              <h1 className="text-3xl font-extrabold text-white tracking-tight">{data.name}</h1>
+              <p className="mt-1 text-white/60 text-sm font-medium">{data.email} • {data.phone}</p>
+            </div>
           </div>
-          <Badge variant={statusVariant[data.status] ?? "default"}>{labels[data.status] ?? data.status}</Badge>
         </div>
       </div>
-      <div className="grid gap-4 lg:grid-cols-2">
+      
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-slate-900">Participante</CardTitle>

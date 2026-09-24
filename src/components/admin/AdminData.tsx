@@ -2,8 +2,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-import { AlertCircle, ArrowUpRight, RefreshCw, Search, X } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CreditCard, Layers3, RefreshCw, Search, X } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -177,16 +178,30 @@ export function DashboardView() {
 
   return (
     <>
-      <PageHeader
-        title="Dashboard"
-        description="Visão geral do acampamento"
-        action={
-          <Button variant="adminOutline" size="sm" onClick={load}>
-            <RefreshCw size={14} />
-            Atualizar
-          </Button>
-        }
-      />
+      <div className="mb-8 relative overflow-hidden rounded-2xl bg-[#0e2043] shadow-xl admin-rise border border-white/10">
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('/brand/lighthouse-hero.webp')] bg-cover bg-center bg-no-repeat mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0e2043] via-[#0e2043]/90 to-transparent z-10"></div>
+        
+        <div className="relative z-20 px-8 py-10 sm:px-12 sm:py-14 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <span className="inline-block px-3 py-1 mb-4 rounded-full bg-[var(--gold)]/20 border border-[var(--gold)]/30 text-[var(--gold)] text-[10px] font-bold tracking-widest uppercase">
+              Operação Lighthouse
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Central de Comando
+            </h1>
+            <p className="mt-2 text-white/70 text-sm sm:text-base max-w-xl">
+              Bem-vindo ao painel administrativo. Acompanhe as inscrições, gerencie os pagamentos e prepare-se para acender o farol de 2027.
+            </p>
+          </div>
+          <div className="shrink-0">
+            <Button variant="adminOutline" className="bg-white/10 hover:bg-white border-white/20 hover:text-[#0e2043] text-white shadow-lg backdrop-blur-md transition-all" onClick={load}>
+              <RefreshCw size={16} className="mr-2" />
+              Sincronizar Dados
+            </Button>
+          </div>
+        </div>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map(([label, value], index) => (
           <Card key={label} className="admin-rise" style={{ animationDelay: `${index * 55}ms` }}>
@@ -198,21 +213,50 @@ export function DashboardView() {
         ))}
       </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <Card className="admin-rise" style={{ animationDelay: "220ms" }}>
-          <CardContent className="p-5">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Receita confirmada</p>
-            <p className="mt-2 text-3xl font-semibold text-slate-900">{money(data.revenue.paidCents)}</p>
-            <p className="mt-4 text-xs text-slate-400">Somente pagamentos aprovados</p>
+        <Card className="admin-rise relative overflow-hidden bg-gradient-to-br from-white to-amber-50/50 border-amber-100" style={{ animationDelay: "220ms" }}>
+          <CardContent className="p-8">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-amber-600/80 mb-2">Receita Confirmada</p>
+                <p className="mt-2 text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">{money(data.revenue.paidCents)}</p>
+              </div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                <CreditCard size={24} />
+              </div>
+            </div>
+            <p className="mt-6 text-sm font-medium text-slate-500 flex items-center gap-2">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Somente pagamentos 100% aprovados
+            </p>
           </CardContent>
         </Card>
-        <Card className="admin-rise" style={{ animationDelay: "275ms" }}>
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Capacidade</p>
-              <span className="text-sm text-slate-500">{data.capacity.reserved} / {data.capacity.total}</span>
+        
+        <Card className="admin-rise relative overflow-hidden bg-gradient-to-br from-[#0e2043] to-[#162747] text-white border-[#0e2043]" style={{ animationDelay: "275ms" }}>
+          <CardContent className="p-8 flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-white/60">Lotação do Evento</p>
+                <div className="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-xs font-mono text-[var(--gold)]">
+                  {capacityPct}%
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2 mt-2">
+                <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">{data.capacity.reserved}</span>
+                <span className="text-white/50 text-lg font-medium">/ {data.capacity.total} vagas</span>
+              </div>
             </div>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-              <div className="h-full rounded-full bg-slate-900" style={{ width: `${capacityPct}%` }} />
+            
+            <div className="mt-8">
+              <div className="flex justify-between text-xs font-medium text-white/50 mb-2">
+                <span>Vagas ocupadas</span>
+                <span>{data.capacity.available} restantes</span>
+              </div>
+              <div className="h-3 overflow-hidden rounded-full bg-white/10 border border-white/5 relative">
+                <div 
+                  className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[var(--gold)] to-amber-300 shadow-[0_0_10px_rgba(232,175,46,0.5)] transition-all duration-1000 ease-out" 
+                  style={{ width: `${capacityPct}%` }} 
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -227,9 +271,6 @@ export function DashboardView() {
           {!data.latestRegistrations.length && <p className="text-sm text-slate-500">Nenhuma inscrição registrada.</p>}
         </CardContent>
       </Card>
-      <div className="mt-4">
-        <AdminJobControls />
-      </div>
     </>
   );
 }
@@ -271,15 +312,19 @@ export function RegistrationsView() {
 
   return (
     <>
-      <PageHeader
-        title="Inscrições"
-        action={
-          <Button variant="adminOutline" size="sm" onClick={load}>
-            <RefreshCw size={14} />
-            Atualizar
+      <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md border border-amber-600/20">
+        <div className="absolute inset-0 bg-[url('/brand/lighthouse-hero.webp')] bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-10"></div>
+        <div className="relative z-10 px-6 py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Registro de Inscrições</h1>
+            <p className="mt-1 text-amber-50 text-sm">Visualize e gerencie todos os campistas inscritos no evento.</p>
+          </div>
+          <Button variant="adminOutline" className="bg-white/20 hover:bg-white border-white/30 hover:text-amber-700 text-white shadow-sm backdrop-blur-md" onClick={load}>
+            <RefreshCw size={14} className="mr-2" />
+            Sincronizar
           </Button>
-        }
-      />
+        </div>
+      </div>
       <FilterBar
         search={search}
         onSearchChange={(value) => { setSearch(value); setPage(1); }}
@@ -374,15 +419,19 @@ export function PaymentsView() {
 
   return (
     <>
-      <PageHeader
-        title="Pagamentos"
-        action={
-          <Button variant="adminOutline" size="sm" onClick={load}>
-            <RefreshCw size={14} />
-            Atualizar
+      <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 shadow-md border border-emerald-700/20">
+        <div className="absolute inset-0 bg-[url('/brand/lighthouse-hero.webp')] bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-10"></div>
+        <div className="relative z-10 px-6 py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Central de Pagamentos</h1>
+            <p className="mt-1 text-emerald-50 text-sm">Acompanhe as transações financeiras e liquidações em tempo real.</p>
+          </div>
+          <Button variant="adminOutline" className="bg-white/20 hover:bg-white border-white/30 hover:text-emerald-800 text-white shadow-sm backdrop-blur-md" onClick={load}>
+            <RefreshCw size={14} className="mr-2" />
+            Sincronizar
           </Button>
-        }
-      />
+        </div>
+      </div>
       <FilterBar
         search={search}
         onSearchChange={(value) => { setSearch(value); setPage(1); }}
@@ -450,35 +499,97 @@ export function BatchesView() {
 
   return (
     <>
-      <PageHeader
-        title="Lotes"
-        action={
-          <Button variant="admin" size="sm" onClick={() => alert("O formulário de criação de lote será conectado na próxima etapa.")}>
-            <ArrowUpRight size={14} />
-            Novo lote
-          </Button>
-        }
-      />
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#0e2043] tracking-tight">Lotes e Capacidade</h1>
+          <p className="mt-1 text-sm text-slate-500">Gerencie a liberação de vagas e os preços de cada fase.</p>
+        </div>
+        <Button variant="admin" size="sm" onClick={() => alert("O formulário de criação de lote será conectado na próxima etapa.")} className="bg-[var(--gold)] text-[#0e2043] hover:bg-[#0e2043] hover:text-white shadow-md">
+          <ArrowUpRight size={14} className="mr-1" />
+          Configurar novo lote
+        </Button>
+      </div>
+
       {error ? (
         <ErrorState message={error} retry={load} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {items.map((batch) => (
-            <Card key={batch.id}>
-              <CardHeader className="flex-row items-start justify-between space-y-0 pb-0">
-                <div>
-                  <p className="text-base font-semibold text-slate-900">{batch.name}</p>
-                  <p className="mt-1 text-sm text-slate-500">{money(batch.priceCents)}</p>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {items.map((batch, index) => {
+            const isSoldOut = batch.reservedCount >= batch.capacity;
+            const percentage = batch.capacity > 0 ? Math.round((batch.reservedCount / batch.capacity) * 100) : 0;
+            
+            return (
+              <div key={batch.id} className="relative group admin-rise" style={{ animationDelay: `${index * 100}ms` }}>
+                {/* Decorative Ticket Stub edge */}
+                <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-50/50 rounded-full z-10 border-r border-slate-200"></div>
+                <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-50/50 rounded-full z-10 border-l border-slate-200"></div>
+                
+                <div className={cn(
+                  "relative h-full overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-300 hover:shadow-xl",
+                  batch.active 
+                    ? "border-[var(--gold)]/50 ring-1 ring-[var(--gold)]/20" 
+                    : "border-slate-200 opacity-80 grayscale-[0.2]"
+                )}>
+                  {/* Top Header */}
+                  <div className={cn(
+                    "px-6 py-5 border-b border-dashed",
+                    batch.active ? "bg-[#0e2043] text-white border-white/20" : "bg-slate-100 text-slate-900 border-slate-300"
+                  )}>
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex flex-col">
+                        <span className={cn(
+                          "text-[10px] font-bold tracking-widest uppercase mb-1",
+                          batch.active ? "text-[var(--gold)]" : "text-slate-500"
+                        )}>
+                          Fase de Vendas
+                        </span>
+                        <h3 className="text-xl font-bold tracking-tight">{batch.name}</h3>
+                      </div>
+                      <Badge variant={batch.active ? "success" : "secondary"} className={batch.active ? "bg-emerald-500 text-white border-transparent" : ""}>
+                        {batch.active ? "Em vigor" : "Inativo"}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom Content */}
+                  <div className="p-6">
+                    <div className="flex flex-col mb-6">
+                      <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Valor do Ingresso</span>
+                      <span className="text-3xl font-extrabold text-slate-900">{money(batch.priceCents)}</span>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-xs font-semibold mb-2">
+                        <span className="text-slate-500 uppercase tracking-wider">Ocupação</span>
+                        <span className={isSoldOut ? "text-red-500" : "text-slate-900"}>
+                          {isSoldOut ? "ESGOTADO" : `${percentage}% preenchido`}
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden mb-2">
+                        <div 
+                          className={cn(
+                            "h-full rounded-full transition-all duration-1000",
+                            isSoldOut ? "bg-red-500" : batch.active ? "bg-[#0e2043]" : "bg-slate-400"
+                          )}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <div className="text-[11px] text-slate-400 text-right font-mono">
+                        {batch.reservedCount} de {batch.capacity} vagas
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <Badge variant={batch.active ? "success" : "default"}>{batch.active ? "Ativo" : "Inativo"}</Badge>
-              </CardHeader>
-              <CardContent className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                <span className="text-slate-500">Ocupação</span>
-                <strong className="text-slate-900">{batch.reservedCount} / {batch.capacity}</strong>
-              </CardContent>
-            </Card>
-          ))}
-          {!items.length && <p className="col-span-full rounded-lg border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">Nenhum lote cadastrado.</p>}
+              </div>
+            );
+          })}
+          {!items.length && (
+            <div className="col-span-full py-20 rounded-2xl border border-dashed border-slate-300 bg-white/50 text-center">
+              <Layers3 className="mx-auto mb-3 h-8 w-8 text-slate-400 opacity-50" />
+              <p className="text-sm font-medium text-slate-600">Nenhum lote configurado.</p>
+              <p className="mt-1 text-xs text-slate-400">Configure um lote para iniciar as vendas.</p>
+            </div>
+          )}
         </div>
       )}
     </>
@@ -497,5 +608,27 @@ export function AdminLoginNotice() {
         Voltar ao site <ArrowUpRight size={14} />
       </Link>
     </Card>
+  );
+}
+
+export function JobsView() {
+  return (
+    <>
+      <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 shadow-md border border-slate-700">
+        <div className="absolute inset-0 bg-[url('/brand/lighthouse-hero.webp')] bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-[0.05]"></div>
+        <div className="relative z-10 px-6 py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Servidor & Jobs</h1>
+            <p className="mt-1 text-slate-400 text-sm">Controle as tarefas de processamento em segundo plano.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid gap-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <AdminJobControls />
+        </div>
+      </div>
+    </>
   );
 }

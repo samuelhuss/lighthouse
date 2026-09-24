@@ -70,7 +70,7 @@ export function MinimalGlassCanvas({
 
           <div className="mt-3 mb-1">
             <Image
-              src="/brand/lighthouse-hero.webp"
+              src="/brand/lighthouse-hero-text.webp"
               alt="LIGHTHOUSE'27"
               width={480}
               height={160}
@@ -348,7 +348,7 @@ export function MinimalGlassCanvas({
           >
             {/* SEÇÃO 1: INÍCIO */}
             {activeId === "inicio" && (
-              <div className="my-auto flex flex-col items-start max-w-3xl">
+              <div className="my-auto flex flex-col items-start max-w-3xl lg:-mt-6">
                 {/* Badges do Topo */}
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[var(--gold)] backdrop-blur-md">
@@ -361,11 +361,11 @@ export function MinimalGlassCanvas({
 
                 <div className="mt-4 mb-2">
                   <Image
-                    src="/brand/lighthouse-hero.webp"
+                    src="/brand/lighthouse-hero-text.webp"
                     alt="LIGHTHOUSE'27"
-                    width={600}
-                    height={200}
-                    className="h-20 sm:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_6px_32px_rgba(232,199,102,0.4)]"
+                    width={800}
+                    height={250}
+                    className="h-28 sm:h-32 lg:h-36 w-auto object-contain drop-shadow-[0_6px_32px_rgba(232,199,102,0.4)]"
                     priority
                   />
                 </div>

@@ -48,7 +48,22 @@ export function EmailCampaign() {
   }
 
   return <>
-    <div className="mb-6"><h1 className="text-xl font-semibold text-slate-900">Emails</h1><p className="mt-1 text-sm text-slate-500">Monte a mensagem, revise o visual e confira a audiência antes de enviar.</p></div>
+    <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-800 to-purple-900 shadow-xl border border-indigo-900/50">
+      <div className="absolute inset-0 bg-[url('/brand/lighthouse-hero.webp')] bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-10"></div>
+      <div className="relative z-10 px-6 py-8 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-6">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 border border-white/20 text-indigo-200 shadow-inner">
+            <Megaphone size={32} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">Comunicação e Disparos</h1>
+            <p className="mt-1 text-indigo-100 text-sm max-w-xl">
+              Monte sua campanha, revise o visual em tempo real e alcance todos os campistas inscritos com apenas um clique.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div className="grid gap-4 xl:grid-cols-[minmax(0,.85fr)_minmax(420px,1.15fr)]">
       <Card><CardHeader><CardTitle className="flex items-center gap-2 text-sm font-semibold text-slate-900"><Megaphone size={16} />Editor da campanha</CardTitle></CardHeader><CardContent>
         <form onSubmit={submit} className="space-y-5">

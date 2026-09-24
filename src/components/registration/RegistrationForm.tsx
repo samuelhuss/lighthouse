@@ -113,21 +113,20 @@ export function RegistrationForm() {
   return (
     <div className="w-full">
       {/* Indicador de Passos */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          {STEPS.map((step) => (
-            <div key={step.id} className="flex flex-col items-center flex-1">
-              <div className={`h-1.5 w-full rounded-full transition-colors duration-300 ${currentStep >= step.id ? 'bg-[var(--gold)]' : 'bg-white/10'}`} />
-            </div>
-          ))}
-        </div>
-        <div className="text-center">
-          <span className="text-xs font-bold text-[var(--gold)] tracking-wider uppercase">
-            Etapa {currentStep} de {STEPS.length}
+      <div className="mb-8 flex flex-col items-center">
+        <div className="text-center mb-4">
+          <span className="inline-block rounded-full border border-[var(--gold)]/30 bg-[var(--gold)]/10 px-3 py-1 text-[9px] font-bold text-[var(--gold)] tracking-widest uppercase mb-2">
+            Passo {currentStep} de {STEPS.length}
           </span>
-          <h3 className="text-sm font-semibold text-white mt-1">
+          <h3 className="text-xl font-serif font-bold text-white">
             {STEPS.find(s => s.id === currentStep)?.title}
           </h3>
+        </div>
+        <div className="h-2 w-full max-w-sm bg-white/10 rounded-full overflow-hidden relative shadow-inner">
+          <div 
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--gold)] to-emerald-400 transition-all duration-700 ease-out"
+            style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
+          />
         </div>
       </div>
 

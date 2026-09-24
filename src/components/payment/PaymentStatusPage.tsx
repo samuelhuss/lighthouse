@@ -1,5 +1,7 @@
 "use client";
 
+import { QRCodeSVG } from "qrcode.react";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -212,6 +214,27 @@ export function PaymentStatusPage({ kind }: { kind: PageKind }) {
                   </div>
                 </div>
               </div>
+
+              {/* QR Code de Check-in (Apenas se pago) */}
+              {view === "success" && (
+                <div className="flex flex-col items-center justify-center p-6 border border-[var(--gold)]/30 bg-[var(--gold)]/5 rounded-2xl">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--gold)] mb-4 text-center">
+                    Apresente na entrada
+                  </p>
+                  <div className="bg-white p-4 rounded-xl shadow-[0_0_20px_rgba(232,175,46,0.2)]">
+                    <QRCodeSVG 
+                      value={registration.code} 
+                      size={180}
+                      level="Q"
+                      includeMargin={false}
+                      fgColor="#0e2043"
+                    />
+                  </div>
+                  <p className="text-xs text-white/60 mt-4 text-center max-w-sm">
+                    Este é o seu QR Code oficial. Tire um print ou guarde o link desta página.
+                  </p>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 pt-2">

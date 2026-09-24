@@ -44,12 +44,12 @@ export function LandingHeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full flex flex-col items-center justify-center px-4"
+          className="w-full flex flex-col items-center justify-center px-4 -mt-16 lg:-mt-40"
         >
           <img
-            src="/brand/lighthouse-hero.webp"
+            src="/brand/lighthouse-hero-text.webp"
             alt="LIGHTHOUSE'27"
-            className="w-full max-w-[800px] h-auto object-contain drop-shadow-[0_8px_60px_rgba(0,0,0,0.35)]"
+            className="w-[95vw] sm:w-[85vw] max-w-[1000px] lg:scale-110 xl:scale-125 h-auto object-contain drop-shadow-[0_8px_60px_rgba(0,0,0,0.35)]"
             loading="eager"
             fetchPriority="high"
           />

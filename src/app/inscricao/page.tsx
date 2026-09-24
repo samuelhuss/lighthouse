@@ -37,71 +37,41 @@ export default function RegistrationPage() {
           </Link>
         </header>
 
-        {/* Card Principal */}
-        <div className="w-full flex items-center justify-center my-auto">
-          <div className="minimal-glass-card relative flex w-full flex-col lg:flex-row rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-2xl gap-8 border border-white/25 backdrop-blur-3xl overflow-hidden">
+        {/* Card Principal Centralizado */}
+        <div className="w-full max-w-3xl flex flex-col items-center justify-center mx-auto my-auto">
+          <div className="minimal-glass-card relative flex w-full flex-col rounded-[2rem] p-6 sm:p-10 text-white shadow-2xl border border-white/25 backdrop-blur-3xl overflow-hidden">
             {/* Linha Dourada Topo */}
             <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[var(--amber)] via-[var(--gold)] to-emerald-400" />
 
-            {/* Esquerdo: Informações do Evento */}
-            <div className="flex flex-col justify-between lg:w-[42%] border-b lg:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-8 shrink-0">
+            {/* Cabeçalho Compacto do Formulário */}
+            <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--gold)]">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest text-[var(--gold)] mb-3">
                   <Sparkles className="h-3 w-3" /> PASSE OFICIAL
                 </span>
-
-                <div className="mt-3 mb-2">
-                  <Image
-                    src="/brand/lighthouse-hero-logo.png"
-                    alt="LIGHTHOUSE'27"
-                    width={400}
-                    height={140}
-                    className="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_4px_20px_rgba(232,199,102,0.35)]"
-                    priority
-                  />
-                </div>
-
-                <div className="mt-3 flex flex-col gap-1 text-xs text-white/80 font-medium">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 05 — 09 de Fevereiro
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Elias Fausto, SP
-                  </span>
-                </div>
-
-                {/* Incluso */}
-                <div className="mt-6 space-y-3 border-t border-white/20 pt-5">
-                  <span className="text-[10px] uppercase font-mono font-bold text-[var(--gold)] tracking-wider block">
-                    O QUE ESTÁ INCLUSO
-                  </span>
-                  <ul className="space-y-2 text-xs text-white/90 font-medium">
-                    {campContent.included.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-4 flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 p-3 text-[11px] text-white/80 font-medium">
-                    <Lock className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" />
-                    <span>Seus dados são protegidos com criptografia.</span>
-                  </div>
-                </div>
+                <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-white">
+                  Sua Inscrição
+                </h2>
+                <p className="text-xs text-white/70 mt-1 max-w-sm">
+                  Preencha seus dados com atenção. Hospedagem e alimentação 100% inclusas.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-1 text-[11px] text-white/80 font-medium md:text-right shrink-0">
+                <span className="flex items-center md:justify-end gap-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 05 — 09 de Fevereiro
+                </span>
+                <span className="flex items-center md:justify-end gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Elias Fausto, SP
+                </span>
+                <span className="flex items-center md:justify-end gap-1.5 mt-1 text-emerald-400">
+                  <Lock className="h-3.5 w-3.5 shrink-0" /> Checkout Seguro
+                </span>
               </div>
             </div>
 
-            {/* Direito: Formulário */}
-            <div className="flex-1 flex flex-col justify-center">
-              <div className="mb-5">
-                <h2 className="font-serif text-xl sm:text-2xl font-extrabold text-white">
-                  Preencha seus dados
-                </h2>
-                <p className="text-xs text-white/80 mt-1">
-                  Informe seus dados para emitir a sua vaga e avançar para o pagamento seguro.
-                </p>
-              </div>
+            {/* Formulário */}
+            <div className="w-full">
               <RegistrationForm />
             </div>
           </div>
