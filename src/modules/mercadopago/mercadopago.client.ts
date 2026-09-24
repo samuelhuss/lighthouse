@@ -8,13 +8,11 @@ import type { CreatePreferenceInput, CreatePreferenceResult, MercadoPagoPayment,
 export class MercadoPagoClient {
   private readonly preferenceClient: Preference;
   private readonly paymentClient: Payment;
-  private readonly isSandbox: boolean;
 
   constructor(accessToken: string = getEnv().MERCADOPAGO_ACCESS_TOKEN) {
     const config = new MercadoPagoConfig({ accessToken });
     this.preferenceClient = new Preference(config);
     this.paymentClient = new Payment(config);
-    this.isSandbox = accessToken.startsWith("TEST-");
   }
 
   async createPreference(input: CreatePreferenceInput): Promise<CreatePreferenceResult> {
@@ -40,9 +38,7 @@ export class MercadoPagoClient {
     };
 
     const response = (await this.preferenceClient.create({ body: payload })) as PreferenceResponse;
-    const initPoint = this.isSandbox
-      ? response.sandbox_init_point ?? response.init_point
-      : response.init_point ?? response.sandbox_init_point;
+    const initPoint = response.sandbox_init_point ?? response.init_point;
 
     if (!response.id || !initPoint) {
       throw new Error("Mercado Pago preference creation failed");
