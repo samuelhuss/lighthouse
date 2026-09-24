@@ -8,10 +8,26 @@ export const createRegistrationSchema = z.object({
   phone: z.string().trim().min(10).max(20),
   cpf: z.string().trim().min(11).max(14).optional(),
   birthDate: z.string().regex(isoDatePattern, "birthDate deve estar no formato YYYY-MM-DD").optional(),
+  
+  address: z.string().trim().min(5).max(255).optional(),
+  zipCode: z.string().trim().max(20).optional(),
+  gender: z.string().trim().optional(),
+  guardianOneName: z.string().trim().max(255).optional(),
+  guardianOnePhone: z.string().trim().max(20).optional(),
+  guardianTwoName: z.string().trim().max(255).optional(),
+  guardianTwoPhone: z.string().trim().max(20).optional(),
+  medications: z.string().trim().optional(),
+  allergies: z.string().trim().optional(),
+  dietaryRestrictions: z.string().trim().optional(),
+
+  agreedToTerms: z.literal(true, { message: "Você precisa concordar com as regras." }),
+  agreedToImageRights: z.literal(true, { message: "Você precisa concordar com os direitos de imagem." }),
+  agreedToNoRefund: z.literal(true, { message: "Você precisa concordar com a política de estorno." }),
+
   batchId: z.string().uuid().optional(),
   privacyConsent: z.literal(true, {
     message: "É necessário aceitar a política de privacidade.",
-  }),
+  }).optional(), // making it optional because we replaced with the 3 checkboxes above in UI, but keeping it in schema for backwards compatibility in API.
   marketingConsent: z.boolean().optional().default(false),
 });
 

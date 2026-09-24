@@ -57,6 +57,21 @@ export async function POST(request: Request) {
           paymentExpiresAt: new Date(Date.now() + paymentExpirationMinutes * 60 * 1000),
           privacyConsentAt: new Date(),
           marketingConsentAt: body.marketingConsent ? new Date() : null,
+          
+          address: body.address ?? null,
+          zipCode: body.zipCode ?? null,
+          gender: body.gender ?? null,
+          guardianOneName: body.guardianOneName ?? null,
+          guardianOnePhone: body.guardianOnePhone ?? null,
+          guardianTwoName: body.guardianTwoName ?? null,
+          guardianTwoPhone: body.guardianTwoPhone ?? null,
+          medications: body.medications ?? null,
+          allergies: body.allergies ?? null,
+          dietaryRestrictions: body.dietaryRestrictions ?? null,
+
+          agreedToTerms: body.agreedToTerms,
+          agreedToImageRights: body.agreedToImageRights,
+          agreedToNoRefund: body.agreedToNoRefund,
         },
       });
 

@@ -317,7 +317,7 @@ export function MinimalGlassCanvas({
             </Link>
 
             <span className="text-[10px] text-white/70">
-              Pagamento 100% seguro via Pix ou Cartão em até 12x.
+              Pagamento 100% seguro via Pix ou Cartão em até 5x.
             </span>
           </div>
         </section>
@@ -614,7 +614,7 @@ export function MinimalGlassCanvas({
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1.5">
-                      <CreditCard className="h-3.5 w-3.5 text-[var(--gold)]" /> Até 12x no cartão
+                      <CreditCard className="h-3.5 w-3.5 text-[var(--gold)]" /> Até 5x no cartão
                     </span>
                   </div>
                 </div>

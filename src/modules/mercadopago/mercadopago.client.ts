@@ -38,6 +38,9 @@ export class MercadoPagoClient {
       expires: true,
       expiration_date_from: new Date().toISOString(),
       expiration_date_to: input.expiresAt.toISOString(),
+      payment_methods: {
+        installments: 5,
+      },
       ...(shouldAutoReturn ? { auto_return: "approved" } : {}),
     };
 

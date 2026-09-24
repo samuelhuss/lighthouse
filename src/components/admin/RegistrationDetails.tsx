@@ -14,6 +14,16 @@ type Detail = {
   email: string;
   phone: string;
   cpf: string | null;
+  address: string | null;
+  zipCode: string | null;
+  gender: string | null;
+  guardianOneName: string | null;
+  guardianOnePhone: string | null;
+  guardianTwoName: string | null;
+  guardianTwoPhone: string | null;
+  medications: string | null;
+  allergies: string | null;
+  dietaryRestrictions: string | null;
   status: string;
   amountCents: number;
   createdAt: string;
@@ -82,13 +92,70 @@ export function RegistrationDetails({ id }: { id: string }) {
               <dt className="text-slate-500">CPF</dt>
               <dd className="mt-0.5 font-medium text-slate-900">{data.cpf ?? "—"}</dd>
             </div>
+            <div>
+              <dt className="text-slate-500">Sexo</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.gender ?? "—"}</dd>
+            </div>
           </CardContent>
         </Card>
+
         <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-semibold text-slate-900">Endereço</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <div>
+              <dt className="text-slate-500">Logradouro</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.address ?? "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">CEP</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.zipCode ?? "—"}</dd>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-semibold text-slate-900">Saúde e Restrições</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <div>
+              <dt className="text-slate-500">Medicamentos</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.medications || "Nenhum"}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Alergias</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.allergies || "Nenhuma"}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Restrições Alimentares</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.dietaryRestrictions || "Nenhuma"}</dd>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-semibold text-slate-900">Responsáveis (Menores de 18)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <div>
+              <dt className="text-slate-500">Responsável 1</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.guardianOneName ?? "—"} {data.guardianOnePhone ? `(${data.guardianOnePhone})` : ""}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Responsável 2</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.guardianTwoName ?? "—"} {data.guardianTwoPhone ? `(${data.guardianTwoPhone})` : ""}</dd>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-slate-900">Inscrição</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-sm">
+          <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-sm">
             <div>
               <dt className="text-slate-500">Lote</dt>
               <dd className="mt-0.5 font-medium text-slate-900">{data.batch?.name ?? "—"}</dd>
@@ -104,10 +171,6 @@ export function RegistrationDetails({ id }: { id: string }) {
             <div>
               <dt className="text-slate-500">Paga em</dt>
               <dd className="mt-0.5 font-medium text-slate-900">{date(data.paidAt)}</dd>
-            </div>
-            <div>
-              <dt className="text-slate-500">Expira em</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{date(data.paymentExpiresAt)}</dd>
             </div>
           </CardContent>
         </Card>

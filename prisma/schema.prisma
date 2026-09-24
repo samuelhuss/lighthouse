@@ -84,6 +84,20 @@ model Registration {
     phone     String
     cpf       String?
     birthDate DateTime?
+    address             String?
+    zipCode             String?
+    gender              String?
+    guardianOneName     String?
+    guardianOnePhone    String?
+    guardianTwoName     String?
+    guardianTwoPhone    String?
+    medications         String?
+    allergies           String?
+    dietaryRestrictions String?
+
+    agreedToTerms       Boolean @default(false)
+    agreedToImageRights Boolean @default(false)
+    agreedToNoRefund    Boolean @default(false)
 
     status RegistrationStatus
 

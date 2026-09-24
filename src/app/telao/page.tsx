@@ -73,7 +73,7 @@ export default function TelaoPage() {
             </div>
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-              <span>Pix ou até 12x no cartão</span>
+              <span>Pix ou até 5x no cartão</span>
             </div>
           </div>
 
