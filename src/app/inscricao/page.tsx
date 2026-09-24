@@ -2,83 +2,118 @@ import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { LighthouseMark } from "@/components/brand/LighthouseMark";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
 import Link from "next/link";
-import { ArrowLeft, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShieldCheck, Lock, Calendar, MapPin, Sparkles } from "lucide-react";
 import { campContent } from "@/content/camp";
 
 export default function RegistrationPage() {
   return (
-    <main className="landing-hero-bg fixed inset-0 z-0 flex h-[100dvh] flex-col overflow-hidden text-white">
-      {/* Luz ambiente & farol */}
-      <HeroAmbience />
+    <main className="relative min-h-screen z-0 flex flex-col text-white pb-16 selection:bg-[var(--gold)] selection:text-[#0e2043]">
+      {/* Luz ambiente & farol (Unified background canvas) */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <HeroAmbience />
+      </div>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between p-2.5 sm:p-5 lg:p-7">
-        {/* Header Superior */}
-        <header className="minimal-glass-dock mx-auto flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2 sm:px-5 sm:py-2.5 shadow-xl border border-white/35 backdrop-blur-3xl shrink-0">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
+        {/* Header Superior idêntico ao site */}
+        <header className="flex w-full items-center justify-between rounded-full px-5 py-3 shadow-xl border border-white/20 bg-[#0e2043]/80 backdrop-blur-2xl shrink-0 mb-8">
           <Link
             href="/"
-            className="flex items-center gap-2 font-serif text-sm sm:text-base font-bold text-white transition hover:text-[var(--gold)]"
+            className="flex items-center gap-2.5 font-serif text-sm sm:text-base font-extrabold text-white transition hover:text-[var(--gold)]"
           >
-            <LighthouseMark size={20} className="text-[var(--gold)]" />
-            <span className="tracking-widest uppercase font-extrabold">LIGHTHOUSE’27</span>
+            <LighthouseMark size={24} className="text-[var(--gold)]" />
+            <span className="tracking-widest uppercase">LIGHTHOUSE’27</span>
           </Link>
 
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold text-white transition hover:bg-white/20"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-white/20 hover:border-white/40"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Voltar ao site
           </Link>
         </header>
 
-        {/* Canvas da Inscrição: Rolável no mobile e Fixo no desktop */}
-        <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 items-center justify-center py-2">
-          <div className="minimal-glass-card relative flex h-full max-h-[calc(100dvh-85px)] lg:max-h-[640px] w-full flex-col lg:flex-row overflow-y-auto lg:overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-7 text-white shadow-2xl gap-4 sm:gap-6 border border-white/35 backdrop-blur-3xl">
-            {/* Lado Esquerdo / Superior: Informações do Evento */}
-            <div className="flex flex-col justify-between lg:w-[42%] border-b lg:border-b-0 lg:border-r border-white/20 pb-3 lg:pb-0 lg:pr-6 shrink-0">
+        {/* Passaporte de Inscrição em Vidro Fosco */}
+        <div className="w-full flex items-center justify-center my-auto">
+          <div className="minimal-glass-card relative flex w-full flex-col lg:flex-row rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-2xl gap-8 border border-white/25 backdrop-blur-3xl overflow-hidden">
+            {/* Linha Dourada de Destaque no Topo */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[var(--amber)] via-[var(--gold)] to-emerald-400" />
+
+            {/* Lado Esquerdo: Passaporte do Evento */}
+            <div className="flex flex-col justify-between lg:w-[42%] border-b lg:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-8 shrink-0">
               <div>
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--gold)]">
-                  SALMOS 27:1
-                </span>
-
-                <h1 className="mt-1 sm:mt-2 font-serif text-2xl sm:text-4xl font-extrabold leading-[0.98] text-white">
-                  LIGHTHOUSE’27
-                </h1>
-
-                <p className="mt-2 font-serif italic text-xs leading-relaxed text-white/95">
-                  {campContent.verseText}
-                </p>
-              </div>
-
-              {/* Incluso no Passe */}
-              <div className="mt-3 space-y-1.5 border-t border-white/20 pt-2.5">
-                <div className="flex items-center justify-between pb-0.5">
-                  <span className="text-[10px] uppercase font-bold text-white/60 tracking-wider">
-                    Incluso no Passe
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
-                    <ShieldCheck className="h-3 w-3" /> 100% Incluso
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--gold)]">
+                    <Sparkles className="h-3 w-3 text-[var(--gold)]" /> PASSE OFICIAL
                   </span>
                 </div>
 
-                <ul className="space-y-1 text-[11px] sm:text-xs text-white/90">
+                <h1 className="mt-3 font-serif text-3xl sm:text-4xl font-extrabold leading-[0.98] text-white">
+                  LIGHTHOUSE’27
+                </h1>
+
+                <div className="mt-3 flex flex-col gap-1 text-xs text-white/80 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 18 — 20 de Abril
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Estância Farol da Serra
+                  </span>
+                </div>
+
+                {/* Versículo */}
+                <div className="mt-4 rounded-2xl border border-[var(--gold)]/30 bg-white/10 p-4 backdrop-blur-md">
+                  <p className="font-serif italic text-xs leading-relaxed text-white/95">
+                    {campContent.verseText}
+                  </p>
+                  <p className="mt-1.5 text-[10px] font-bold text-[var(--gold)] text-right">
+                    — {campContent.verseReference}
+                  </p>
+                </div>
+              </div>
+
+              {/* Incluso no Passe */}
+              <div className="mt-6 space-y-3 border-t border-white/20 pt-5">
+                <span className="text-[10px] uppercase font-mono font-bold text-[var(--gold)] tracking-wider block">
+                  O QUE ESTÁ INCLUSO
+                </span>
+
+                <ul className="space-y-2 text-xs text-white/90 font-medium">
                   <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                    <span>Hospedagem em quartos confortáveis</span>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Hospedagem nos 3 dias do evento</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                    <span>Alimentação completa nos 3 dias</span>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Todas as refeições (Café, Almoço e Jantar)</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                    <span>Ministrações e momentos de louvor</span>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Acesso total à estrutura de lazer</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Kit exclusivo do participante</span>
                   </li>
                 </ul>
+
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 p-3 text-[11px] text-white/80 font-medium">
+                  <Lock className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" />
+                  <span>Seus dados são protegidos com criptografia.</span>
+                </div>
               </div>
             </div>
 
-            {/* Lado Direito / Inferior: Formulário */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center">
+            {/* Lado Direito: Formulário de Cadastro */}
+            <div className="flex-1 flex flex-col justify-center">
+              <div className="mb-5">
+                <h2 className="font-serif text-xl sm:text-2xl font-extrabold text-white">
+                  Preencha seus dados
+                </h2>
+                <p className="text-xs text-white/80 mt-1">
+                  Informe seus dados para emitir a sua vaga e avançar para o pagamento seguro.
+                </p>
+              </div>
+
               <RegistrationForm />
             </div>
           </div>

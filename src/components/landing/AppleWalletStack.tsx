@@ -345,15 +345,18 @@ export function AppleWalletStack({
                                   </span>
                                 </div>
                                 <ul className="mt-3 space-y-2 text-xs text-white/88 leading-relaxed">
-                                  {day.items.map((item) => (
-                                    <li
-                                      key={item}
-                                      className="flex items-start gap-1.5"
-                                    >
-                                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--gold)]" />
-                                      <span>{item}</span>
-                                    </li>
-                                  ))}
+                                  {day.items.map((item) => {
+                                    const text = typeof item === "string" ? item : `${item.time} — ${item.title}`;
+                                    return (
+                                      <li
+                                        key={text}
+                                        className="flex items-start gap-1.5"
+                                      >
+                                        <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--gold)]" />
+                                        <span>{text}</span>
+                                      </li>
+                                    );
+                                  })}
                                 </ul>
                               </div>
                             ))}

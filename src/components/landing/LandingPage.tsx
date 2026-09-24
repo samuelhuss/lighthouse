@@ -1,7 +1,7 @@
 "use client";
 
 import { IntroReveal } from "@/components/brand/IntroReveal";
-import { LandingFixedHero } from "@/components/landing/LandingFixedHero";
+import { LandingScrollExperience } from "@/components/landing/LandingScrollExperience";
 import type { CampInfo } from "@/components/landing/types";
 
 export function LandingPage({ camp }: { camp: CampInfo | null }) {
@@ -11,7 +11,8 @@ export function LandingPage({ camp }: { camp: CampInfo | null }) {
 
   return (
     <IntroReveal>
-      <LandingFixedHero camp={camp} price={price} />
+      <LandingScrollExperience camp={camp} price={price} />
     </IntroReveal>
   );
 }
+

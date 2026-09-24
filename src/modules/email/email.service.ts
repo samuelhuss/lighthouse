@@ -13,12 +13,51 @@ function paragraphHtml(value: string): string {
 }
 
 export function renderEmailLayout(input: { subject: string; preview: string; content: string }): string {
-  return `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head><body style="margin:0;background:#faf6ec;color:#16223f;font-family:Arial,sans-serif"><div style="display:none;max-height:0;overflow:hidden">${escapeHtml(input.preview)}</div><main style="max-width:600px;margin:0 auto;padding:32px 16px"><div style="overflow:hidden;border:1px solid #f6e7bd;border-radius:16px;background:#fffdf6;box-shadow:0 16px 48px rgba(14,32,67,.12)"><header style="padding:28px 32px;background:#0e2043;color:#fff"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="padding-right:10px"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#e8af2e"></span></td><td style="font-size:20px;font-weight:700;letter-spacing:-.3px;color:#fff">Lighthouse</td></tr></table></header><section style="padding:32px;color:#16223f"><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3462ac">${escapeHtml(input.subject)}</div><div style="margin-top:20px;font-size:16px;line-height:1.7;color:#4c5a80">${input.content}</div></section><footer style="border-top:1px solid #f6e7bd;padding:20px 32px;font-size:12px;line-height:1.5;color:#4c5a80">Você recebeu este email por causa da sua inscrição no Lighthouse.</footer></div></main></body></html>`;
+  return `<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background-color:#0e2043;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden">${escapeHtml(input.preview)}</div>
+  <main style="max-width:560px;margin:0 auto;padding:40px 20px;">
+    <div style="background-color:#162747;border:1px solid rgba(255,255,255,0.2);border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.4);">
+      
+      <!-- Brand Header -->
+      <header style="padding:28px 32px;background-color:#0e2043;border-bottom:1px solid rgba(255,255,255,0.15);text-align:center;">
+        <span style="font-size:18px;font-weight:800;letter-spacing:3px;color:#e8c766;text-transform:uppercase;">
+          LIGHTHOUSE’27
+        </span>
+      </header>
+
+      <!-- Main Body Content -->
+      <section style="padding:32px 32px 40px;color:#ffffff;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#e8c766;margin-bottom:16px;">
+          ${escapeHtml(input.subject)}
+        </div>
+        <div style="font-size:15px;line-height:1.7;color:rgba(255,255,255,0.9);">
+          ${input.content}
+        </div>
+      </section>
+
+      <!-- Minimal Footer -->
+      <footer style="border-top:1px solid rgba(255,255,255,0.15);padding:20px 32px;background-color:#0a1833;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.5);text-align:center;">
+        © 2027 Lighthouse. Mensagem enviada referente à sua inscrição.
+      </footer>
+    </div>
+  </main>
+</body>
+</html>`;
 }
 
 export function renderCampaignEmail(input: { subject: string; message: string; name: string }): string {
-  return renderEmailLayout({ subject: input.subject, preview: input.message, content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#223164">Olá, ${escapeHtml(input.name)}!</h1>${paragraphHtml(input.message)}<p style="margin-top:28px;font-size:13px;color:#4c5a80">Você recebeu esta mensagem porque autorizou comunicações sobre o Lighthouse.</p>` });
+  return renderEmailLayout({
+    subject: input.subject,
+    preview: input.message,
+    content: `<h1 style="margin:0 0 16px;font-size:24px;line-height:1.2;font-weight:800;color:#ffffff;">Olá, ${escapeHtml(input.name)}!</h1>${paragraphHtml(input.message)}<p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.6);">Você recebeu esta mensagem porque autorizou comunicações sobre o Lighthouse.</p>`,
+  });
 }
+
 
 function configured() {
   const env = getEnv();

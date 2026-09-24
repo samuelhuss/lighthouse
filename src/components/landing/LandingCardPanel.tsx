@@ -71,9 +71,10 @@ function renderCorpo(panel: CardPanelId, camp: CampInfo | null, price: string | 
             <li key={day.day}>
               <p className="font-serif text-lg text-[var(--amber)]">{day.day}</p>
               <ul className="mt-3 space-y-2 text-sm text-[var(--moss)]">
-                {day.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
+                {day.items.map((item) => {
+                  const text = typeof item === "string" ? item : `${item.time} — ${item.title}`;
+                  return <li key={text}>{text}</li>;
+                })}
               </ul>
             </li>
           ))}

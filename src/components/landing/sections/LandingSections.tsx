@@ -56,9 +56,10 @@ export function LandingSections({ camp, price }: SectionsProps) {
                 <article className="group h-full rounded-2xl border border-[color:var(--pine)/10%] bg-[var(--paper)]/80 p-8 shadow-[0_12px_40px_rgba(34,49,100,.06)] backdrop-blur-sm transition-[transform,box-shadow,border-color] duration-500 hover:-translate-y-1 hover:border-[color:var(--amber)/40%] hover:shadow-[0_20px_50px_rgba(232,175,46,.15)]">
                   <h3 className="font-serif text-2xl text-[var(--amber)]">{day.day}</h3>
                   <ul className="mt-6 space-y-3 text-sm leading-relaxed text-[var(--moss)]">
-                    {day.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
+                    {day.items.map((item) => {
+                      const text = typeof item === "string" ? item : `${item.time} — ${item.title}`;
+                      return <li key={text}>{text}</li>;
+                    })}
                   </ul>
                 </article>
               </RevealStaggerItem>

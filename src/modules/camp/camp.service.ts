@@ -38,6 +38,11 @@ export const campService = {
       orderBy: { startsAt: "desc" },
     });
 
+    const allBatches = await prisma.batch.findMany({
+      where: { campId: camp.id, active: true },
+      orderBy: { startsAt: "asc" },
+    });
+
     const reservedTotal = await prisma.batch.aggregate({
       where: { campId: camp.id },
       _sum: { reservedCount: true },
@@ -62,6 +67,14 @@ export const campService = {
             priceCents: currentBatch.priceCents,
           }
         : null,
+      batches: allBatches.map((b) => ({
+        id: b.id,
+        name: b.name,
+        startsAt: b.startsAt,
+        endsAt: b.endsAt,
+        isCurrent: currentBatch?.id === b.id,
+        priceCents: currentBatch?.id === b.id ? b.priceCents : null,
+      })),
     };
   },
 

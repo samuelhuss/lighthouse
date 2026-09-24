@@ -48,10 +48,18 @@ export function AppleDockNav({
   onChange,
   "aria-label": ariaLabel = "Navegação",
 }: AppleDockNavProps) {
+  const handleClick = (id: StageId) => {
+    onChange(id);
+    const targetEl = document.getElementById(`section-${id}`);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
   return (
     <nav
       aria-label={ariaLabel}
-      className="minimal-glass-dock mx-auto flex items-center justify-center gap-1 rounded-full p-1.5 shadow-xl transition-all duration-300 border border-white/35 backdrop-blur-3xl lg:mx-0 lg:flex-col lg:rounded-[2rem] lg:p-2"
+      className="minimal-glass-dock mx-auto flex items-center justify-center gap-1 rounded-full p-1.5 shadow-xl border border-white/25 backdrop-blur-3xl lg:mx-0 lg:flex-col lg:rounded-[2rem] lg:p-2.5 max-w-[92vw]"
     >
       <div className="flex items-center gap-1 overflow-x-auto px-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:overflow-visible lg:px-0">
         {dockItems.map((item) => {
@@ -63,12 +71,12 @@ export function AppleDockNav({
             <button
               key={item.id}
               type="button"
-              onClick={() => onChange(item.id)}
+              onClick={() => handleClick(item.id)}
               className={cn(
-                "group relative flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition-all duration-200 lg:w-full lg:rounded-2xl lg:px-4 lg:py-2.5",
+                "group relative flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold transition-all duration-200 lg:w-full lg:rounded-2xl lg:px-4 lg:py-2.5 shrink-0",
                 isActive
                   ? "text-white font-bold"
-                  : "text-white/80 hover:text-white hover:bg-white/15",
+                  : "text-white/80 hover:text-white hover:bg-white/10",
                 isHighlight && !isActive && "text-[var(--gold)] font-bold"
               )}
             >
@@ -79,7 +87,7 @@ export function AppleDockNav({
                     "absolute inset-0 rounded-full lg:rounded-2xl shadow-md",
                     isHighlight
                       ? "bg-[var(--gold)] text-[#0e2043]"
-                      : "bg-white/25 backdrop-blur-md border border-white/40"
+                      : "bg-white/20 backdrop-blur-md border border-white/30"
                   )}
                   transition={{ type: "spring", stiffness: 420, damping: 32 }}
                 />
@@ -98,7 +106,7 @@ export function AppleDockNav({
 
               <span
                 className={cn(
-                  "relative z-10 hidden whitespace-nowrap text-[11px] sm:text-xs tracking-tight sm:inline-block",
+                  "relative z-10 whitespace-nowrap text-[11px] sm:text-xs tracking-tight inline-block",
                   isHighlight && isActive && "text-[#0e2043] font-bold"
                 )}
               >
@@ -111,3 +119,4 @@ export function AppleDockNav({
     </nav>
   );
 }
+

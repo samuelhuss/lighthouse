@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 const formSchema = z.object({
   name: z.string().trim().min(3, "Digite seu nome completo."),
   email: z.string().trim().email("Digite um e-mail válido."),
-  phone: z.string().min(10, "Digite seu WhatsApp."),
-  cpf: z.string().optional(),
-  birthDate: z.string().optional(),
-  privacyConsent: z.literal(true, { error: "Aceite a política de privacidade para continuar." }),
+  phone: z.string().min(10, "Digite seu WhatsApp com DDD."),
+  cpf: z.string().min(11, "Digite seu CPF completo."),
+  birthDate: z.string().min(1, "Selecione sua data de nascimento."),
+  privacyConsent: z.literal(true, { error: "Aceite os termos de privacidade para continuar." }),
   marketingConsent: z.boolean().optional(),
 });
 
@@ -43,7 +43,7 @@ export function RegistrationForm() {
         body: JSON.stringify({
           ...values,
           phone: onlyDigits(values.phone),
-          cpf: values.cpf ? onlyDigits(values.cpf) : undefined,
+          cpf: onlyDigits(values.cpf),
         }),
       });
       const body = await response.json();
@@ -61,118 +61,148 @@ export function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
-        <label className="sm:col-span-2 text-xs font-semibold text-white">
-          Nome Completo
+      <div className="flex flex-col gap-2.5">
+        {/* Nome Completo */}
+        <div>
+          <label className="block text-xs font-bold tracking-wider text-white/90 uppercase mb-1">
+            Nome Completo <span className="text-[var(--gold)]">*</span>
+          </label>
           <input
             {...register("name")}
-            className="minimal-input mt-1 h-10.5 w-full rounded-xl px-3.5 text-xs placeholder:text-white/50 font-medium"
+            className="w-full h-10.5 rounded-xl border border-white/25 bg-white/10 px-3.5 text-xs font-medium text-white placeholder:text-white/40 backdrop-blur-md transition-all focus:border-[var(--gold)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30"
             placeholder="Digite seu nome completo"
           />
           {errors.name && (
-            <span className="mt-0.5 block text-[11px] font-normal text-red-300">
+            <span className="mt-0.5 block text-[11px] font-semibold text-rose-300">
               {errors.name.message}
             </span>
           )}
-        </label>
+        </div>
 
-        <label className="text-xs font-semibold text-white">
-          E-mail
-          <input
-            type="email"
-            {...register("email")}
-            className="minimal-input mt-1 h-10.5 w-full rounded-xl px-3.5 text-xs placeholder:text-white/50 font-medium"
-            placeholder="seu@email.com"
-          />
-          {errors.email && (
-            <span className="mt-0.5 block text-[11px] font-normal text-red-300">
-              {errors.email.message}
-            </span>
-          )}
-        </label>
+        {/* E-mail & WhatsApp */}
+        <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+          <div>
+            <label className="block text-xs font-bold tracking-wider text-white/90 uppercase mb-1">
+              E-mail <span className="text-[var(--gold)]">*</span>
+            </label>
+            <input
+              type="email"
+              {...register("email")}
+              className="w-full h-10.5 rounded-xl border border-white/25 bg-white/10 px-3.5 text-xs font-medium text-white placeholder:text-white/40 backdrop-blur-md transition-all focus:border-[var(--gold)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30"
+              placeholder="seu@email.com"
+            />
+            {errors.email && (
+              <span className="mt-0.5 block text-[11px] font-semibold text-rose-300">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
 
-        <label className="text-xs font-semibold text-white">
-          WhatsApp
-          <input
-            {...register("phone")}
-            className="minimal-input mt-1 h-10.5 w-full rounded-xl px-3.5 text-xs placeholder:text-white/50 font-medium"
-            placeholder="(00) 00000-0000"
-          />
-          {errors.phone && (
-            <span className="mt-0.5 block text-[11px] font-normal text-red-300">
-              {errors.phone.message}
-            </span>
-          )}
-        </label>
+          <div>
+            <label className="block text-xs font-bold tracking-wider text-white/90 uppercase mb-1">
+              WhatsApp <span className="text-[var(--gold)]">*</span>
+            </label>
+            <input
+              {...register("phone")}
+              className="w-full h-10.5 rounded-xl border border-white/25 bg-white/10 px-3.5 text-xs font-medium text-white placeholder:text-white/40 backdrop-blur-md transition-all focus:border-[var(--gold)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30"
+              placeholder="(00) 90000-0000"
+            />
+            {errors.phone && (
+              <span className="mt-0.5 block text-[11px] font-semibold text-rose-300">
+                {errors.phone.message}
+              </span>
+            )}
+          </div>
+        </div>
 
-        <label className="text-xs font-semibold text-white">
-          CPF <span className="text-white/60 font-normal">(opcional)</span>
-          <input
-            {...register("cpf")}
-            className="minimal-input mt-1 h-10.5 w-full rounded-xl px-3.5 text-xs placeholder:text-white/50 font-medium"
-            placeholder="000.000.000-00"
-          />
-        </label>
+        {/* CPF & Data de Nascimento */}
+        <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+          <div>
+            <label className="block text-xs font-bold tracking-wider text-white/90 uppercase mb-1">
+              CPF <span className="text-[var(--gold)]">*</span>
+            </label>
+            <input
+              {...register("cpf")}
+              className="w-full h-10.5 rounded-xl border border-white/25 bg-white/10 px-3.5 text-xs font-medium text-white placeholder:text-white/40 backdrop-blur-md transition-all focus:border-[var(--gold)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30"
+              placeholder="000.000.000-00"
+            />
+            {errors.cpf && (
+              <span className="mt-0.5 block text-[11px] font-semibold text-rose-300">
+                {errors.cpf.message}
+              </span>
+            )}
+          </div>
 
-        <label className="text-xs font-semibold text-white">
-          Data de Nascimento
-          <input
-            type="date"
-            {...register("birthDate")}
-            className="minimal-input mt-1 h-10.5 w-full rounded-xl px-3.5 text-xs text-white font-medium"
-          />
-        </label>
+          <div>
+            <label className="block text-xs font-bold tracking-wider text-white/90 uppercase mb-1">
+              Data de Nascimento <span className="text-[var(--gold)]">*</span>
+            </label>
+            <input
+              type="date"
+              {...register("birthDate")}
+              className="w-full h-10.5 rounded-xl border border-white/25 bg-white/10 px-3.5 text-xs font-medium text-white backdrop-blur-md transition-all focus:border-[var(--gold)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30"
+            />
+            {errors.birthDate && (
+              <span className="mt-0.5 block text-[11px] font-semibold text-rose-300">
+                {errors.birthDate.message}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Aceites */}
-      <div className="space-y-1.5 pt-2 border-t border-white/20">
-        <label className="flex items-start gap-2 text-[11px] leading-relaxed text-white/90">
+      {/* Consentimento */}
+      <div className="space-y-1.5 pt-2 border-t border-white/15">
+        <label className="flex items-start gap-2 cursor-pointer text-[11px] leading-relaxed text-white/90">
           <input
             type="checkbox"
             {...register("privacyConsent")}
-            className="mt-0.5 h-3.5 w-3.5 rounded border-white/30 bg-white/20 accent-[var(--gold)] shrink-0"
+            className="mt-0.5 h-3.5 w-3.5 rounded border-white/30 bg-white/20 accent-[var(--gold)] shrink-0 cursor-pointer"
           />
           <span>
-            Concordo com o uso dos meus dados para realização da inscrição.
+            Concordo com os termos de inscrição. <span className="text-[var(--gold)]">*</span>
             {errors.privacyConsent && (
-              <span className="block text-red-300 font-bold">
+              <span className="block text-rose-300 font-semibold mt-0.5">
                 {errors.privacyConsent.message}
               </span>
             )}
           </span>
         </label>
-        <label className="flex items-start gap-2 text-[11px] leading-relaxed text-white/90">
+
+        <label className="flex items-start gap-2 cursor-pointer text-[11px] leading-relaxed text-white/90">
           <input
             type="checkbox"
             {...register("marketingConsent")}
-            className="mt-0.5 h-3.5 w-3.5 rounded border-white/30 bg-white/20 accent-[var(--gold)] shrink-0"
+            className="mt-0.5 h-3.5 w-3.5 rounded border-white/30 bg-white/20 accent-[var(--gold)] shrink-0 cursor-pointer"
           />
-          <span>Quero receber avisos importantes sobre o acampamento.</span>
+          <span>Desejo receber avisos sobre o acampamento no WhatsApp.</span>
         </label>
       </div>
 
       {submitError && (
-        <p
+        <div
           role="alert"
-          className="rounded-xl border border-red-400/40 bg-red-500/25 p-2.5 text-xs font-medium text-white"
+          className="rounded-xl border border-rose-400/40 bg-rose-500/20 p-2 text-xs font-semibold text-rose-200"
         >
           {submitError}
-        </p>
+        </div>
       )}
 
+      {/* Botão de Envio */}
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-11 w-full rounded-2xl bg-white text-xs sm:text-sm font-bold text-[#0e2043] shadow-lg transition hover:bg-[var(--gold)] hover:scale-[1.01] active:scale-[0.99]"
+        className="mt-2 h-11 w-full rounded-xl bg-gradient-to-r from-white via-amber-50 to-[var(--gold)] text-xs sm:text-sm font-extrabold text-[#0e2043] shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
       >
         {isSubmitting ? (
-          <>
-            <LoaderCircle className="h-4 w-4 animate-spin" /> Processando...
-          </>
+          <span className="flex items-center gap-2">
+            <LoaderCircle className="h-4 w-4 animate-spin text-[#0e2043]" /> Processando...
+          </span>
         ) : (
-          <>
-            Ir para o Pagamento Seguro <ArrowRight className="h-4 w-4 ml-1" />
-          </>
+          <span className="flex items-center justify-center gap-2">
+            <span>Ir para o Pagamento</span>
+            <ArrowRight className="h-4 w-4" />
+          </span>
         )}
       </Button>
     </form>

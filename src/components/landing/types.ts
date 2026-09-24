@@ -1,3 +1,12 @@
+export type BatchInfo = {
+  id: string;
+  name: string;
+  startsAt: Date | string | null;
+  endsAt: Date | string | null;
+  isCurrent: boolean;
+  priceCents: number | null;
+};
+
 export type CampInfo = {
   name: string;
   description: string | null;
@@ -6,4 +15,5 @@ export type CampInfo = {
   endDate: Date | null;
   availableSpots: number;
   currentBatch: { name: string; priceCents: number } | null;
+  batches?: BatchInfo[];
 };
