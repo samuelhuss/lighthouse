@@ -34,25 +34,26 @@ export function LandingHeroSection() {
     <section
       ref={sectionRef}
       id="inicio"
-      className="relative min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden"
+      className="relative min-h-[100dvh] flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden"
     >
-      {/* Title com parallax */}
       <motion.div
         style={{ y, opacity, scale }}
-        className="relative z-10 w-full my-auto flex flex-col items-center justify-center px-2"
+        className="relative z-10 w-full flex flex-col items-center justify-center px-2"
       >
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif font-black tracking-tighter text-white leading-none select-none w-full max-w-[100vw]"
-          style={{
-            fontSize: "clamp(2rem, 12.5vw, 9.5rem)",
-            textShadow: "0 8px 60px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2)",
-          }}
+          className="w-full flex flex-col items-center justify-center px-4"
         >
-          LIGHTHOUSE'27
-        </motion.h1>
+          <img
+            src="/brand/lighthouse-hero.webp"
+            alt="LIGHTHOUSE'27"
+            className="w-full max-w-[800px] h-auto object-contain drop-shadow-[0_8px_60px_rgba(0,0,0,0.35)]"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </motion.div>
       </motion.div>
 
       {/* Scroll hint */}
@@ -60,7 +61,7 @@ export function LandingHeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="relative z-10 text-center pb-2 sm:pb-0"
+        className="absolute bottom-8 left-0 right-0 z-10 text-center"
       >
         <button
           onClick={() => scrollToSection("sobre")}

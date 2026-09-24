@@ -2,7 +2,7 @@ export const campContent = {
   eyebrow: "LIGHTHOUSE'27",
   heroTitle: "LIGHTHOUSE'27",
   heroDescription:
-    "Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.",
+    "Cinco dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.",
   verseText:
     "\u201cO Senhor é a minha luz e a minha salvação; de quem terei temor? O Senhor é o meu forte refúgio; de quem terei medo.\u201d",
   verseReference: "Salmos 27:1",
@@ -78,7 +78,7 @@ export const campContent = {
   program: [
     {
       day: "Sexta-Feira",
-      date: "18 de Abril",
+      date: "05 de Fevereiro",
       tag: "Dia 1 — Acolhimento",
       items: [
         { time: "17:00", title: "Check-in & Acolhimento" },
@@ -89,7 +89,7 @@ export const campContent = {
     },
     {
       day: "Sábado",
-      date: "19 de Abril",
+      date: "06 de Fevereiro",
       tag: "Dia 2 — Imersão & Altar",
       items: [
         { time: "07:30", title: "Alvorada Devocional & Café da Manhã" },
@@ -101,8 +101,32 @@ export const campContent = {
     },
     {
       day: "Domingo",
-      date: "20 de Abril",
-      tag: "Dia 3 — Envio & Renovação",
+      date: "07 de Fevereiro",
+      tag: "Dia 3 — Comunhão",
+      items: [
+        { time: "08:00", title: "Café da Manhã" },
+        { time: "10:00", title: "Culto Dominical" },
+        { time: "12:30", title: "Almoço em Comunhão" },
+        { time: "15:00", title: "Dinâmicas e Jogos" },
+        { time: "20:00", title: "Culto de Celebração" },
+      ],
+    },
+    {
+      day: "Segunda-Feira",
+      date: "08 de Fevereiro",
+      tag: "Dia 4 — Propósito",
+      items: [
+        { time: "08:00", title: "Café da Manhã" },
+        { time: "10:00", title: "Plenária e Direcionamento" },
+        { time: "13:00", title: "Almoço" },
+        { time: "15:30", title: "Lazer Livre" },
+        { time: "20:00", title: "Noite de Adoração" },
+      ],
+    },
+    {
+      day: "Terça-Feira",
+      date: "09 de Fevereiro",
+      tag: "Dia 5 — Envio",
       items: [
         { time: "08:00", title: "Café da Manhã" },
         { time: "10:00", title: "Culto de Encerramento & Santa Ceia" },
@@ -140,7 +164,7 @@ export const campContent = {
     },
     {
       question: "Onde será o acampamento?",
-      answer: "O nosso acampamento será em Leme, no Acampamento EETAD - Shalom.",
+      answer: "O nosso acampamento será em Elias Fausto.",
     },
     {
       question: "O valor da inscrição pode ser parcelado?",

@@ -18,30 +18,28 @@ export function renderEmailLayout(input: { subject: string; preview: string; con
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body style="margin:0;padding:0;background-color:#0e2043;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:#0e2043;color:#16223f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
   <div style="display:none;max-height:0;overflow:hidden">${escapeHtml(input.preview)}</div>
   <main style="max-width:560px;margin:0 auto;padding:40px 20px;">
-    <div style="background-color:#162747;border:1px solid rgba(255,255,255,0.2);border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.4);">
+    <div style="background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.15);">
       
       <!-- Brand Header -->
-      <header style="padding:28px 32px;background-color:#0e2043;border-bottom:1px solid rgba(255,255,255,0.15);text-align:center;">
-        <span style="font-size:18px;font-weight:800;letter-spacing:3px;color:#e8c766;text-transform:uppercase;">
-          LIGHTHOUSE’27
-        </span>
+      <header style="padding:16px 32px;background-color:#0e2043;border-bottom:1px solid rgba(255,255,255,0.1);text-align:center;">
+        <img src="${getEnv().NEXT_PUBLIC_APP_URL}/brand/lighthouse-hero.webp" alt="LIGHTHOUSE'27" style="display:inline-block;width:110px;height:auto;max-width:100%;" />
       </header>
 
       <!-- Main Body Content -->
-      <section style="padding:32px 32px 40px;color:#ffffff;">
-        <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#e8c766;margin-bottom:16px;">
+      <section style="padding:40px 32px;color:#16223f;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#e8af2e;margin-bottom:16px;">
           ${escapeHtml(input.subject)}
         </div>
-        <div style="font-size:15px;line-height:1.7;color:rgba(255,255,255,0.9);">
+        <div style="font-size:15px;line-height:1.7;color:#334155;">
           ${input.content}
         </div>
       </section>
 
       <!-- Minimal Footer -->
-      <footer style="border-top:1px solid rgba(255,255,255,0.15);padding:20px 32px;background-color:#0a1833;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.5);text-align:center;">
+      <footer style="border-top:1px solid #f0f0f0;padding:24px 32px;background-color:#fafafa;font-size:11px;line-height:1.6;color:#94a3b8;text-align:center;">
         © 2027 Lighthouse. Mensagem enviada referente à sua inscrição.
       </footer>
     </div>
@@ -54,7 +52,7 @@ export function renderCampaignEmail(input: { subject: string; message: string; n
   return renderEmailLayout({
     subject: input.subject,
     preview: input.message,
-    content: `<h1 style="margin:0 0 16px;font-size:24px;line-height:1.2;font-weight:800;color:#ffffff;">Olá, ${escapeHtml(input.name)}!</h1>${paragraphHtml(input.message)}<p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.6);">Você recebeu esta mensagem porque autorizou comunicações sobre o Lighthouse.</p>`,
+    content: `<h1 style="margin:0 0 16px;font-size:24px;line-height:1.2;font-weight:800;color:#0e2043;">Olá, ${escapeHtml(input.name)}!</h1>${paragraphHtml(input.message)}<p style="margin-top:24px;font-size:12px;color:rgba(22,34,63,0.5);">Você recebeu esta mensagem porque autorizou comunicações sobre o Lighthouse.</p>`,
   });
 }
 

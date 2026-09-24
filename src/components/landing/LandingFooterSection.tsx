@@ -15,9 +15,11 @@ export function LandingFooterSection() {
       <div className="mx-auto max-w-4xl">
         {/* Divisor suave — sem fundo diferente */}
         <div className="border-t border-white/10 pt-10 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
-          <span className="font-serif text-sm font-extrabold tracking-widest uppercase text-white/60">
-            LIGHTHOUSE'27
-          </span>
+          <img
+            src="/brand/lighthouse-icon.webp"
+            alt="Farol Lighthouse"
+            className="h-10 sm:h-12 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity drop-shadow-md"
+          />
 
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-white/40 font-medium">
             {[

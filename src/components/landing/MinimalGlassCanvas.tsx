@@ -24,6 +24,7 @@ import {
   CreditCard,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 import { campContent } from "@/content/camp";
 import type { CampInfo } from "@/components/landing/types";
 import type { StageId } from "./AppleDockNav";
@@ -67,9 +68,16 @@ export function MinimalGlassCanvas({
             </span>
           </div>
 
-          <h1 className="mt-3 font-serif text-3xl sm:text-4xl font-extrabold leading-[0.98] tracking-tight text-white">
-            LIGHTHOUSE’27
-          </h1>
+          <div className="mt-3 mb-1">
+            <Image
+              src="/brand/lighthouse-hero.webp"
+              alt="LIGHTHOUSE'27"
+              width={480}
+              height={160}
+              className="h-16 sm:h-20 w-auto object-contain drop-shadow-[0_4px_24px_rgba(232,199,102,0.35)]"
+              priority
+            />
+          </div>
 
           {/* Versículo Tema */}
           <div className="mt-3.5 rounded-2xl border border-[var(--gold)]/30 bg-white/10 p-4 backdrop-blur-md relative">
@@ -351,9 +359,16 @@ export function MinimalGlassCanvas({
                   </span>
                 </div>
 
-                <h1 className="mt-4 font-serif text-[clamp(2.5rem,5.5vw,4.5rem)] font-extrabold leading-[0.96] tracking-tight text-white drop-shadow-md">
-                  LIGHTHOUSE’27
-                </h1>
+                <div className="mt-4 mb-2">
+                  <Image
+                    src="/brand/lighthouse-hero.webp"
+                    alt="LIGHTHOUSE'27"
+                    width={600}
+                    height={200}
+                    className="h-20 sm:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_6px_32px_rgba(232,199,102,0.4)]"
+                    priority
+                  />
+                </div>
 
                 {/* Versículo Tema em Card de Citação Iluminado */}
                 <div className="mt-4 rounded-2xl border border-[var(--gold)]/30 bg-white/10 p-5 backdrop-blur-md relative w-full">
@@ -410,38 +425,51 @@ export function MinimalGlassCanvas({
 
             {/* SEÇÃO 2: SOBRE */}
             {activeId === "sobre" && (
-              <div className="my-auto flex flex-col max-w-3xl">
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">
-                  Nossa Essência
-                </span>
-                <h2 className="mt-1.5 font-serif text-3xl font-extrabold text-white leading-tight">
-                  {campContent.aboutTitle}
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-white/90">
-                  {campContent.aboutText}
-                </p>
+              <div className="my-auto flex items-center gap-6 max-w-4xl">
+                <div className="flex-1 flex flex-col">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--gold)]">
+                    Nossa Essência
+                  </span>
+                  <h2 className="mt-1.5 font-serif text-3xl font-extrabold text-white leading-tight">
+                    {campContent.aboutTitle}
+                  </h2>
+                  <p className="mt-2.5 text-sm leading-relaxed text-white/90">
+                    {campContent.aboutText}
+                  </p>
 
-                {/* 4 Cards de Recursos Ricos */}
-                <div className="mt-5 grid grid-cols-2 gap-3.5">
-                  {campContent.pillars.map((pillar) => (
-                    <div
-                      key={pillar.id}
-                      className="rounded-2xl border border-white/20 bg-white/10 p-4 flex items-start gap-3.5 backdrop-blur-md"
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--gold)]/20 text-[var(--gold)]">
-                        {pillar.id === "louvor" && <Flame className="h-5 w-5" />}
-                        {pillar.id === "comunhao" && <Users className="h-5 w-5" />}
-                        {pillar.id === "descanso" && <Sun className="h-5 w-5" />}
-                        {pillar.id === "devocional" && <HeartHandshake className="h-5 w-5" />}
+                  {/* 4 Cards de Recursos Ricos */}
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {campContent.pillars.map((pillar) => (
+                      <div
+                        key={pillar.id}
+                        className="rounded-2xl border border-white/20 bg-white/10 p-3.5 flex items-start gap-3 backdrop-blur-md"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--gold)]/20 text-[var(--gold)]">
+                          {pillar.id === "louvor" && <Flame className="h-4.5 w-4.5" />}
+                          {pillar.id === "comunhao" && <Users className="h-4.5 w-4.5" />}
+                          {pillar.id === "descanso" && <Sun className="h-4.5 w-4.5" />}
+                          {pillar.id === "devocional" && <HeartHandshake className="h-4.5 w-4.5" />}
+                        </div>
+                        <div>
+                          <h3 className="text-xs font-bold text-white">{pillar.title}</h3>
+                          <p className="mt-0.5 text-[11px] text-white/80 leading-snug">
+                            {pillar.description}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-white">{pillar.title}</h3>
-                        <p className="mt-1 text-xs text-white/80 leading-relaxed">
-                          {pillar.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ilustração do Farol nas Ondas */}
+                <div className="hidden lg:flex shrink-0 w-48 items-center justify-center">
+                  <Image
+                    src="/brand/lighthouse-waves.png"
+                    alt="Farol Lighthouse"
+                    width={300}
+                    height={300}
+                    className="h-52 w-auto object-contain drop-shadow-[0_8px_32px_rgba(232,199,102,0.25)] hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
               </div>
             )}

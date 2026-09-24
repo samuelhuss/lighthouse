@@ -42,7 +42,7 @@ export default function TelaoPage() {
           {/* HIGH CONTRAST DATE BADGE FOR PROJECTORS */}
           <div className="inline-flex items-center gap-2.5 rounded-full bg-white border-2 border-[var(--gold)] px-5 py-2.5 text-xs sm:text-sm font-mono font-extrabold tracking-widest text-[#0e2043] uppercase shadow-2xl">
             <Sparkles className="h-4 w-4 text-[var(--gold)] shrink-0" />
-            <span>18 — 20 DE ABRIL • LEME, SP</span>
+            <span>05 — 09 DE FEVEREIRO • ELIAS FAUSTO, SP</span>
           </div>
 
           <h1 className="font-serif text-[clamp(3.2rem,6vw,5.5rem)] font-extrabold tracking-tight text-white leading-[0.94] drop-shadow-2xl">
@@ -54,7 +54,7 @@ export default function TelaoPage() {
           </p>
 
           <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed font-normal">
-            Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.
+            Cinco dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.
           </p>
 
           {/* Included Bullet Points */}
@@ -80,7 +80,7 @@ export default function TelaoPage() {
           {/* Location footnote */}
           <div className="pt-4 border-t border-white/15 w-full">
             <p className="text-xs sm:text-sm text-white/70 font-medium">
-              📍 Acampamento EETAD - Shalom • Leme, São Paulo
+              📍 Elias Fausto, São Paulo
             </p>
           </div>
         </div>

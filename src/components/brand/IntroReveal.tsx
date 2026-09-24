@@ -36,21 +36,15 @@ export function IntroReveal({ children }: { children: React.ReactNode }) {
           <HeroAmbience />
 
           <div className="relative z-10 flex flex-col items-center gap-4">
-            <LighthouseMark
-              size={64}
-              className={`transition-all duration-700 ${
+            <img
+              src="/brand/lighthouse-text.webp"
+              alt="Lighthouse"
+              className={`h-56 sm:h-64 w-auto object-contain transition-all duration-700 ${
                 phase === "dark"
                   ? "opacity-30 scale-95"
                   : "opacity-100 scale-105 drop-shadow-[0_0_36px_rgba(232,175,46,0.9)]"
               }`}
             />
-            <span
-              className={`font-serif text-sm font-bold tracking-widest text-[var(--gold)] uppercase transition-opacity duration-500 ${
-                phase === "dark" ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              LIGHTHOUSE'27
-            </span>
           </div>
         </div>
       )}

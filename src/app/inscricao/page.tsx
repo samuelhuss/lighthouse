@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
 import Link from "next/link";
@@ -14,7 +15,20 @@ export default function RegistrationPage() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
         {/* Header */}
-        <header className="flex w-full items-center justify-end rounded-full px-5 py-3 shadow-xl border border-white/20 bg-[#0e2043]/80 backdrop-blur-2xl shrink-0 mb-8">
+        <header className="flex w-full items-center justify-between rounded-full px-5 py-3 shadow-xl border border-white/20 bg-[#0e2043]/80 backdrop-blur-2xl shrink-0 mb-8">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/brand/lighthouse-icon.png"
+              alt="Lighthouse Farol"
+              width={32}
+              height={32}
+              className="h-7 w-auto object-contain drop-shadow-md"
+            />
+            <span className="font-serif text-sm sm:text-base tracking-widest text-white font-extrabold uppercase">
+              LIGHTHOUSE’27
+            </span>
+          </Link>
+
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-white/20 hover:border-white/40"
@@ -36,16 +50,23 @@ export default function RegistrationPage() {
                   <Sparkles className="h-3 w-3" /> PASSE OFICIAL
                 </span>
 
-                <h1 className="mt-3 font-serif text-3xl sm:text-4xl font-extrabold leading-[0.98] text-white">
-                  LIGHTHOUSE'27
-                </h1>
+                <div className="mt-3 mb-2">
+                  <Image
+                    src="/brand/lighthouse-hero-logo.png"
+                    alt="LIGHTHOUSE'27"
+                    width={400}
+                    height={140}
+                    className="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_4px_20px_rgba(232,199,102,0.35)]"
+                    priority
+                  />
+                </div>
 
                 <div className="mt-3 flex flex-col gap-1 text-xs text-white/80 font-medium">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 18 — 20 de Abril
+                    <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 05 — 09 de Fevereiro
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Acampamento EETAD - Shalom • Leme, SP
+                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Elias Fausto, SP
                   </span>
                 </div>
 

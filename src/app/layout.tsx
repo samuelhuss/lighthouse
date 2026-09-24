@@ -17,6 +17,11 @@ const displayFont = Outfit({
 export const metadata: Metadata = {
   title: "Lighthouse'27 | Acampamento",
   description: "O acampamento de adolescentes e jovens da D'One, Rota&Link. Busca espiritual, palavra transformadora e comunhão com a igreja.",
+  icons: {
+    icon: [
+      { url: '/brand/lighthouse-icon.webp', type: 'image/webp' },
+    ]
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -24,6 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="pt-BR"
       className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>

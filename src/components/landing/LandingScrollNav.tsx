@@ -63,8 +63,13 @@ export function LandingScrollNav() {
           }`}
         >
           <div className="flex items-center justify-between w-full">
-            {/* Desktop Links Spacer */}
-            <div className="hidden md:flex flex-1" />
+            {/* Desktop Brand / Date */}
+            <div className="hidden md:flex flex-1 items-center gap-3">
+              <img src="/brand/lighthouse-icon.webp" alt="Lighthouse" className="h-6 w-auto opacity-80" />
+              <span className={`text-[11px] font-mono font-bold tracking-widest transition-colors ${isScrolled ? 'text-[var(--gold)]' : 'text-white'}`}>
+                05 — 09 FEV, 2027
+              </span>
+            </div>
 
             {/* Desktop Links */}
             <div className="hidden md:flex items-center justify-center gap-6 text-xs font-bold tracking-wider">
@@ -73,7 +78,7 @@ export function LandingScrollNav() {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`transition-colors cursor-pointer hover:opacity-100 ${
-                    isScrolled ? "text-white/80 hover:text-[var(--gold)]" : "text-[#0e2043]/85 hover:text-[#0e2043]"
+                    isScrolled ? "text-white/80 hover:text-[var(--gold)]" : "text-white/70 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -87,8 +92,8 @@ export function LandingScrollNav() {
                 onClick={() => scrollToSection("inscricao")}
                 className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-extrabold transition-all hover:scale-[1.03] active:scale-95 cursor-pointer ${
                   isScrolled
-                    ? "bg-white text-[#0e2043] shadow-md hover:bg-[var(--gold)]"
-                    : "bg-[#0e2043] text-white shadow-xl hover:bg-[#0e2043]/90"
+                    ? "bg-[var(--gold)] text-[#0e2043] shadow-md hover:bg-white"
+                    : "bg-white text-[#0e2043] shadow-xl hover:bg-white/90"
                 }`}
               >
                 <span>Inscrição</span>
@@ -100,7 +105,7 @@ export function LandingScrollNav() {
                 className={`md:hidden p-1.5 rounded-full border transition cursor-pointer ${
                   isScrolled
                     ? "bg-white/10 border-white/20 text-white hover:bg-white/20"
-                    : "bg-[#0e2043]/10 border-[#0e2043]/30 text-[#0e2043] hover:bg-[#0e2043]/20"
+                    : "bg-white/10 border-white/20 text-white hover:bg-white/30"
                 }`}
                 aria-label="Abrir menu"
               >
