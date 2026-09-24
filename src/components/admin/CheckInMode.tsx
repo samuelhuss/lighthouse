@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { Camera, CheckCircle2, AlertTriangle, QrCode, XCircle, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type ScanResult = {
   success: boolean;
@@ -31,8 +32,14 @@ export function CheckInMode() {
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Auto-start scanner
+    const timer = setTimeout(() => {
+      initScanner();
+    }, 500); // small delay to let DOM mount properly
+
     // Cleanup scanner on unmount
     return () => {
+      clearTimeout(timer);
       if (scannerRef.current && scannerRef.current.isScanning) {
         scannerRef.current.stop().catch(console.error);
       }
@@ -198,14 +205,28 @@ export function CheckInMode() {
 
       </div>
 
-      {/* Result Section */}
-      <div className="flex flex-col">
-        <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+      {/* Result Section (Overlay on mobile, sidebar on desktop) */}
+      <div className={cn(
+        "flex flex-col transition-all duration-300",
+        lastResult 
+          ? "fixed inset-0 z-50 bg-[#0e2043]/90 backdrop-blur-md p-6 lg:relative lg:p-0 lg:bg-transparent lg:z-auto lg:backdrop-blur-none" 
+          : "hidden lg:flex"
+      )}>
+        <h3 className="font-bold text-slate-900 mb-4 items-center gap-2 hidden lg:flex">
           Monitor de Status
         </h3>
 
-        <div className="flex-1 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden">
+        <div className="flex-1 bg-white rounded-3xl border border-slate-200 p-8 shadow-2xl lg:shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden h-full lg:h-auto">
           
+          {lastResult && (
+            <button 
+              onClick={() => setLastResult(null)}
+              className="lg:hidden absolute top-4 right-4 p-2 bg-slate-100 text-slate-500 rounded-full hover:bg-slate-200 transition"
+            >
+              <XCircle className="h-6 w-6" />
+            </button>
+          )}
+
           {!lastResult && !loading && (
             <div className="flex flex-col items-center text-slate-400">
               <QrCode className="h-16 w-16 mb-4 opacity-20" />
