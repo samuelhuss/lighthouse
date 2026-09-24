@@ -35,6 +35,7 @@ export async function GET(request: Request) {
           amountCents: registration.amountCents,
           paidAt: registration.paidAt,
           createdAt: registration.createdAt,
+          checkedInAt: registration.checkedInAt,
         })),
         pagination: {
           page: Math.floor(offset / query.limit) + 1,

@@ -65,6 +65,7 @@ export const listRegistrationsQuerySchema = z.object({
     ])
     .optional(),
   batchId: z.string().uuid().optional(),
+  checkInStatus: z.enum(["done", "pending"]).optional(),
   search: z.string().trim().min(1).optional(),
   dateFrom: z.coerce.date().optional(),
   dateTo: z.coerce.date().optional(),

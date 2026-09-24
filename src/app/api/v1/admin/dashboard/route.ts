@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const env = getEnv();
-    const [total, paid, pending, failed, cancelled, capacity, revenue, todayRegistrations, todayPayments, averageTicket, latestRegistrations] = await Promise.all([
+    const [total, paid, pending, failed, cancelled, capacity, revenue, todayRegistrations, todayPayments, averageTicket, latestRegistrations, checkedIn] = await Promise.all([
       prisma.registration.count(),
       prisma.registration.count({ where: { status: "PAID" } }),
       prisma.registration.count({ where: { status: "PENDING_PAYMENT" } }),
@@ -34,6 +34,7 @@ export async function GET(request: Request) {
         take: 5,
         select: { id: true, registrationCode: true, name: true, status: true, amountCents: true, createdAt: true },
       }),
+      prisma.registration.count({ where: { checkedInAt: { not: null } } }),
     ]);
 
     return NextResponse.json(
@@ -44,6 +45,7 @@ export async function GET(request: Request) {
           pending,
           failed,
           cancelled,
+          checkedIn,
         },
         capacity: {
           total: Number(capacity._sum.capacity ?? 0),

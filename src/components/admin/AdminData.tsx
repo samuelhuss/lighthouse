@@ -15,8 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AdminJobControls } from "@/components/admin/AdminJobControls";
 
-type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number; averageTicketCents: number }; today: { registrations: number; payments: number }; latestRegistrations: Array<{ id: string; code: string; name: string; status: string; amountCents: number; createdAt: string }>; googleSheets: { configured: boolean } };
-type Registration = { id: string; code: string; name: string; email: string; status: string; amountCents: number; createdAt: string };
+type Dashboard = { registrations: { total: number; paid: number; pending: number; failed: number; cancelled: number; checkedIn: number; }; capacity: { total: number; reserved: number; available: number }; revenue: { paidCents: number; averageTicketCents: number }; today: { registrations: number; payments: number }; latestRegistrations: Array<{ id: string; code: string; name: string; status: string; amountCents: number; createdAt: string }>; googleSheets: { configured: boolean } };
+type Registration = { id: string; code: string; name: string; email: string; status: string; amountCents: number; createdAt: string; checkedInAt: string | null; };
 type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
 
 const money = (cents: number) => (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -262,7 +262,7 @@ export function DashboardView() {
         </Card>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {[["Inscrições hoje", data.today.registrations], ["Pagamentos aprovados hoje", data.today.payments], ["Ticket médio", money(data.revenue.averageTicketCents)], ["Google Sheets", data.googleSheets.configured ? "Configurado" : "Não configurado"]].map(([label, value], index) => <Card key={label} className="admin-rise" style={{ animationDelay: `${320 + index * 55}ms` }}><CardContent className="p-5"><p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p><p className="mt-2 text-xl font-semibold text-slate-900">{value}</p></CardContent></Card>)}
+        {[["Inscrições hoje", data.today.registrations], ["Check-ins (Presentes)", `${data.registrations.checkedIn} / ${data.registrations.paid}`], ["Pagamentos hoje", data.today.payments], ["Ticket médio", money(data.revenue.averageTicketCents)]].map(([label, value], index) => <Card key={label} className="admin-rise" style={{ animationDelay: `${320 + index * 55}ms` }}><CardContent className="p-5"><p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p><p className="mt-2 text-xl font-semibold text-slate-900">{value}</p></CardContent></Card>)}
       </div>
       <Card className="mt-4 admin-rise" style={{ animationDelay: "540ms" }}>
         <CardHeader><CardTitle className="text-sm font-semibold text-slate-900">Últimas inscrições</CardTitle></CardHeader>
@@ -289,6 +289,7 @@ export function RegistrationsView() {
   const [dateTo, setDateTo] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState("desc");
+  const [checkInStatus, setCheckInStatus] = useState("");
   const [batches, setBatches] = useState<Array<{ id: string; name: string }>>([]);
   const debouncedSearch = useDebouncedValue(search);
 
@@ -300,6 +301,7 @@ export function RegistrationsView() {
     if (batchId) params.set("batchId", batchId);
     if (dateFrom) params.set("dateFrom", dateFrom);
     if (dateTo) params.set("dateTo", `${dateTo}T23:59:59.999Z`);
+    if (checkInStatus) params.set("checkInStatus", checkInStatus);
     params.set("sortBy", sortBy); params.set("sortDir", sortDir);
     if (debouncedSearch) params.set("search", debouncedSearch);
     void adminFetch<{ items: Registration[]; pagination: { total: number } }>(`/api/v1/admin/registrations?${params.toString()}`).then((body) => { setItems(body.items); setTotal(body.pagination.total); }).catch((e) => setError(e.message)).finally(() => setLoading(false));
@@ -307,7 +309,7 @@ export function RegistrationsView() {
   useEffect(() => {
     const timer = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(timer);
-  }, [debouncedSearch, status, batchId, dateFrom, dateTo, sortBy, sortDir, page, limit]);
+  }, [debouncedSearch, status, batchId, dateFrom, dateTo, checkInStatus, sortBy, sortDir, page, limit]);
   useEffect(() => { void adminFetch<{ items: Array<{ id: string; name: string }> }>("/api/v1/admin/batches").then((body) => setBatches(body.items)).catch(() => undefined); }, []);
 
   return (
@@ -343,8 +345,9 @@ export function RegistrationsView() {
       </div>
       <div className="mb-4 rounded-lg border border-slate-200 bg-white p-3">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Filtros avançados</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <div><label className="mb-1.5 block text-xs text-slate-500">Lote</label><Select value={batchId || "all"} onValueChange={(value) => { setBatchId(value === "all" ? "" : value); setPage(1); }}><SelectTrigger><SelectValue placeholder="Todos os lotes" /></SelectTrigger><SelectContent><SelectItem value="all">Todos os lotes</SelectItem>{batches.map((batch) => <SelectItem key={batch.id} value={batch.id}>{batch.name}</SelectItem>)}</SelectContent></Select></div>
+          <div><label className="mb-1.5 block text-xs text-slate-500">Check-in</label><Select value={checkInStatus || "all"} onValueChange={(value) => { setCheckInStatus(value === "all" ? "" : value); setPage(1); }}><SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger><SelectContent><SelectItem value="all">Todos</SelectItem><SelectItem value="done">Liberado</SelectItem><SelectItem value="pending">Aguardando</SelectItem></SelectContent></Select></div>
           <div><label className="mb-1.5 block text-xs text-slate-500">De</label><Input type="date" value={dateFrom} onChange={(event) => { setDateFrom(event.target.value); setPage(1); }} aria-label="Data inicial" /></div>
           <div><label className="mb-1.5 block text-xs text-slate-500">Até</label><Input type="date" value={dateTo} onChange={(event) => { setDateTo(event.target.value); setPage(1); }} aria-label="Data final" /></div>
           <div><label className="mb-1.5 block text-xs text-slate-500">Ordenar por</label><Select value={sortBy} onValueChange={(value) => { setSortBy(value); setPage(1); }}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{[["createdAt", "Data"], ["name", "Nome"], ["status", "Status"], ["amountCents", "Valor"], ["paidAt", "Pagamento"]].map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
@@ -362,6 +365,7 @@ export function RegistrationsView() {
                 <TableHead>Participante</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Valor</TableHead>
+                <TableHead>Check-in</TableHead>
                 <TableHead>Criada em</TableHead>
               </TableRow>
             </TableHeader>
@@ -379,6 +383,17 @@ export function RegistrationsView() {
                   </TableCell>
                   <TableCell><StatusBadge status={item.status} /></TableCell>
                   <TableCell>{money(item.amountCents)}</TableCell>
+                  <TableCell>
+                    {item.checkedInAt ? (
+                      <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                        Liberado
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-slate-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 ring-1 ring-inset ring-slate-500/20">
+                        Aguardando
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-slate-500">{new Date(item.createdAt).toLocaleDateString("pt-BR")}</TableCell>
                 </TableRow>
               ))}

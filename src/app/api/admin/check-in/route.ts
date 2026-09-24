@@ -53,6 +53,11 @@ export async function POST(request: Request) {
         name: updated.name,
         code: updated.registrationCode,
         batchName: registration.batch?.name || "Lote Oficial",
+        phone: updated.phone,
+        cpf: updated.cpf,
+        gender: updated.gender,
+        medications: updated.medications,
+        allergies: updated.allergies,
       }
     });
 

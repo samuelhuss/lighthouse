@@ -60,6 +60,7 @@ export const registrationRepository = {
     offset: number;
     status?: RegistrationStatus;
     batchId?: string;
+    checkInStatus?: "done" | "pending";
     search?: string;
     dateFrom?: Date;
     dateTo?: Date;
@@ -69,6 +70,7 @@ export const registrationRepository = {
     const where: Prisma.RegistrationWhereInput = {
       ...(params.status ? { status: params.status } : {}),
       ...(params.batchId ? { batchId: params.batchId } : {}),
+      ...(params.checkInStatus === "done" ? { checkedInAt: { not: null } } : params.checkInStatus === "pending" ? { checkedInAt: null } : {}),
       ...(params.dateFrom || params.dateTo ? { createdAt: { ...(params.dateFrom ? { gte: params.dateFrom } : {}), ...(params.dateTo ? { lte: params.dateTo } : {}) } } : {}),
       ...(params.search
         ? {

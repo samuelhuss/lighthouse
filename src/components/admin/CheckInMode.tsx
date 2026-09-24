@@ -11,6 +11,10 @@ type ScanResult = {
     name: string;
     code: string;
     batchName: string;
+    phone?: string | null;
+    gender?: string | null;
+    medications?: string | null;
+    allergies?: string | null;
   };
 };
 
@@ -211,12 +215,36 @@ export function CheckInMode() {
                   <h4 className="text-3xl font-serif font-extrabold text-slate-900 mb-2">
                     {lastResult.registration?.name}
                   </h4>
-                  <p className="text-sm text-slate-500 font-medium mb-1">
-                    Passaporte: <span className="font-mono text-slate-700">{lastResult.registration?.code}</span>
-                  </p>
-                  <p className="text-sm text-slate-500 font-medium">
-                    Lote: <span className="text-[var(--gold)] font-bold">{lastResult.registration?.batchName}</span>
-                  </p>
+                  <div className="flex gap-4 text-sm text-slate-500 font-medium mb-6">
+                    <p>Passaporte: <span className="font-mono text-slate-700">{lastResult.registration?.code}</span></p>
+                    <p>Lote: <span className="text-[var(--gold)] font-bold">{lastResult.registration?.batchName}</span></p>
+                  </div>
+                  
+                  {/* Informações Adicionais */}
+                  <div className="w-full max-w-sm bg-slate-50 rounded-2xl border border-slate-100 p-4 text-left grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Telefone</p>
+                      <p className="text-sm text-slate-700 font-medium">{lastResult.registration?.phone || "-"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Sexo</p>
+                      <p className="text-sm text-slate-700 font-medium">{lastResult.registration?.gender || "-"}</p>
+                    </div>
+                    
+                    {(lastResult.registration?.allergies || lastResult.registration?.medications) && (
+                      <div className="col-span-2 border-t border-slate-200 pt-3 mt-1">
+                        <p className="text-[10px] text-rose-400 font-bold uppercase tracking-widest mb-2 flex items-center gap-1">
+                          <AlertTriangle className="h-3 w-3" /> Atenção Médica
+                        </p>
+                        {lastResult.registration.allergies && (
+                          <p className="text-xs text-slate-600 mb-1"><strong>Alergias:</strong> {lastResult.registration.allergies}</p>
+                        )}
+                        {lastResult.registration.medications && (
+                          <p className="text-xs text-slate-600"><strong>Medicamentos:</strong> {lastResult.registration.medications}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   
                   <div className="absolute top-0 left-0 w-full h-1.5 bg-emerald-500" />
                 </>
