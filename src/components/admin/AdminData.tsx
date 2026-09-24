@@ -560,7 +560,7 @@ export function BatchesView() {
                         </span>
                         <h3 className="text-xl font-bold tracking-tight">{batch.name}</h3>
                       </div>
-                      <Badge variant={batch.active ? "success" : "secondary"} className={batch.active ? "bg-emerald-500 text-white border-transparent" : ""}>
+                      <Badge variant={batch.active ? "success" : "outline"} className={batch.active ? "bg-emerald-500 text-white border-transparent" : ""}>
                         {batch.active ? "Em vigor" : "Inativo"}
                       </Badge>
                     </div>
