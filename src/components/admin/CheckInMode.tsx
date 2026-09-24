@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Html5QrcodeScanner, Html5QrcodeScanType } from "html5-qrcode";
+import { Html5Qrcode } from "html5-qrcode";
 import { Camera, CheckCircle2, AlertTriangle, QrCode, XCircle, Search } from "lucide-react";
 
 type ScanResult = {
@@ -22,8 +22,9 @@ export function CheckInMode() {
   const [manualCode, setManualCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [lastResult, setLastResult] = useState<ScanResult | null>(null);
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
   const [scannerActive, setScannerActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
 
   // Avoid scanning the same code multiple times rapidly
   const lastScannedCode = useRef<string | null>(null);
@@ -32,35 +33,45 @@ export function CheckInMode() {
   useEffect(() => {
     // Cleanup scanner on unmount
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
+      if (scannerRef.current && scannerRef.current.isScanning) {
+        scannerRef.current.stop().catch(console.error);
       }
     };
   }, []);
 
-  const initScanner = () => {
+  const initScanner = async () => {
     if (scannerRef.current || scannerActive) return;
 
     setScannerActive(true);
     setLastResult(null);
+    setCameraError(null);
 
-    scannerRef.current = new Html5QrcodeScanner(
-      "qr-reader",
-      { 
-        fps: 10, 
-        qrbox: { width: 250, height: 250 },
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] 
-      },
-      false
-    );
+    scannerRef.current = new Html5Qrcode("qr-reader");
 
-    scannerRef.current.render(onScanSuccess, onScanFailure);
+    try {
+      await scannerRef.current.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        onScanSuccess,
+        onScanFailure
+      );
+    } catch (err) {
+      console.error("Camera start error", err);
+      setCameraError("Permissão de câmera negada ou ambiente não seguro (HTTPS/localhost).");
+      setScannerActive(false);
+      scannerRef.current = null;
+    }
   };
 
   const stopScanner = () => {
-    if (scannerRef.current) {
-      scannerRef.current.clear().catch(console.error);
-      scannerRef.current = null;
+    if (scannerRef.current && scannerRef.current.isScanning) {
+      scannerRef.current.stop().then(() => {
+        scannerRef.current?.clear();
+        scannerRef.current = null;
+      }).catch(console.error);
+    } else if (scannerRef.current) {
+        scannerRef.current?.clear();
+        scannerRef.current = null;
     }
     setScannerActive(false);
   };
@@ -150,10 +161,17 @@ export function CheckInMode() {
         <div className="w-full max-w-sm aspect-square bg-slate-900/50 rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 relative flex items-center justify-center">
           <div id="qr-reader" className="w-full h-full" />
           
-          {!scannerActive && (
+          {!scannerActive && !cameraError && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 pointer-events-none">
               <QrCode className="h-12 w-12 mb-2 opacity-50" />
               <p className="text-sm font-medium">Câmera desativada</p>
+            </div>
+          )}
+          
+          {cameraError && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-rose-500 bg-slate-900/90 text-center p-6 z-10">
+              <AlertTriangle className="h-8 w-8 mb-2" />
+              <p className="text-xs font-bold">{cameraError}</p>
             </div>
           )}
         </div>
