@@ -13,8 +13,8 @@ export const campContent = {
 
   venueTitle: "O Lugar",
   venueText:
-    "O evento acontecerá em Leme - São Paulo, no Acampamento EETAD - Shalom. O espaço foi escolhido por oferecer a estrutura necessária e um ambiente que favorece foco, conforto e uma boa experiência para todos os participantes.",
-  venueLocationName: "Acampamento EETAD - Shalom • Leme, SP",
+    "O evento acontecerá em Elias Fausto - São Paulo. O espaço foi escolhido por oferecer a estrutura necessária e um ambiente que favorece foco, conforto e uma boa experiência para todos os participantes.",
+  venueLocationName: "Elias Fausto, SP",
 
   rulesTitle: "Regras do Acampamento",
   rules: [

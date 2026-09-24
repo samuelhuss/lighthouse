@@ -15,8 +15,8 @@ const displayFont = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Lighthouse | Acampamento da igreja 2026",
-  description: "Três dias de fé, comunhão e presença de Deus.",
+  title: "Lighthouse'27 | Acampamento",
+  description: "O acampamento de adolescentes e jovens da D'One, Rota&Link. Busca espiritual, palavra transformadora e comunhão com a igreja.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

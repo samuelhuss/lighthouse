@@ -52,20 +52,21 @@ export function LandingScrollNav() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 flex justify-center ${
-          isScrolled ? "pt-4" : "pt-0"
+          isScrolled ? "pt-0 md:pt-4" : "pt-0"
         }`}
       >
         <nav
           className={`w-full transition-all duration-500 max-w-5xl ${
             isScrolled
-              ? "mx-3 sm:mx-6 rounded-full bg-[#0e2043]/90 backdrop-blur-2xl shadow-2xl border border-white/15 px-4 sm:px-6 py-2.5"
-              : "mx-0 bg-transparent px-4 sm:px-8 py-5 sm:py-6 border-transparent"
+              ? "mx-0 bg-transparent px-4 sm:px-8 py-4 sm:py-6 border-transparent md:mx-6 md:rounded-full md:bg-[#0e2043]/90 md:backdrop-blur-2xl md:shadow-2xl md:border md:border-white/15 md:px-6 md:py-2.5"
+              : "mx-0 bg-transparent px-4 sm:px-8 py-4 sm:py-6 border-transparent"
           }`}
         >
           <div className="flex items-center justify-between w-full">
-            {/* Desktop Links */}
+            {/* Desktop Links Spacer */}
             <div className="hidden md:flex flex-1" />
 
+            {/* Desktop Links */}
             <div className="hidden md:flex items-center justify-center gap-6 text-xs font-bold tracking-wider">
               {NAV_ITEMS.map((item) => (
                 <button
@@ -80,8 +81,8 @@ export function LandingScrollNav() {
               ))}
             </div>
 
-            {/* Right Action & Mobile Toggle */}
-            <div className="flex items-center justify-end gap-2 sm:gap-3 w-full md:w-auto md:flex-1">
+            {/* Action Buttons & Mobile Toggle */}
+            <div className="flex items-center justify-between w-full md:w-auto md:justify-end md:gap-3 md:flex-1">
               <button
                 onClick={() => scrollToSection("inscricao")}
                 className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-extrabold transition-all hover:scale-[1.03] active:scale-95 cursor-pointer ${
