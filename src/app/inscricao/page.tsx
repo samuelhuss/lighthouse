@@ -1,29 +1,20 @@
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
-import { LighthouseMark } from "@/components/brand/LighthouseMark";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ShieldCheck, Lock, Calendar, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Lock, Calendar, MapPin, Sparkles } from "lucide-react";
 import { campContent } from "@/content/camp";
 
 export default function RegistrationPage() {
   return (
     <main className="relative min-h-screen z-0 flex flex-col text-white pb-16 selection:bg-[var(--gold)] selection:text-[#0e2043]">
-      {/* Luz ambiente & farol (Unified background canvas) */}
+      {/* Background canvas */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <HeroAmbience />
       </div>
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
-        {/* Header Superior idêntico ao site */}
-        <header className="flex w-full items-center justify-between rounded-full px-5 py-3 shadow-xl border border-white/20 bg-[#0e2043]/80 backdrop-blur-2xl shrink-0 mb-8">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 font-serif text-sm sm:text-base font-extrabold text-white transition hover:text-[var(--gold)]"
-          >
-            <LighthouseMark size={24} className="text-[var(--gold)]" />
-            <span className="tracking-widest uppercase">LIGHTHOUSE’27</span>
-          </Link>
-
+        {/* Header */}
+        <header className="flex w-full items-center justify-end rounded-full px-5 py-3 shadow-xl border border-white/20 bg-[#0e2043]/80 backdrop-blur-2xl shrink-0 mb-8">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold text-white transition hover:bg-white/20 hover:border-white/40"
@@ -32,23 +23,21 @@ export default function RegistrationPage() {
           </Link>
         </header>
 
-        {/* Passaporte de Inscrição em Vidro Fosco */}
+        {/* Card Principal */}
         <div className="w-full flex items-center justify-center my-auto">
           <div className="minimal-glass-card relative flex w-full flex-col lg:flex-row rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-2xl gap-8 border border-white/25 backdrop-blur-3xl overflow-hidden">
-            {/* Linha Dourada de Destaque no Topo */}
+            {/* Linha Dourada Topo */}
             <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[var(--amber)] via-[var(--gold)] to-emerald-400" />
 
-            {/* Lado Esquerdo: Passaporte do Evento */}
+            {/* Esquerdo: Informações do Evento */}
             <div className="flex flex-col justify-between lg:w-[42%] border-b lg:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-8 shrink-0">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--gold)]">
-                    <Sparkles className="h-3 w-3 text-[var(--gold)]" /> PASSE OFICIAL
-                  </span>
-                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-[var(--gold)]">
+                  <Sparkles className="h-3 w-3" /> PASSE OFICIAL
+                </span>
 
                 <h1 className="mt-3 font-serif text-3xl sm:text-4xl font-extrabold leading-[0.98] text-white">
-                  LIGHTHOUSE’27
+                  LIGHTHOUSE'27
                 </h1>
 
                 <div className="mt-3 flex flex-col gap-1 text-xs text-white/80 font-medium">
@@ -56,54 +45,33 @@ export default function RegistrationPage() {
                     <Calendar className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> 18 — 20 de Abril
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Estância Farol da Serra
+                    <MapPin className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" /> Acampamento EETAD - Shalom • Leme, SP
                   </span>
                 </div>
 
-                {/* Versículo */}
-                <div className="mt-4 rounded-2xl border border-[var(--gold)]/30 bg-white/10 p-4 backdrop-blur-md">
-                  <p className="font-serif italic text-xs leading-relaxed text-white/95">
-                    {campContent.verseText}
-                  </p>
-                  <p className="mt-1.5 text-[10px] font-bold text-[var(--gold)] text-right">
-                    — {campContent.verseReference}
-                  </p>
-                </div>
-              </div>
+                {/* Incluso */}
+                <div className="mt-6 space-y-3 border-t border-white/20 pt-5">
+                  <span className="text-[10px] uppercase font-mono font-bold text-[var(--gold)] tracking-wider block">
+                    O QUE ESTÁ INCLUSO
+                  </span>
+                  <ul className="space-y-2 text-xs text-white/90 font-medium">
+                    {campContent.included.map((item) => (
+                      <li key={item} className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-              {/* Incluso no Passe */}
-              <div className="mt-6 space-y-3 border-t border-white/20 pt-5">
-                <span className="text-[10px] uppercase font-mono font-bold text-[var(--gold)] tracking-wider block">
-                  O QUE ESTÁ INCLUSO
-                </span>
-
-                <ul className="space-y-2 text-xs text-white/90 font-medium">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Hospedagem nos 3 dias do evento</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Todas as refeições (Café, Almoço e Jantar)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Acesso total à estrutura de lazer</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Kit exclusivo do participante</span>
-                  </li>
-                </ul>
-
-                <div className="mt-4 flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 p-3 text-[11px] text-white/80 font-medium">
-                  <Lock className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" />
-                  <span>Seus dados são protegidos com criptografia.</span>
+                  <div className="mt-4 flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 p-3 text-[11px] text-white/80 font-medium">
+                    <Lock className="h-3.5 w-3.5 text-[var(--gold)] shrink-0" />
+                    <span>Seus dados são protegidos com criptografia.</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Lado Direito: Formulário de Cadastro */}
+            {/* Direito: Formulário */}
             <div className="flex-1 flex flex-col justify-center">
               <div className="mb-5">
                 <h2 className="font-serif text-xl sm:text-2xl font-extrabold text-white">
@@ -113,7 +81,6 @@ export default function RegistrationPage() {
                   Informe seus dados para emitir a sua vaga e avançar para o pagamento seguro.
                 </p>
               </div>
-
               <RegistrationForm />
             </div>
           </div>

@@ -1,32 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
-import { LighthouseMark } from "@/components/brand/LighthouseMark";
 
 const NAV_ITEMS = [
-  { id: "essencia", label: "Essência" },
-  { id: "programacao", label: "Programação" },
+  { id: "inicio", label: "Início" },
+  { id: "sobre", label: "Sobre Nós" },
+  { id: "regras", label: "Regras" },
   { id: "local", label: "O Lugar" },
-  { id: "inscricao", label: "Inscrição" },
+  { id: "lotes", label: "Lotes" },
   { id: "faq", label: "FAQ" },
 ];
 
-export function LandingScrollNav({ period }: { period: string }) {
+export function LandingScrollNav() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 60);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    // Inicializa o estado corretamente no primeiro render
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent background scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -50,55 +50,57 @@ export function LandingScrollNav({ period }: { period: string }) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-4 pt-3 sm:pt-5 transition-all duration-500">
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 flex justify-center ${
+          isScrolled ? "pt-4" : "pt-0"
+        }`}
+      >
         <nav
-          className={`mx-auto max-w-5xl rounded-full transition-all duration-500 border border-white/20 backdrop-blur-2xl ${
+          className={`w-full transition-all duration-500 max-w-5xl ${
             isScrolled
-              ? "bg-[#0e2043]/90 py-2.5 px-4 sm:px-5 shadow-xl"
-              : "bg-[#0e2043]/50 py-3 px-4 sm:px-6"
+              ? "mx-3 sm:mx-6 rounded-full bg-[#0e2043]/90 backdrop-blur-2xl shadow-2xl border border-white/15 px-4 sm:px-6 py-2.5"
+              : "mx-0 bg-transparent px-4 sm:px-8 py-5 sm:py-6 border-transparent"
           }`}
         >
-          <div className="flex items-center justify-between">
-            {/* Logo Brand */}
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-2 text-left cursor-pointer group shrink-0"
-            >
-              <div className="p-1 rounded-full bg-white/10 border border-white/20 group-hover:border-[var(--gold)]/50 transition-colors">
-                <LighthouseMark size={20} className="text-[var(--gold)] group-hover:scale-105 transition-transform" />
-              </div>
-              <span className="hidden sm:inline-block font-serif text-sm font-extrabold tracking-widest text-white uppercase">
-                LIGHTHOUSE’27
-              </span>
-            </button>
-
+          <div className="flex items-center justify-between w-full">
             {/* Desktop Links */}
-            <div className="hidden md:flex items-center gap-6 text-xs font-bold tracking-wider text-white/80">
+            <div className="hidden md:flex flex-1" />
+
+            <div className="hidden md:flex items-center justify-center gap-6 text-xs font-bold tracking-wider">
               {NAV_ITEMS.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="hover:text-[var(--gold)] transition cursor-pointer"
+                  className={`transition-colors cursor-pointer hover:opacity-100 ${
+                    isScrolled ? "text-white/80 hover:text-[var(--gold)]" : "text-[#0e2043]/85 hover:text-[#0e2043]"
+                  }`}
                 >
                   {item.label}
                 </button>
               ))}
             </div>
 
-            {/* Right Action */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* Right Action & Mobile Toggle */}
+            <div className="flex items-center justify-end gap-2 sm:gap-3 w-full md:w-auto md:flex-1">
               <button
                 onClick={() => scrollToSection("inscricao")}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-white px-3.5 sm:px-4 py-1.5 text-xs font-extrabold text-[#0e2043] transition-all hover:bg-[var(--gold)] active:scale-95 shadow-md cursor-pointer"
+                className={`inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-extrabold transition-all hover:scale-[1.03] active:scale-95 cursor-pointer ${
+                  isScrolled
+                    ? "bg-white text-[#0e2043] shadow-md hover:bg-[var(--gold)]"
+                    : "bg-[#0e2043] text-white shadow-xl hover:bg-[#0e2043]/90"
+                }`}
               >
                 <span>Inscrição</span>
                 <ArrowRight className="h-3 w-3" />
               </button>
 
-              {/* Mobile Menu Toggle Button */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden p-1.5 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition cursor-pointer"
+                className={`md:hidden p-1.5 rounded-full border transition cursor-pointer ${
+                  isScrolled
+                    ? "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    : "bg-[#0e2043]/10 border-[#0e2043]/30 text-[#0e2043] hover:bg-[#0e2043]/20"
+                }`}
                 aria-label="Abrir menu"
               >
                 <Menu className="h-5 w-5" />
@@ -108,7 +110,7 @@ export function LandingScrollNav({ period }: { period: string }) {
         </nav>
       </header>
 
-      {/* Dedicated Mobile Navigation Modal Drawer */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -118,14 +120,7 @@ export function LandingScrollNav({ period }: { period: string }) {
             transition={{ duration: 0.25 }}
             className="fixed inset-0 z-50 bg-[#0e2043]/95 backdrop-blur-3xl flex flex-col justify-between p-6 md:hidden"
           >
-            {/* Top Modal Header */}
-            <div className="flex items-center justify-between border-b border-white/15 pb-4">
-              <div className="flex items-center gap-2">
-                <LighthouseMark size={24} className="text-[var(--gold)]" />
-                <span className="font-serif text-sm font-extrabold tracking-widest text-white uppercase">
-                  LIGHTHOUSE’27
-                </span>
-              </div>
+            <div className="flex items-center justify-end border-b border-white/15 pb-4">
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 cursor-pointer"
@@ -135,7 +130,6 @@ export function LandingScrollNav({ period }: { period: string }) {
               </button>
             </div>
 
-            {/* Mobile Nav Links List */}
             <div className="flex flex-col gap-6 my-auto text-center py-8">
               {NAV_ITEMS.map((item, idx) => (
                 <motion.button
@@ -151,8 +145,7 @@ export function LandingScrollNav({ period }: { period: string }) {
               ))}
             </div>
 
-            {/* Bottom Modal CTA */}
-            <div className="border-t border-white/15 pt-6 flex flex-col gap-3">
+            <div className="border-t border-white/15 pt-6">
               <button
                 onClick={() => scrollToSection("inscricao")}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-white via-amber-50 to-[var(--gold)] text-sm font-extrabold text-[#0e2043] shadow-xl flex items-center justify-center gap-2 cursor-pointer"
@@ -160,10 +153,6 @@ export function LandingScrollNav({ period }: { period: string }) {
                 <span>Fazer Minha Inscrição Agora</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
-
-              <span className="text-[11px] text-white/50 font-mono text-center">
-                {period} • Estância Farol da Serra
-              </span>
             </div>
           </motion.div>
         )}

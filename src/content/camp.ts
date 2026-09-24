@@ -1,14 +1,57 @@
 export const campContent = {
-  eyebrow: "LIGHTHOUSE’27 • SALMOS 27:1",
-  heroTitle: "LIGHTHOUSE’27",
-  verseText:
-    "“O Senhor é a minha luz e a minha salvação; de quem terei temor? O Senhor é o meu forte refúgio; de quem terei medo.”",
-  verseReference: "Salmos 27:1",
+  eyebrow: "LIGHTHOUSE'27",
+  heroTitle: "LIGHTHOUSE'27",
   heroDescription:
-    "Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão profunda com a igreja.",
-  aboutTitle: "Toda jornada de fé precisa de um farol.",
+    "Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.",
+  verseText:
+    "\u201cO Senhor é a minha luz e a minha salvação; de quem terei temor? O Senhor é o meu forte refúgio; de quem terei medo.\u201d",
+  verseReference: "Salmos 27:1",
+
+  aboutTitle: "O que é?",
   aboutText:
-    "O Lighthouse’27 é um acampamento da igreja projetado para nos desconectar da correria diária e nos conectar profundamente com Deus. Serão três dias de renovação espiritual, ensinamentos práticos, refeições compartilhadas e momentos inesquecíveis em meio à natureza.",
+    "O Lighthouse é o acampamento de adolescentes e jovens da D'One, Rota&Link. Mais que um evento anual, ele é um tempo separado para buscar a Deus de forma intensa e verdadeira. No Lighthouse a gente se desconecta da rotina e mergulha em um ambiente criado para viver experiências que transformam.",
+
+  venueTitle: "O Lugar",
+  venueText:
+    "O evento acontecerá em Leme - São Paulo, no Acampamento EETAD - Shalom. O espaço foi escolhido por oferecer a estrutura necessária e um ambiente que favorece foco, conforto e uma boa experiência para todos os participantes.",
+  venueLocationName: "Acampamento EETAD - Shalom • Leme, SP",
+
+  rulesTitle: "Regras do Acampamento",
+  rules: [
+    {
+      id: "vestimenta",
+      title: "Vestimenta",
+      description: "Use roupas confortáveis e modestas que permitam participar de todas as atividades.",
+    },
+    {
+      id: "respeito",
+      title: "Respeito e Obediência",
+      description:
+        "Mantenha uma atitude de respeito com todos os participantes, equipe de apoio e liderança. Siga as orientações para garantir a organização e segurança do evento.",
+    },
+    {
+      id: "cronograma",
+      title: "Cronograma",
+      description: "Respeite os horários e o cronograma. Isso nos ajuda a aproveitar ao máximo cada momento juntos.",
+    },
+  ],
+  prohibitedItems: [
+    {
+      title: "Objetos Cortantes e Explosivos",
+      description:
+        "Por segurança, não é permitido o uso ou porte de facas, canivetes, fogos de artifício ou qualquer tipo de objeto perigoso.",
+    },
+    {
+      title: "Objetos Barulhentos",
+      description:
+        "Para não atrapalhar o cronograma, evite o uso de caixas de som, buzinas ou outros objetos que possam causar barulho excessivo.",
+    },
+    {
+      title: "Drogas e Álcool",
+      description: "O acampamento é um ambiente 100% livre de drogas e álcool.",
+    },
+  ],
+
   pillars: [
     {
       id: "louvor",
@@ -23,7 +66,7 @@ export const campContent = {
     {
       id: "descanso",
       title: "Descanso na Natureza",
-      description: "Ambiente reservado e tranquilo na serra para renovar as energias físicas e mentais.",
+      description: "Ambiente reservado e tranquilo para renovar as energias físicas e mentais.",
     },
     {
       id: "devocional",
@@ -31,15 +74,16 @@ export const campContent = {
       description: "Momento a sós com Deus, leituras guiadas e acompanhamento com a liderança.",
     },
   ],
+
   program: [
     {
       day: "Sexta-Feira",
       date: "18 de Abril",
       tag: "Dia 1 — Acolhimento",
       items: [
-        { time: "17:00", title: "Check-in & Acolhimento nos Chalés" },
+        { time: "17:00", title: "Check-in & Acolhimento" },
         { time: "19:30", title: "Jantar de Boas-Vindas" },
-        { time: "21:00", title: "Culto de Abertura — O Farol na Tempestade" },
+        { time: "21:00", title: "Culto de Abertura" },
         { time: "23:00", title: "Fogueira & Comunhão Noturna" },
       ],
     },
@@ -49,10 +93,9 @@ export const campContent = {
       tag: "Dia 2 — Imersão & Altar",
       items: [
         { time: "07:30", title: "Alvorada Devocional & Café da Manhã" },
-        { time: "09:30", title: "Painel de Ensino & Oficinas de Fé" },
-        { time: "12:30", title: "Almoço Especial em Família" },
-        { time: "14:30", title: "Tarde de Lazer, Esportes & Convivência" },
-        { time: "19:00", title: "Jantar" },
+        { time: "09:30", title: "Painel de Ensino & Oficinas" },
+        { time: "12:30", title: "Almoço Especial" },
+        { time: "14:30", title: "Tarde de Lazer & Convivência" },
         { time: "20:30", title: "Noite de Clamor & Quebrantamento" },
       ],
     },
@@ -63,52 +106,50 @@ export const campContent = {
       items: [
         { time: "08:00", title: "Café da Manhã" },
         { time: "10:00", title: "Culto de Encerramento & Santa Ceia" },
-        { time: "12:30", title: "Almoço de Confraternização & Fotos" },
-        { time: "14:30", title: "Check-out & Retorno para Casa" },
+        { time: "12:30", title: "Almoço de Confraternização" },
+        { time: "14:30", title: "Check-out & Retorno" },
       ],
     },
   ],
+
   venueFeatures: [
-    { name: "Chalés Climatizados", desc: "Alojamentos masculinos e femininos com banheiros privativos." },
-    { name: "Refeitório Completo", desc: "4 refeições fartas preparadas com carinho diariamente." },
-    { name: "Auditório Equipado", desc: "Espaço com som, luz e climatização para todas as ministrações." },
-    { name: "Área de Lazer & Piscina", desc: "Quadra poliesportiva, piscina e áreas verdes para descanso." },
-    { name: "Estacionamento Seguro", desc: "Vagas internas e segurança 24h para todos os participantes." },
-    { name: "Ambiente de Oração", desc: "Trilhas e quiostes calmos para momentos devocionais individuais." },
+    { name: "Alojamentos", desc: "Acomodações separadas por gênero com banheiros privativos." },
+    { name: "Refeitório Completo", desc: "Refeições fartas preparadas diariamente." },
+    { name: "Auditório Equipado", desc: "Espaço com som, luz e climatização para as ministrações." },
+    { name: "Área de Lazer", desc: "Áreas verdes para descanso e convivência." },
   ],
+
+  pricingIncludedTitle: "O que o valor inclui?",
   included: [
-    "Hospedagem completa nos 3 dias do evento",
-    "Todas as refeições (Café, Almoço, Jantar e Lanches)",
-    "Acesso total a toda infraestrutura de lazer do local",
-    "Kit exclusivo do participante Lighthouse’27",
-    "Material devocional para acompanhamento das mensagens",
-    "Suporte e cuidado da equipe organizadora 24h",
+    "Hospedagem completa",
+    "Alimentação",
+    "Acesso a todas as atividades",
+    "Equipe de suporte",
   ],
+
+  paymentConditionsTitle: "Condições de Pagamento",
+  paymentConditions: [
+    "Pagamento à Vista — Pix, débito ou crédito",
+    "Pagamento Parcelado em até 12x no Crédito",
+  ],
+
   faq: [
     {
-      question: "O que preciso levar para o acampamento?",
-      answer:
-        "Leve Bíblia, caderno de anotações, roupas confortáveis, agasalho para a noite, itens de higiene pessoal, roupa de cama/travesseiro, toalha e uma garrafinha de água.",
+      question: "Qual a idade mínima para participar?",
+      answer: "O acampamento é destinado a jovens e adolescentes de 13 a 30 anos.",
     },
     {
-      question: "Como funciona o pagamento e parcelamento?",
-      answer:
-        "O pagamento pode ser feito via Pix à vista ou no cartão de crédito em até 12x. A transação é processada com 100% de segurança pelo Mercado Pago.",
+      question: "Onde será o acampamento?",
+      answer: "O nosso acampamento será em Leme, no Acampamento EETAD - Shalom.",
     },
     {
-      question: "Crianças e adolescentes podem participar?",
-      answer:
-        "Sim! Crianças acompanhadas dos pais são muito bem-vindas. Menores de 18 anos desacompanhados precisam de autorização dos responsáveis.",
+      question: "O valor da inscrição pode ser parcelado?",
+      answer: "Sim, poderá ser pago no Pix, cartão de débito e crédito.",
     },
     {
-      question: "Haverá transporte fornecido pela igreja?",
+      question: "A alimentação e hospedagem estão inclusas?",
       answer:
-        "Organizamos grupos de carona solidária e ônibus fretado partindo da igreja. Os detalhes de embarque serão informados no grupo oficial do WhatsApp.",
-    },
-    {
-      question: "Posso transferir minha vaga caso surja um imprevisto?",
-      answer:
-        "Sim. Caso não possa comparecer, você pode transferir sua inscrição para outro irmão até 5 dias antes do evento entrando em contato com a organização.",
+        "Sim, o valor da inscrição inclui hospedagem, todas as refeições e acesso a todas as atividades do evento.",
     },
   ],
 };

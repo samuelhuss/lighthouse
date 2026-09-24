@@ -2,7 +2,8 @@
 
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { RevealOnScroll } from "@/components/landing/RevealOnScroll";
-import { CheckCircle2, Clock } from "lucide-react";
+import { CheckCircle2, Clock, CreditCard, ShieldCheck } from "lucide-react";
+import { campContent } from "@/content/camp";
 import type { CampInfo, BatchInfo } from "@/components/landing/types";
 
 type LandingPricingSectionProps = {
@@ -28,7 +29,6 @@ function formatDateRange(startsAt: Date | string | null, endsAt: Date | string |
 export function LandingPricingSection({ camp, price }: LandingPricingSectionProps) {
   const activeBatchName = camp?.currentBatch?.name ?? "1º Lote";
 
-  // Lotes 100% dinâmicos vindos do banco de dados (Prisma)
   const dbBatches: BatchInfo[] = camp?.batches?.length
     ? camp.batches
     : [
@@ -39,10 +39,7 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
 
   return (
     <div className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 space-y-24 sm:space-y-32">
-      {/* 
-        SEÇÃO 1: CRONOGRAMA DE LOTES (DADOS 100% DINÂMICOS DO BANCO)
-        Conceito de matriz em cascata nas cores oficiais do site (Gold, Marinho e Vidro Fosco)
-      */}
+      {/* SEÇÃO 1: CRONOGRAMA DE LOTES */}
       <section id="lotes" className="mx-auto max-w-5xl">
         <RevealOnScroll className="text-left mb-8 sm:mb-10">
           <span className="text-xs font-mono tracking-[0.25em] text-[var(--gold)] uppercase font-extrabold flex items-center gap-1.5 mb-2">
@@ -52,11 +49,10 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
             Lotes
           </h2>
           <p className="mt-2 text-sm text-white/80 font-normal">
-            Acompanhe a evolução e a transição dos lotes direto do sistema.
+            Acompanhe a evolução e a transição dos lotes.
           </p>
         </RevealOnScroll>
 
-        {/* Matriz Cascata com Dados Reais do Banco de Dados */}
         <RevealOnScroll delay={0.1}>
           <div className="rounded-[2.5rem] border border-white/20 bg-[#0e2043]/90 p-6 sm:p-10 backdrop-blur-3xl shadow-2xl overflow-x-auto">
             <div className={`min-w-[650px] grid grid-cols-${Math.max(dbBatches.length, 3)} divide-x divide-dashed divide-white/20 relative`}>
@@ -65,8 +61,7 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
                 const dateRangeStr = formatDateRange(b.startsAt, b.endsAt);
 
                 return (
-                  <div key={b.id || b.name} className="flex flex-col px-4 sm:px-6 py-2 min-h-[240px]">
-                    {/* Cabeçalho da Coluna: Mês / Data vinda do Banco */}
+                  <div key={b.id || b.name} className="flex flex-col px-4 sm:px-6 py-2 min-h-[220px]">
                     <div className="text-center font-serif text-base sm:text-lg font-bold text-[var(--gold)] mb-1">
                       {headerTitle}
                     </div>
@@ -76,10 +71,9 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
                       </div>
                     )}
 
-                    {/* Pílula Cascata com Nome Dinâmico do Lote */}
                     <div
                       className="flex-1 flex items-start"
-                      style={{ paddingTop: `${idx * 48}px` }}
+                      style={{ paddingTop: `${idx * 44}px` }}
                     >
                       <div
                         className={`w-full py-3.5 px-4 rounded-full text-center text-xs font-serif font-bold transition-all shadow-xl border ${
@@ -104,56 +98,67 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
         </RevealOnScroll>
       </section>
 
-      {/* 
-        SEÇÃO 2: FORMULÁRIO DE INSCRIÇÃO
-        Totalmente independente com respiro e layout limpo
-      */}
+      {/* SEÇÃO 2: FORMULÁRIO DE INSCRIÇÃO & INCLUSÕES & CONDIÇÕES DE PAGAMENTO */}
       <section id="inscricao" className="mx-auto max-w-5xl border-t border-white/15 pt-16 sm:pt-24">
         <RevealOnScroll className="text-left mb-8 sm:mb-10">
           <span className="text-xs font-mono tracking-[0.25em] text-[var(--gold)] uppercase font-extrabold block mb-2">
             INSCRIÇÃO OFICIAL
           </span>
           <h2 className="font-serif text-[clamp(2.5rem,6vw,4rem)] font-extrabold text-white leading-tight">
-            Garanta a sua vaga.
+            Faça sua Inscrição
           </h2>
           <p className="mt-2 text-sm text-white/80 font-normal">
-            Preencha seus dados para reservar seu lugar no acampamento.
+            Preencha seus dados para emitir a sua vaga.
           </p>
         </RevealOnScroll>
 
-        {/* Container da Inscrição */}
         <RevealOnScroll delay={0.15}>
           <div className="rounded-[2.5rem] border border-white/20 bg-[#0e2043]/90 p-6 sm:p-10 backdrop-blur-3xl shadow-2xl flex flex-col lg:flex-row gap-8 lg:gap-12">
-            {/* Esquerda: Valor do Lote Atual e Inclusões */}
-            <div className="flex flex-col justify-between lg:w-[38%] border-b lg:border-b-0 lg:border-r border-white/15 pb-6 lg:pb-0 lg:pr-8 shrink-0">
+            {/* Esquerda: Preço, O que inclui (1 a 4) e Condições de Pagamento */}
+            <div className="flex flex-col justify-between lg:w-[42%] border-b lg:border-b-0 lg:border-r border-white/15 pb-8 lg:pb-0 lg:pr-8 shrink-0 space-y-6">
               <div>
                 <span className="inline-block rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/15 px-3.5 py-1 text-xs font-mono text-[var(--gold)] font-bold uppercase">
                   {activeBatchName} ATIVO
                 </span>
 
-                <div className="mt-4">
+                <div className="mt-3">
                   <span className="font-serif text-[clamp(2.5rem,5vw,3.8rem)] font-extrabold text-white leading-none">
-                    {price ?? "Consulte liderança"}
+                    {price ?? "Consulte a liderança"}
                   </span>
-                  <p className="mt-2 text-xs text-white/70 font-medium">
-                    Passe individual com tudo incluso
-                  </p>
                 </div>
 
-                <ul className="mt-8 space-y-3 text-xs text-white/90 font-medium border-t border-white/15 pt-6">
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Hospedagem nos 3 dias</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Todas as refeições inclusas</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span>Kit exclusivo do participante</span>
-                  </li>
-                </ul>
+                {/* O que o valor inclui? */}
+                <div className="mt-6 border-t border-white/15 pt-6">
+                  <h3 className="font-serif text-lg font-bold text-white mb-3">
+                    {campContent.pricingIncludedTitle}
+                  </h3>
+                  <ol className="space-y-2.5">
+                    {campContent.included.map((item, index) => (
+                      <li key={item} className="flex items-center gap-3 text-xs sm:text-sm text-white/90 font-medium">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--gold)]/20 border border-[var(--gold)]/40 font-mono text-xs font-bold text-[var(--gold)]">
+                          {index + 1}
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* Condições de Pagamento */}
+                <div className="mt-6 border-t border-white/15 pt-6">
+                  <h3 className="font-serif text-base font-bold text-white mb-3 flex items-center gap-2">
+                    <CreditCard className="h-4 w-4 text-[var(--gold)]" />
+                    {campContent.paymentConditionsTitle}
+                  </h3>
+                  <ul className="space-y-2">
+                    {campContent.paymentConditions.map((cond) => (
+                      <li key={cond} className="flex items-center gap-2 text-xs text-white/85 font-medium">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                        <span>{cond}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
 

@@ -1,18 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
-type LandingHeroSectionProps = {
-  camp: CampInfo | null;
-  price: string | null;
-  period: string;
-  place: string;
-};
+export function LandingHeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
 
-import type { CampInfo } from "@/components/landing/types";
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
 
-export function LandingHeroSection({ camp, price, period, place }: LandingHeroSectionProps) {
+  // Parallax: title sobe devagar enquanto o usuario rola
+  const rawY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const y = useSpring(rawY, { stiffness: 80, damping: 20 });
+
+  // Fade out suave conforme rola
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  // Escala leve — começa ligeiramente maior e encolhe
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -23,75 +31,45 @@ export function LandingHeroSection({ camp, price, period, place }: LandingHeroSe
   };
 
   return (
-    <section id="inicio" className="relative min-h-[85dvh] flex flex-col justify-between pt-24 sm:pt-28 pb-10 px-4 sm:px-6 lg:px-8 text-center">
-      <div className="relative z-10 mx-auto max-w-4xl w-full my-auto flex flex-col items-center">
-        {/* Date & Location Pill - High Contrast */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full border border-[#0e2043]/30 bg-[#0e2043]/85 px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-mono font-bold tracking-widest text-[var(--gold)] uppercase shadow-lg backdrop-blur-md"
-        >
-          <span>{period}</span>
-          <span>•</span>
-          <span>{place}</span>
-        </motion.div>
-
-        {/* Main Title - Mobile & Desktop Perfect Scaling */}
+    <section
+      ref={sectionRef}
+      id="inicio"
+      className="relative min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-28 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8 text-center overflow-hidden"
+    >
+      {/* Title com parallax */}
+      <motion.div
+        style={{ y, opacity, scale }}
+        className="relative z-10 w-full my-auto flex flex-col items-center justify-center px-2"
+      >
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="mt-4 sm:mt-6 font-serif text-[clamp(2.8rem,10vw,6.8rem)] font-extrabold tracking-tight text-[#0e2043] leading-[0.92] drop-shadow-sm"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif font-black tracking-tighter text-white leading-none select-none w-full max-w-[100vw]"
+          style={{
+            fontSize: "clamp(2rem, 12.5vw, 9.5rem)",
+            textShadow: "0 8px 60px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2)",
+          }}
         >
-          LIGHTHOUSE’27
+          LIGHTHOUSE'27
         </motion.h1>
+      </motion.div>
 
-        {/* Short Punchy Subtitle Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-4 sm:mt-6 max-w-xl text-sm sm:text-lg text-[#223164]/95 font-semibold leading-relaxed px-2"
-        >
-          Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.
-        </motion.p>
-
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="mt-8 flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto px-4 sm:px-0"
-        >
-          <button
-            onClick={() => scrollToSection("inscricao")}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0e2043] px-8 py-3.5 text-xs sm:text-sm font-extrabold text-white transition-all hover:bg-[var(--azure)] active:scale-95 shadow-xl cursor-pointer"
-          >
-            <span>Fazer Minha Inscrição</span>
-            <ArrowRight className="h-4 w-4 text-[var(--gold)]" />
-          </button>
-
-          <button
-            onClick={() => scrollToSection("essencia")}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs font-bold text-[#0e2043] hover:text-[var(--azure)] transition cursor-pointer py-2 px-4"
-          >
-            <span>Conhecer o acampamento</span>
-            <ArrowDown className="h-3.5 w-3.5 text-[#0e2043]" />
-          </button>
-        </motion.div>
-      </div>
-
-      {/* Scroll Hint */}
-      <div className="relative z-10 text-center mt-6">
+      {/* Scroll hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="relative z-10 text-center pb-2 sm:pb-0"
+      >
         <button
-          onClick={() => scrollToSection("essencia")}
-          className="inline-flex flex-col items-center gap-1.5 text-[10px] font-mono tracking-widest text-[#0e2043]/70 hover:text-[#0e2043] transition uppercase cursor-pointer"
+          onClick={() => scrollToSection("sobre")}
+          className="inline-flex flex-col items-center gap-2 text-[10px] font-mono tracking-widest text-white/60 hover:text-white transition uppercase cursor-pointer"
         >
           <span>Role para explorar</span>
-          <div className="h-4 w-0.5 bg-[#0e2043] animate-pulse" />
+          <div className="h-5 w-0.5 bg-white/60 animate-pulse" />
         </button>
-      </div>
+      </motion.div>
     </section>
   );
 }

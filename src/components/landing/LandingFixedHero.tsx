@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 import { AppleDockNav, type StageId } from "@/components/landing/AppleDockNav";
 import { MinimalGlassCanvas } from "@/components/landing/MinimalGlassCanvas";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
-import { LighthouseMark } from "@/components/brand/LighthouseMark";
 import type { CampInfo } from "@/components/landing/types";
 
 function formatDate(value: Date) {
@@ -51,13 +50,7 @@ export function LandingFixedHero({ camp, price }: LandingFixedHeroProps) {
       {/* Container Principal */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between p-3 sm:p-5 lg:p-7 pb-24 lg:pb-7">
         {/* Header Superior em Pílula de Vidro Fosco */}
-        <header className="minimal-glass-dock mx-auto flex w-full max-w-5xl items-center justify-between rounded-full px-4 py-2 sm:px-6 sm:py-2.5 shadow-md border border-white/25 backdrop-blur-3xl shrink-0">
-          <div className="flex items-center gap-2">
-            <LighthouseMark size={22} className="text-[var(--gold)]" />
-            <span className="font-serif text-sm sm:text-base tracking-widest text-white font-extrabold uppercase">
-              LIGHTHOUSE’27
-            </span>
-          </div>
+        <header className="minimal-glass-dock mx-auto flex w-full max-w-5xl items-center justify-end rounded-full px-4 py-2 sm:px-6 sm:py-2.5 shadow-md border border-white/25 backdrop-blur-3xl shrink-0">
 
           <div className="flex items-center gap-3 text-xs font-bold tracking-wider text-white">
             <span className="text-[var(--gold)] font-mono">{period}</span>

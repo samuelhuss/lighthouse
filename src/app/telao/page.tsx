@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, QrCode, CheckCircle2 } from "lucide-react";
-import { LighthouseMark } from "@/components/brand/LighthouseMark";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
-import { campContent } from "@/content/camp";
 
 export default function TelaoPage() {
   const [siteUrl, setSiteUrl] = useState<string>("https://lighthouse27.com");
@@ -28,14 +26,7 @@ export default function TelaoPage() {
       </div>
 
       {/* Top Header */}
-      <header className="relative z-10 flex items-center justify-between max-w-7xl w-full mx-auto">
-        <div className="flex items-center gap-3">
-          <LighthouseMark size={32} className="text-[var(--gold)]" />
-          <span className="font-serif text-lg sm:text-xl font-extrabold tracking-widest uppercase text-white">
-            LIGHTHOUSE’27
-          </span>
-        </div>
-
+      <header className="relative z-10 flex items-center justify-end max-w-7xl w-full mx-auto">
         <Link
           href="/"
           className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs font-bold text-white transition hover:bg-white/20"
@@ -51,7 +42,7 @@ export default function TelaoPage() {
           {/* HIGH CONTRAST DATE BADGE FOR PROJECTORS */}
           <div className="inline-flex items-center gap-2.5 rounded-full bg-white border-2 border-[var(--gold)] px-5 py-2.5 text-xs sm:text-sm font-mono font-extrabold tracking-widest text-[#0e2043] uppercase shadow-2xl">
             <Sparkles className="h-4 w-4 text-[var(--gold)] shrink-0" />
-            <span>18 — 20 DE ABRIL • ESTÂNCIA FAROL DA SERRA</span>
+            <span>18 — 20 DE ABRIL • LEME, SP</span>
           </div>
 
           <h1 className="font-serif text-[clamp(3.2rem,6vw,5.5rem)] font-extrabold tracking-tight text-white leading-[0.94] drop-shadow-2xl">
@@ -63,7 +54,7 @@ export default function TelaoPage() {
           </p>
 
           <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed font-normal">
-            Três dias imersivos de renovação espiritual, palavra transformadora, louvor e comunhão profunda com a igreja.
+            Três dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.
           </p>
 
           {/* Included Bullet Points */}
@@ -74,11 +65,11 @@ export default function TelaoPage() {
             </div>
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-              <span>4 Refeições por dia</span>
+              <span>Alimentação inclusa</span>
             </div>
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-              <span>Kit participante</span>
+              <span>Acesso a todas as atividades</span>
             </div>
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
@@ -86,10 +77,10 @@ export default function TelaoPage() {
             </div>
           </div>
 
-          {/* Verse Footnote */}
+          {/* Location footnote */}
           <div className="pt-4 border-t border-white/15 w-full">
-            <p className="font-serif italic text-xs sm:text-sm text-white/70">
-              “{campContent.verseText.replace(/^["“]|["”]$/g, "")}” — Salmos 27:1
+            <p className="text-xs sm:text-sm text-white/70 font-medium">
+              📍 Acampamento EETAD - Shalom • Leme, São Paulo
             </p>
           </div>
         </div>
@@ -129,7 +120,7 @@ export default function TelaoPage() {
 
       {/* Footer */}
       <footer className="relative z-10 text-center text-xs text-white/50 font-mono">
-        © 2027 Lighthouse’27 • Exibição em Telão
+        © 2027 Lighthouse'27 • Exibição em Telão
       </footer>
     </main>
   );

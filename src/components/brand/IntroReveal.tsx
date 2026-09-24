@@ -49,7 +49,7 @@ export function IntroReveal({ children }: { children: React.ReactNode }) {
                 phase === "dark" ? "opacity-0" : "opacity-100"
               }`}
             >
-              Lighthouse 2026
+              LIGHTHOUSE'27
             </span>
           </div>
         </div>
