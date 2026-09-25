@@ -18,10 +18,12 @@ export async function POST(request: Request) {
     const xSignature = request.headers.get("x-signature");
     const xRequestId = request.headers.get("x-request-id");
     const client = new MercadoPagoClient();
+    const url = new URL(request.url);
+    const dataId = url.searchParams.get("data.id") || String(body?.data?.id || "");
 
-    client.validateWebhookSignature(xSignature, xRequestId, rawBody);
+    client.validateWebhookSignature(xSignature, xRequestId, dataId);
 
-    const eventId = String(body?.data?.id ?? body?.id ?? "unknown");
+    const eventId = String(body?.data?.id ?? body?.id ?? dataId ?? "unknown");
     const eventType = body?.type ?? "unknown";
 
     const existing = await prisma.webhookEvent.findUnique({

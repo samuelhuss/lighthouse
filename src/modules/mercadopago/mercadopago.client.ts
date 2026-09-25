@@ -93,24 +93,19 @@ export class MercadoPagoClient {
     }));
   }
 
-  validateWebhookSignature(xSignature: string | null | undefined, requestId: string | null | undefined, rawBody: string): void {
+  validateWebhookSignature(xSignature: string | null | undefined, requestId: string | null | undefined, dataId: string | null | undefined): void {
     const secret = getEnv().MERCADOPAGO_WEBHOOK_SECRET;
 
     try {
       WebhookSignatureValidator.validate({
         xSignature,
         xRequestId: requestId,
-        dataId: null,
+        dataID: dataId || "",
         secret,
-        toleranceSeconds: 300,
       });
-    } catch {
+    } catch (err) {
+      console.error("Webhook signature validation error:", err);
       throw new InvalidWebhookSignatureError();
     }
-
-    // The SDK validates the HMAC but not the raw body. We keep the request
-    // body in memory for downstream processing, and the route handler will
-    // validate the parsed JSON before updating the database.
-    void rawBody;
   }
 }
