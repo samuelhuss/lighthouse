@@ -13,7 +13,7 @@ export function LandingVenueSection() {
           <RevealOnScroll>
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/25 shadow-2xl bg-white/5">
               <iframe 
-                src="https://maps.google.com/maps?q=Elias%20Fausto,%20SP&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                src="https://maps.google.com/maps?q=ESF-040+-+Elias+Fausto,+SP,+13350-000&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -49,7 +49,7 @@ export function LandingVenueSection() {
 
               <div className="mt-8 pt-6 border-t border-white/20">
                 <a
-                  href="https://maps.google.com/?q=Elias+Fausto+SP"
+                  href="https://maps.app.goo.gl/E1AheJQCK1Rc4vPC9"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-xs font-bold text-white hover:bg-white/20 transition backdrop-blur-md"

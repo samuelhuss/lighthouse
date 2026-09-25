@@ -2,6 +2,7 @@
 
 import { campContent } from "@/content/camp";
 import { RevealOnScroll } from "@/components/landing/RevealOnScroll";
+import { Ban } from "lucide-react";
 
 export function LandingRulesSection() {
   return (
@@ -38,23 +39,19 @@ export function LandingRulesSection() {
           ))}
         </div>
 
-        {/* Proibidos — linha horizontal simples */}
-        <RevealOnScroll delay={0.2} className="mt-16">
-          <div className="border-t border-white/15 pt-12">
-            <span className="text-xs font-mono tracking-[0.25em] text-white/40 uppercase font-bold">
-              PROIBIDO
+        {/* Proibidos — Minimalist Grid */}
+        <RevealOnScroll delay={0.2} className="mt-24">
+          <div className="border-t border-white/20 pt-12">
+            <span className="text-xs font-mono tracking-[0.25em] text-white/50 uppercase font-bold flex items-center gap-2 mb-10">
+              <Ban className="w-4 h-4" /> PROIBIDO
             </span>
 
-            <div className="mt-6 divide-y divide-white/10">
+            <div className="grid sm:grid-cols-2 gap-x-12 gap-y-10">
               {campContent.prohibitedItems.map((item, idx) => (
-                <div key={idx} className="py-5 flex items-start gap-5">
-                  <span className="font-mono text-xs text-white/25 shrink-0 mt-0.5 tabular-nums w-6">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <p className="text-sm font-bold text-white/90">{item.title}</p>
-                    <p className="mt-1 text-xs text-white/55 leading-relaxed">{item.description}</p>
-                  </div>
+                <div key={idx} className="relative pl-5">
+                  <span className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full bg-white/30"></span>
+                  <h4 className="text-base sm:text-lg font-bold text-white mb-1.5">{item.title}</h4>
+                  <p className="text-sm sm:text-base text-white/50 leading-relaxed font-normal">{item.description}</p>
                 </div>
               ))}
             </div>

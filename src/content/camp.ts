@@ -4,74 +4,123 @@ export const campContent = {
   heroDescription:
     "Cinco dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.",
   verseText:
-    "\u201cO Senhor é a minha luz e a minha salvação; de quem terei temor? O Senhor é o meu forte refúgio; de quem terei medo.\u201d",
+    "\u201cO Senhor é a minha luz e a minha salvação; de quem terei medo?\u201d",
   verseReference: "Salmos 27:1",
 
-  aboutTitle: "O que é?",
-  aboutText:
-    "O Lighthouse é o acampamento de adolescentes e jovens da D'One, Rota&Link. Mais que um evento anual, ele é um tempo separado para buscar a Deus de forma intensa e verdadeira. No Lighthouse a gente se desconecta da rotina e mergulha em um ambiente criado para viver experiências que transformam.",
+  aboutTitle: "Sobre o D'One Camp",
+  aboutText: [
+    "Entre 05 e 09 de fevereiro de 2027, o D'One Ministry abre as portas para mais uma edição inesquecível do D'One Camp — nosso acampamento cristão anual para jovens e adolescentes.",
+    "Na nossa última edição, com o tema Overflow'26, mergulhamos fundo na presença do Espírito Santo. Vivemos dias intensos de cura, encontros marcantes e transformação real. Fomos verdadeiramente selados por essa presença.",
+    "Mas fica a pergunta: o que acontece depois do mergulho?",
+    "Agora, chegou o momento de erguer e carregar essa luz!",
+    "Seja bem-vindo ao Lighthouse'27!",
+    "Prepare-se para dias totalmente separados para buscar a Deus de forma intensa e genuína. É hora de se desconectar da rotina e viver experiências que vão mudar a sua vida para sempre."
+  ],
 
   venueTitle: "O Lugar",
   venueText:
-    "O evento acontecerá em Elias Fausto - São Paulo. O espaço foi escolhido por oferecer a estrutura necessária e um ambiente que favorece foco, conforto e uma boa experiência para todos os participantes.",
+    "O evento acontecerá em Elias Fausto - SP. O local conta com estrutura completa para garantir conforto, foco e uma excelente experiência a todos os participantes.",
   venueLocationName: "Elias Fausto, SP",
 
-  rulesTitle: "Regras do Acampamento",
+  rulesTitle: "Regras do D'One Camp",
   rules: [
     {
-      id: "vestimenta",
+      id: "regra-1",
+      title: "Autorização de Menores",
+      description: "Menores de idade devem apresentar a autorização assinada pelos responsáveis.",
+    },
+    {
+      id: "regra-2",
+      title: "Respeito e Horários",
+      description: "Respeite os horários da programação e os momentos de silêncio.",
+    },
+    {
+      id: "regra-3",
       title: "Vestimenta",
-      description: "Use roupas confortáveis e modestas que permitam participar de todas as atividades.",
+      description: "Use roupas confortáveis e adequadas para o ambiente de acampamento.",
     },
     {
-      id: "respeito",
-      title: "Respeito e Obediência",
-      description:
-        "Mantenha uma atitude de respeito com todos os participantes, equipe de apoio e liderança. Siga as orientações para garantir a organização e segurança do evento.",
+      id: "regra-4",
+      title: "Limpeza e Organização",
+      description: "Zele pela organização e limpeza dos quartos e áreas comuns.",
     },
     {
-      id: "cronograma",
-      title: "Cronograma",
-      description: "Respeite os horários e o cronograma. Isso nos ajuda a aproveitar ao máximo cada momento juntos.",
+      id: "regra-5",
+      title: "Limites do Acampamento",
+      description: "Não é permitida a saída do local do acampamento sem autorização da liderança.",
+    },
+    {
+      id: "regra-6",
+      title: "Pertences Pessoais",
+      description: "Cuide dos seus pertences pessoais e ajude a preservar o local.",
+    },
+    {
+      id: "regra-7",
+      title: "Respeito e Cordialidade",
+      description: "Mantenha o respeito e a cordialidade com todos os participantes e líderes.",
     },
   ],
   prohibitedItems: [
     {
       title: "Objetos Cortantes e Explosivos",
-      description:
-        "Por segurança, não é permitido o uso ou porte de facas, canivetes, fogos de artifício ou qualquer tipo de objeto perigoso.",
+      description: "Por segurança, não é permitido o uso ou porte de facas, canivetes, fogos de artifício ou qualquer tipo de objeto perigoso.",
     },
     {
       title: "Objetos Barulhentos",
-      description:
-        "Para não atrapalhar o cronograma, evite o uso de caixas de som, buzinas ou outros objetos que possam causar barulho excessivo.",
+      description: "Para não atrapalhar o cronograma, evite o uso de caixas de som, buzinas ou outros objetos que possam causar barulho excessivo.",
     },
     {
       title: "Drogas e Álcool",
-      description: "O acampamento é um ambiente 100% livre de drogas e álcool.",
+      description: "Não é permitida a entrada de drogas e bebidas álcoolicas nas dependências do acampamento.",
+    },
+    {
+      title: "Cigarros, Eletrônicos e Vapes",
+      description: "O ambiente é totalmente livre de cigarros, vapes (dispositivos eletrônicos de fumar) e similares.",
+    },
+    {
+      title: "Danos ao Patrimônio",
+      description: "É proibido depredar, pichar ou danificar as instalações do local, móveis ou a vegetação.",
+    },
+    {
+      title: "Medicamentos sem Aviso",
+      description: "O uso de remédios de uso contínuo ou controlado deve ser informado previamente à equipe de saúde/organização.",
+    },
+    {
+      title: "Circulação Fora de Hora ou Local",
+      description: "É proibido circular fora das áreas permitidas do acampamento ou sair dos alojamentos após o horário de silêncio.",
     },
   ],
 
   pillars: [
     {
-      id: "louvor",
-      title: "Presença & Adoração",
-      description: "Cultos marcantes, noites de altar e louvor sem pressa para buscar o Espírito Santo.",
+      id: "cristo-no-centro",
+      title: "Cristo no Centro",
+      description: "Tudo o que a gente faz aqui tem um motivo principal - conhecer e se aproximar de Jesus.",
     },
     {
-      id: "comunhao",
-      title: "Comunhão da Igreja",
-      description: "Refeições juntas, rodas de conversa, dinâmicas e amizades fortalecidas para a vida.",
+      id: "respeito",
+      title: "Respeito em Primeiro Lugar",
+      description: "Valorizamos e respeitamos cada líder, voluntário e participante sem exceção.",
     },
     {
-      id: "descanso",
-      title: "Descanso na Natureza",
-      description: "Ambiente reservado e tranquilo para renovar as energias físicas e mentais.",
+      id: "mente-aberta",
+      title: "Mente e Coração Abertos",
+      description: "Um espaço para se desligar do barulho de fora e viver o acampamento de verdade.",
     },
     {
-      id: "devocional",
-      title: "Cuidado & Devocional",
-      description: "Momento a sós com Deus, leituras guiadas e acompanhamento com a liderança.",
+      id: "conexoes",
+      title: "Conexões Reais",
+      description: "Um ambiente para criar laços de verdade, encontrar seu lugar e trocar ideias.",
+    },
+    {
+      id: "alegria",
+      title: "Alegria com Propósito",
+      description: "A gente curte, se diverte e dá risada, sem perder o foco do que realmente importa.",
+    },
+    {
+      id: "impacto",
+      title: "Impacto pra Vida",
+      description: "O que vivemos aqui não fica só no acampamento; a ideia é levar essa transformação pra rotina.",
     },
   ],
 
