@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { ArrowRight, LoaderCircle, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -25,8 +24,11 @@ export function AdminLogin() {
       const configResponse = await fetch("/api/admin/auth/config", { cache: "no-store" });
       const config = await configResponse.json();
       if (!configResponse.ok) throw new Error(config.error?.message ?? "Autenticação não configurada.");
+      
+      const { createClient } = await import("@supabase/supabase-js");
       const supabase = createClient(config.url, config.anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
       if (error || !data.session) throw new Error("E-mail ou senha inválidos.");
       const response = await fetch("/api/admin/auth/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accessToken: data.session.access_token }) });
       const body = await response.json();
@@ -41,9 +43,9 @@ export function AdminLogin() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#0e2043] relative overflow-hidden px-6 py-12">
-      {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--gold)]/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--azure)]/20 rounded-full blur-[120px] pointer-events-none" />
+      {/* High-performance background glow (radial gradients instead of heavy CSS blur) */}
+      <div className="absolute top-0 left-0 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_center,rgba(232,175,46,0.15)_0,transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[800px] h-[800px] translate-x-1/2 translate-y-1/2 bg-[radial-gradient(circle_at_center,rgba(52,98,172,0.15)_0,transparent_70%)] pointer-events-none" />
       
       <div className="relative z-10 w-full max-w-[400px]">
         <div className="flex justify-center mb-8">
@@ -53,7 +55,7 @@ export function AdminLogin() {
           </Link>
         </div>
 
-        <div className="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
+        <div className="rounded-3xl bg-[#162a52] border border-white/10 shadow-2xl overflow-hidden">
           <div className="p-8 sm:p-10">
             <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-6">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white/90">

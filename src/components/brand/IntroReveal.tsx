@@ -1,53 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { LighthouseMark } from "@/components/brand/LighthouseMark";
 import { HeroAmbience } from "@/components/landing/HeroAmbience";
 
-type Phase = "dark" | "lit" | "fading" | "done";
-
-/** Cinematic entrance: screen starts with atmospheric lighthouse beacon lighting up inside the dusk scene. */
+/** Cinematic entrance: pure CSS implementation to avoid JS hydration blocking the screen */
 export function IntroReveal({ children }: { children: React.ReactNode }) {
-  const [phase, setPhase] = useState<Phase>("dark");
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const skip = window.setTimeout(() => setPhase("done"), 0);
-      return () => window.clearTimeout(skip);
-    }
-    const timers = [
-      window.setTimeout(() => setPhase("lit"), 200),
-      window.setTimeout(() => setPhase("fading"), 1100),
-      window.setTimeout(() => setPhase("done"), 1750),
-    ];
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, []);
-
   return (
     <>
-      {phase !== "done" && (
-        <div
-          aria-hidden
-          className={`fixed inset-0 z-[999] flex items-center justify-center bg-[var(--abyss)] transition-opacity duration-700 overflow-hidden ${
-            phase === "fading" ? "pointer-events-none opacity-0" : "opacity-100"
-          }`}
-        >
-          {/* Fundo crepuscular idêntico à página principal */}
-          <HeroAmbience />
+      <style suppressHydrationWarning>{`
+        @keyframes introFadeOut {
+          0%, 70% { opacity: 1; pointer-events: auto; }
+          100% { opacity: 0; pointer-events: none; visibility: hidden; }
+        }
+        @keyframes introLogo {
+          0% { opacity: 0; transform: scale(0.95); }
+          20%, 70% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 36px rgba(232,175,46,0.9)); }
+          100% { opacity: 0; transform: scale(1.1); }
+        }
+        .intro-overlay {
+          animation: introFadeOut 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .intro-logo {
+          animation: introLogo 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .intro-overlay { display: none !important; }
+        }
+      `}</style>
 
-          <div className="relative z-10 flex flex-col items-center gap-4">
-            <img
-              src="/brand/lighthouse-text.webp"
-              alt="Lighthouse"
-              className={`h-56 sm:h-64 w-auto object-contain transition-all duration-700 ${
-                phase === "dark"
-                  ? "opacity-30 scale-95"
-                  : "opacity-100 scale-105 drop-shadow-[0_0_36px_rgba(232,175,46,0.9)]"
-              }`}
-            />
-          </div>
+      <div
+        aria-hidden
+        className="intro-overlay fixed inset-0 z-[999] flex items-center justify-center bg-[var(--abyss)] overflow-hidden"
+      >
+        <HeroAmbience />
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <img
+            src="/brand/lighthouse-text.webp"
+            alt="Lighthouse"
+            className="intro-logo h-56 sm:h-64 w-auto object-contain opacity-0"
+          />
         </div>
-      )}
+      </div>
+      
       {children}
     </>
   );
