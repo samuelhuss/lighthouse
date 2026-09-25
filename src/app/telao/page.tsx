@@ -53,10 +53,6 @@ export default function TelaoPage() {
             Faça sua inscrição agora!
           </p>
 
-          <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed font-normal">
-            Cinco dias imersivos de busca espiritual, palavra transformadora, louvor intenso e comunhão com a igreja.
-          </p>
-
           {/* Included Bullet Points */}
           <div className="grid grid-cols-2 gap-3 pt-2 w-full max-w-lg">
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
