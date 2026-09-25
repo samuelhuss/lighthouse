@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ExternalLink, MapPin } from "lucide-react";
 import { campContent } from "@/content/camp";
 import { RevealOnScroll } from "@/components/landing/RevealOnScroll";
@@ -61,6 +62,79 @@ export function LandingVenueSection() {
             </div>
           </RevealOnScroll>
         </div>
+
+        {/* Photo Gallery Grid (Mosaic) */}
+        <RevealOnScroll delay={0.3} className="mt-12 sm:mt-16">
+          <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-left">
+              
+              {/* Photo 1 - Pool (Span 2 desktop, Span 2 mobile) */}
+              <div className="col-span-2 relative aspect-video md:aspect-[8/5] w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790367092839.webp" 
+                  alt="Área da piscina" 
+                  fill sizes="(max-width: 768px) 100vw, 66vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+
+              {/* Photo 2 - Entrance Gate (Span 1 desktop, Span 1 mobile) */}
+              <div className="col-span-1 relative aspect-square md:aspect-[4/5] w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790366739716.webp" 
+                  alt="Entrada do local" 
+                  fill sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+
+              {/* Photo 3 - House (Span 1 desktop, Span 1 mobile) */}
+              <div className="col-span-1 relative aspect-square w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790367100265.webp" 
+                  alt="Casa principal" 
+                  fill sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+
+              {/* Photo 4 - Gazebo / Pond (Span 1 desktop, Span 1 mobile) */}
+              <div className="col-span-1 relative aspect-square w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790367100266.webp" 
+                  alt="Área do lago" 
+                  fill sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+              
+              {/* Photo 5 - Palm Trees (Span 1 desktop, Span 1 mobile) */}
+              <div className="col-span-1 relative aspect-square w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790367858825.webp" 
+                  alt="Jardim com palmeiras" 
+                  fill sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+
+              {/* Photo 6 - Wide Landscape (Span 3 desktop, Span 2 mobile) */}
+              <div className="col-span-2 md:col-span-3 relative aspect-video md:aspect-[21/9] lg:aspect-[3/1] w-full rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl">
+                <div className="absolute inset-0 bg-[#0e2043]/20 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none" />
+                <Image 
+                  src="/venue/media_1790366739749.webp" 
+                  alt="Vista panorâmica" 
+                  fill sizes="100vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              </div>
+
+            </div>
+        </RevealOnScroll>
       </div>
     </section>
   );
