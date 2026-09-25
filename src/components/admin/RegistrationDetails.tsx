@@ -41,31 +41,76 @@ const date = (value: string | null) => (value ? new Date(value).toLocaleString("
 export function RegistrationDetails({ id }: { id: string }) {
   const [data, setData] = useState<Detail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<Detail>>({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  const load = () => {
+    void fetch(`/api/v1/admin/registrations/${id}`, { credentials: "include", cache: "no-store" })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.error?.message ?? "Não foi possível carregar a inscrição.");
+        return body.registration;
+      })
+      .then(setData)
+      .catch((requestError) => setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar a inscrição."));
+  };
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      void fetch(`/api/v1/admin/registrations/${id}`, { credentials: "include", cache: "no-store" })
-        .then(async (response) => {
-          const body = await response.json();
-          if (!response.ok) throw new Error(body.error?.message ?? "Não foi possível carregar a inscrição.");
-          return body.registration;
-        })
-        .then(setData)
-        .catch((requestError) => setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar a inscrição."));
-    }, 0);
+    const timer = window.setTimeout(load, 0);
     return () => window.clearTimeout(timer);
   }, [id]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const response = await fetch(`/api/v1/admin/registrations/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
+      if (!response.ok) throw new Error("Erro ao salvar dados.");
+      setIsEditing(false);
+      load();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro desconhecido.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleEdit = () => {
+    setEditForm({
+      name: data?.name,
+      email: data?.email,
+      phone: data?.phone,
+      cpf: data?.cpf,
+      gender: data?.gender,
+      medications: data?.medications,
+      allergies: data?.allergies,
+    });
+    setIsEditing(true);
+  };
 
   if (error) return <div className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-800">{error}</div>;
   if (!data) return <div className="flex min-h-60 items-center justify-center"><LoaderCircle className="animate-spin text-slate-400" /></div>;
 
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
         <Link href="/admin/inscricoes" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-[var(--gold)] transition-colors">
           <ArrowLeft size={15} />
           Voltar para inscrições
         </Link>
+        {isEditing ? (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancelar</Button>
+            <Button size="sm" onClick={handleSave} disabled={isSaving}>{isSaving ? "Salvando..." : "Salvar Alterações"}</Button>
+          </div>
+        ) : (
+          <Button variant="outline" size="sm" onClick={handleEdit}>Editar Dados</Button>
+        )}
       </div>
       
       <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0e2043] to-[#1a2d5c] shadow-2xl border border-[#0e2043]/50">
@@ -73,17 +118,28 @@ export function RegistrationDetails({ id }: { id: string }) {
           <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div className="relative z-10 px-6 py-8 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 w-full">
             <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/10 border border-white/20 text-3xl font-extrabold text-white shadow-inner">
               {data.name.charAt(0)}
             </div>
-            <div>
+            <div className="w-full max-w-md">
               <div className="flex items-center gap-3 mb-2">
                 <span className="font-mono text-sm text-[var(--gold)] font-bold tracking-widest">{data.registrationCode}</span>
                 <Badge variant={statusVariant[data.status] ?? "default"} className="uppercase tracking-wider text-[10px]">{labels[data.status] ?? data.status}</Badge>
               </div>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight">{data.name}</h1>
-              <p className="mt-1 text-white/60 text-sm font-medium">{data.email} • {data.phone}</p>
+              {isEditing ? (
+                <input type="text" className="w-full bg-white/10 border border-white/20 text-white px-3 py-1 rounded text-xl font-bold focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" value={editForm.name || ""} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
+              ) : (
+                <h1 className="text-3xl font-extrabold text-white tracking-tight">{data.name}</h1>
+              )}
+              {isEditing ? (
+                <div className="flex gap-2 mt-2">
+                  <input type="email" placeholder="E-mail" className="w-full bg-white/10 border border-white/20 text-white px-2 py-1 rounded text-sm focus:outline-none" value={editForm.email || ""} onChange={e => setEditForm({ ...editForm, email: e.target.value })} />
+                  <input type="text" placeholder="WhatsApp" className="w-full bg-white/10 border border-white/20 text-white px-2 py-1 rounded text-sm focus:outline-none" value={editForm.phone || ""} onChange={e => setEditForm({ ...editForm, phone: e.target.value })} />
+                </div>
+              ) : (
+                <p className="mt-1 text-white/60 text-sm font-medium">{data.email} • {data.phone}</p>
+              )}
             </div>
           </div>
         </div>
@@ -97,19 +153,19 @@ export function RegistrationDetails({ id }: { id: string }) {
           <CardContent className="space-y-4 text-sm">
             <div>
               <dt className="text-slate-500">E-mail</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.email}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <input className="w-full border rounded px-2 py-1" value={editForm.email || ""} onChange={e => setEditForm({...editForm, email: e.target.value})} /> : data.email}</dd>
             </div>
             <div>
               <dt className="text-slate-500">WhatsApp</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.phone}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <input className="w-full border rounded px-2 py-1" value={editForm.phone || ""} onChange={e => setEditForm({...editForm, phone: e.target.value})} /> : data.phone}</dd>
             </div>
             <div>
               <dt className="text-slate-500">CPF</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.cpf ?? "—"}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <input className="w-full border rounded px-2 py-1" value={editForm.cpf || ""} onChange={e => setEditForm({...editForm, cpf: e.target.value})} /> : (data.cpf ?? "—")}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Sexo</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.gender ?? "—"}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <select className="w-full border rounded px-2 py-1" value={editForm.gender || ""} onChange={e => setEditForm({...editForm, gender: e.target.value})}><option value="">Não informado</option><option value="M">Masculino</option><option value="F">Feminino</option></select> : (data.gender ?? "—")}</dd>
             </div>
           </CardContent>
         </Card>
@@ -137,11 +193,11 @@ export function RegistrationDetails({ id }: { id: string }) {
           <CardContent className="space-y-4 text-sm">
             <div>
               <dt className="text-slate-500">Medicamentos</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.medications || "Nenhum"}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <textarea className="w-full border rounded px-2 py-1" value={editForm.medications || ""} onChange={e => setEditForm({...editForm, medications: e.target.value})} /> : (data.medications || "Nenhum")}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Alergias</dt>
-              <dd className="mt-0.5 font-medium text-slate-900">{data.allergies || "Nenhuma"}</dd>
+              <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <textarea className="w-full border rounded px-2 py-1" value={editForm.allergies || ""} onChange={e => setEditForm({...editForm, allergies: e.target.value})} /> : (data.allergies || "Nenhuma")}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Restrições Alimentares</dt>

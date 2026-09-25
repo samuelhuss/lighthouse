@@ -42,7 +42,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
       const updated = await tx.registration.update({
         where: { id },
-        data: { status: body.status },
+        data: {
+          status: body.status,
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          cpf: body.cpf,
+          gender: body.gender,
+          medications: body.medications,
+          allergies: body.allergies,
+        },
       });
 
       if (

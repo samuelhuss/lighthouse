@@ -321,10 +321,37 @@ export function RegistrationsView() {
             <h1 className="text-2xl font-extrabold text-white tracking-tight">Registro de Inscrições</h1>
             <p className="mt-1 text-amber-50 text-sm">Visualize e gerencie todos os campistas inscritos no evento.</p>
           </div>
-          <Button variant="adminOutline" className="bg-white/20 hover:bg-white border-white/30 hover:text-amber-700 text-white shadow-sm backdrop-blur-md" onClick={load}>
-            <RefreshCw size={14} className="mr-2" />
-            Sincronizar
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="adminOutline" className="bg-white/10 hover:bg-white border-white/30 hover:text-amber-700 text-white shadow-sm backdrop-blur-md" onClick={() => {
+              const csvContent = [
+                ["Código", "Nome", "E-mail", "Status", "Valor (R$)", "Data Inscrição", "Check-in"].join(","),
+                ...items.map(item => [
+                  item.code,
+                  `"${item.name}"`,
+                  item.email,
+                  statusLabel[item.status] || item.status,
+                  (item.amountCents / 100).toFixed(2).replace('.', ','),
+                  new Date(item.createdAt).toLocaleString("pt-BR"),
+                  item.checkedInAt ? new Date(item.checkedInAt).toLocaleString("pt-BR") : "Pendente"
+                ].join(","))
+              ].join("\n");
+              
+              const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.setAttribute("href", url);
+              link.setAttribute("download", `inscricoes_lighthouse_${new Date().toISOString().split('T')[0]}.csv`);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}>
+              Exportar CSV (Página atual)
+            </Button>
+            <Button variant="adminOutline" className="bg-white/20 hover:bg-white border-white/30 hover:text-amber-700 text-white shadow-sm backdrop-blur-md" onClick={load}>
+              <RefreshCw size={14} className="mr-2" />
+              Sincronizar
+            </Button>
+          </div>
         </div>
       </div>
       <FilterBar

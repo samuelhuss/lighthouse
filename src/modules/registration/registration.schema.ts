@@ -45,6 +45,13 @@ export const adminUpdateRegistrationSchema = z.object({
       "REFUNDED",
     ])
     .optional(),
+  name: z.string().trim().min(3).max(255).optional(),
+  email: z.string().trim().email().max(255).optional(),
+  phone: z.string().trim().min(10).max(20).optional(),
+  cpf: z.string().trim().max(14).optional(),
+  gender: z.string().trim().optional(),
+  medications: z.string().trim().optional(),
+  allergies: z.string().trim().optional(),
 });
 
 export type AdminUpdateRegistrationBody = z.infer<typeof adminUpdateRegistrationSchema>;
