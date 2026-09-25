@@ -100,7 +100,7 @@ export class MercadoPagoClient {
       WebhookSignatureValidator.validate({
         xSignature,
         xRequestId: requestId,
-        dataID: dataId || "",
+        dataId: dataId || "",
         secret,
       });
     } catch (err) {
