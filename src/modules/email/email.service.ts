@@ -127,6 +127,17 @@ export const emailService = {
     });
   },
 
+  async sendTicketResend(input: { registrationId: string; name: string; email: string; registrationCode: string }) {
+    return send({
+      recipient: input.email,
+      registrationId: input.registrationId,
+      type: "TICKET_RESEND",
+      idempotencyKey: `ticket-resend:${input.registrationId}:${Date.now()}`,
+      subject: "Seu ingresso para o Lighthouse",
+      html: renderEmailLayout({ subject: "Seu ingresso para o Lighthouse", preview: "Acesse seu QR Code.", content: `<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#223164">Aqui está o seu ingresso</h1><p>Olá, ${escapeHtml(input.name)}.</p><p>A pedido da organização, estamos reenviando o link de acesso ao seu Ingresso Oficial (QR Code) para a inscrição <strong>${escapeHtml(input.registrationCode)}</strong>.</p><p>Guarde-o com carinho para o dia do evento:</p><p><a href="${getEnv().NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pagamento/sucesso?code=${escapeHtml(input.registrationCode)}" style="display:inline-block;border-radius:8px;background:#e8af2e;padding:12px 18px;color:#0e2043;font-weight:700;text-decoration:none;margin-top:8px;">Acessar Ingresso Oficial</a></p>` }),
+    });
+  },
+
   async sendCampaign(input: { subject: string; message: string }) {
     const recipients = await this.getCampaignAudience();
     const campaignKey = createHash("sha256").update(`${input.subject}\0${input.message}`).digest("hex").slice(0, 24);

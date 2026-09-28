@@ -26,6 +26,7 @@ enum PaymentStatus {
 
 enum PaymentProvider {
     MERCADO_PAGO
+    MANUAL
 }
 
 enum WebhookProvider {
@@ -224,4 +225,15 @@ model AuditLog {
 
     @@index([entityType, entityId])
     @@map("audit_logs")
+}
+
+model NotificationRule {
+    id        String   @id @default(uuid())
+    event     String   // "REGISTRATION_CREATED", "PAYMENT_APPROVED", "PAYMENT_FAILED"
+    action    String   // "SEND_EMAIL", "WEBHOOK", "SMS"
+    target    String   // email address, url, phone
+    active    Boolean  @default(true)
+    createdAt DateTime @default(now())
+
+    @@map("notification_rules")
 }

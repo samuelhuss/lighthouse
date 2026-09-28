@@ -324,15 +324,26 @@ export function RegistrationsView() {
           <div className="flex items-center gap-3">
             <Button variant="adminOutline" className="bg-white/10 hover:bg-white border-white/30 hover:text-amber-700 text-white shadow-sm backdrop-blur-md" onClick={() => {
               const csvContent = [
-                ["Código", "Nome", "E-mail", "Status", "Valor (R$)", "Data Inscrição", "Check-in"].join(","),
+                ["Código", "Nome", "E-mail", "WhatsApp", "CPF", "Nascimento", "Gênero", "Status", "Valor (R$)", "Data Inscrição", "Check-in", "Logradouro", "CEP", "Medicamentos", "Alergias", "Restrição Alimentar", "Responsável 1", "Responsável 2"].join(","),
                 ...items.map(item => [
                   item.code,
-                  `"${item.name}"`,
-                  item.email,
+                  `"${item.name || ""}"`,
+                  `"${item.email || ""}"`,
+                  `"${(item as any).phone || ""}"`,
+                  `"${(item as any).cpf || ""}"`,
+                  `"${(item as any).birthDate || ""}"`,
+                  `"${(item as any).gender || ""}"`,
                   statusLabel[item.status] || item.status,
                   (item.amountCents / 100).toFixed(2).replace('.', ','),
                   new Date(item.createdAt).toLocaleString("pt-BR"),
-                  item.checkedInAt ? new Date(item.checkedInAt).toLocaleString("pt-BR") : "Pendente"
+                  item.checkedInAt ? new Date(item.checkedInAt).toLocaleString("pt-BR") : "Pendente",
+                  `"${(item as any).address || ""}"`,
+                  `"${(item as any).zipCode || ""}"`,
+                  `"${(item as any).medications || ""}"`,
+                  `"${(item as any).allergies || ""}"`,
+                  `"${(item as any).dietaryRestrictions || ""}"`,
+                  `"${(item as any).guardianOneName || ""} ${(item as any).guardianOnePhone || ""}".trim()`,
+                  `"${(item as any).guardianTwoName || ""} ${(item as any).guardianTwoPhone || ""}".trim()`
                 ].join(","))
               ].join("\n");
               

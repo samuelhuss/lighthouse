@@ -14,6 +14,7 @@ type Detail = {
   email: string;
   phone: string;
   cpf: string | null;
+  birthDate: string | null;
   address: string | null;
   zipCode: string | null;
   gender: string | null;
@@ -93,6 +94,31 @@ export function RegistrationDetails({ id }: { id: string }) {
     setIsEditing(true);
   };
 
+  const handleResendTicket = async () => {
+    if (!confirm("Tem certeza que deseja reenviar o ingresso por e-mail?")) return;
+    try {
+      await adminFetch(`/api/v1/admin/registrations/${id}/resend-ticket`, { method: "POST" });
+      alert("Ingresso reenviado com sucesso!");
+    } catch (e: any) {
+      alert("Erro ao reenviar: " + e.message);
+    }
+  };
+
+  const handleApproveManualPayment = async () => {
+    const justification = prompt("Aprovar pagamento manualmente.\n\nSe quiser, digite uma justificativa (ex: 'Pix para João', 'Dinheiro na mão'):");
+    if (justification === null) return; // cancelled
+    try {
+      await adminFetch(`/api/v1/admin/registrations/${id}/approve-payment`, { 
+        method: "POST", 
+        body: JSON.stringify({ justification }) 
+      });
+      alert("Pagamento aprovado com sucesso!");
+      load(); // refresh data
+    } catch (e: any) {
+      alert("Erro ao aprovar: " + e.message);
+    }
+  };
+
   if (error) return <div className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-800">{error}</div>;
   if (!data) return <div className="flex min-h-60 items-center justify-center"><LoaderCircle className="animate-spin text-slate-400" /></div>;
 
@@ -109,7 +135,15 @@ export function RegistrationDetails({ id }: { id: string }) {
             <Button size="sm" onClick={handleSave} disabled={isSaving}>{isSaving ? "Salvando..." : "Salvar Alterações"}</Button>
           </div>
         ) : (
-          <Button variant="outline" size="sm" onClick={handleEdit}>Editar Dados</Button>
+          <div className="flex gap-2">
+            {data.status === "PAID" && (
+              <Button variant="outline" size="sm" onClick={handleResendTicket}>Reenviar Ingresso</Button>
+            )}
+            {data.status === "PENDING_PAYMENT" && (
+              <Button variant="admin" size="sm" onClick={handleApproveManualPayment}>Aprovar Pagamento</Button>
+            )}
+            <Button variant="outline" size="sm" onClick={handleEdit}>Editar Dados</Button>
+          </div>
         )}
       </div>
       
@@ -162,6 +196,10 @@ export function RegistrationDetails({ id }: { id: string }) {
             <div>
               <dt className="text-slate-500">CPF</dt>
               <dd className="mt-0.5 font-medium text-slate-900">{isEditing ? <input className="w-full border rounded px-2 py-1" value={editForm.cpf || ""} onChange={e => setEditForm({...editForm, cpf: e.target.value})} /> : (data.cpf ?? "—")}</dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Data de Nascimento</dt>
+              <dd className="mt-0.5 font-medium text-slate-900">{data.birthDate ? new Date(data.birthDate).toLocaleDateString("pt-BR") : "—"}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Sexo</dt>
@@ -270,4 +308,11 @@ export function RegistrationDetails({ id }: { id: string }) {
       </Card>
     </>
   );
+}
+
+async function adminFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(path, { credentials: "include", cache: "no-store", ...options });
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error?.message ?? "Não foi possível carregar os dados.");
+  return body;
 }

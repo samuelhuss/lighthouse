@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BarChart3, CreditCard, Layers3, LogOut, Mail, Menu, Users, X, Activity, QrCode } from "lucide-react";
+import { BarChart3, CreditCard, Layers3, LogOut, Mail, Menu, Users, X, Activity, QrCode, Bell } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ const navigation = [
   { href: "/admin/inscricoes", label: "Inscrições", icon: Users },
   { href: "/admin/pagamentos", label: "Pagamentos", icon: CreditCard },
   { href: "/admin/lotes", label: "Lotes", icon: Layers3 },
+  { href: "/admin/notificacoes", label: "Notificações", icon: Bell },
   { href: "/admin/emails", label: "Emails", icon: Mail },
   { href: "/admin/check-in", label: "Check-in", icon: QrCode },
   { href: "/admin/jobs", label: "Servidor & Jobs", icon: Activity },

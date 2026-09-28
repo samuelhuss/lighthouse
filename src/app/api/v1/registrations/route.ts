@@ -135,6 +135,18 @@ export async function POST(request: Request) {
     log.info({ registrationCode: result.registration.code }, "registration_created");
 
     try {
+      const { notificationService } = await import("@/modules/notification/notification.service");
+      await notificationService.notifyAdmin("NOVA_INSCRICAO", {
+        nome: body.name,
+        email: body.email,
+        telefone: body.phone,
+        codigo: result.registration.code,
+        valor: (batch.priceCents / 100).toFixed(2),
+      });
+    } catch (e) {}
+
+
+    try {
       const { emailService } = await import("@/modules/email/email.service");
       await emailService.sendRegistrationCreated({
         registrationId: result.registration.id,
