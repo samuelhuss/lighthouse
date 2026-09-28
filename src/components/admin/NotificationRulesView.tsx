@@ -1,10 +1,9 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus, Bell, Mail } from "lucide-react";
+import { Trash2, Plus, Bell, Mail, Activity, Zap } from "lucide-react";
 
 type NotificationRule = {
   id: string;
@@ -74,74 +73,109 @@ export function NotificationRulesView() {
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-semibold">Nova Regra</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Quando acontecer o evento</label>
-                <select className="w-full border rounded-md px-3 py-2 text-sm" value={form.event} onChange={e => setForm({...form, event: e.target.value})}>
-                  <option value="PAGAMENTO_APROVADO">Pagamento Aprovado</option>
-                  <option value="NOVA_INSCRICAO">Nova Inscrição Criada</option>
-                </select>
-              </div>
+          <div className="sticky top-20 bg-white/50 p-6 rounded-2xl border border-slate-200/60 shadow-sm backdrop-blur-sm">
+            <h3 className="text-sm font-semibold mb-6 text-slate-800 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-900 text-white text-xs">1</span>
+              Montar Novo Fluxo
+            </h3>
+            
+            <div className="space-y-0 relative before:absolute before:inset-y-6 before:left-[19px] before:w-0.5 before:bg-slate-200">
               
-              <div>
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Ação</label>
-                <select className="w-full border rounded-md px-3 py-2 text-sm" value={form.action} onChange={e => setForm({...form, action: e.target.value})}>
-                  <option value="SEND_EMAIL">Enviar E-mail</option>
-                </select>
+              <div className="relative pl-12 pb-6">
+                <div className="absolute left-0 top-1 w-10 h-10 bg-indigo-50 border-2 border-indigo-200 rounded-full flex items-center justify-center text-indigo-500 z-10 shadow-sm">
+                  <Activity size={18} />
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Quando acontecer (Gatilho)</label>
+                  <select className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none" value={form.event} onChange={e => setForm({...form, event: e.target.value})}>
+                    <option value="PAGAMENTO_APROVADO">Pagamento Aprovado</option>
+                    <option value="NOVA_INSCRICAO">Nova Inscrição Criada</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Destino (Seu E-mail)</label>
-                <input type="email" placeholder="contato@exemplo.com" className="w-full border rounded-md px-3 py-2 text-sm" value={form.target} onChange={e => setForm({...form, target: e.target.value})} />
+              <div className="relative pl-12 pb-6">
+                <div className="absolute left-0 top-1 w-10 h-10 bg-amber-50 border-2 border-amber-200 rounded-full flex items-center justify-center text-amber-500 z-10 shadow-sm">
+                  <Zap size={18} />
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Fazer isso (Ação)</label>
+                  <select className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-none" value={form.action} onChange={e => setForm({...form, action: e.target.value})}>
+                    <option value="SEND_EMAIL">Enviar E-mail</option>
+                  </select>
+                </div>
               </div>
 
-              <Button onClick={handleCreate} className="w-full" variant="admin">
-                <Plus size={16} className="mr-2" />
-                Adicionar Regra
-              </Button>
-            </CardContent>
-          </Card>
+              <div className="relative pl-12 pb-6">
+                <div className="absolute left-0 top-1 w-10 h-10 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center text-emerald-500 z-10 shadow-sm">
+                  <Mail size={18} />
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Para este destino</label>
+                  <input type="email" placeholder="contato@exemplo.com" className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none placeholder:text-slate-300" value={form.target} onChange={e => setForm({...form, target: e.target.value})} />
+                </div>
+              </div>
+
+            </div>
+
+            <Button onClick={handleCreate} className="w-full mt-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-md py-6">
+              <Plus size={18} className="mr-2" />
+              Ativar Fluxo
+            </Button>
+          </div>
         </div>
 
         <div className="md:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-semibold">Regras Ativas</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-white/80 p-6 rounded-2xl shadow-sm border border-slate-200/60 backdrop-blur-sm h-full">
+            <h3 className="text-sm font-semibold mb-6 text-slate-800 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-xs">2</span>
+              Fluxos Ativos
+            </h3>
+            
+            <div className="h-[calc(100%-3rem)]">
               {loading ? (
-                <p className="text-sm text-slate-500 text-center py-10">Carregando...</p>
+                <p className="text-sm text-slate-500 text-center py-20 flex flex-col items-center gap-3">
+                  <Activity className="animate-spin text-slate-300 w-6 h-6" />
+                  Carregando fluxos...
+                </p>
               ) : items.length === 0 ? (
-                <div className="text-center py-10 border-2 border-dashed border-slate-100 rounded-lg">
-                  <Bell className="mx-auto text-slate-300 w-8 h-8 mb-3" />
-                  <p className="text-sm text-slate-500 font-medium">Nenhuma regra configurada</p>
-                  <p className="text-xs text-slate-400 mt-1">Adicione uma regra ao lado para começar a receber alertas.</p>
+                <div className="text-center py-20 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                  <Zap className="mx-auto text-slate-300 w-10 h-10 mb-3" />
+                  <p className="text-sm text-slate-600 font-medium">Nenhum fluxo ativo</p>
+                  <p className="text-xs text-slate-400 mt-1 max-w-[200px] mx-auto">Crie seu primeiro fluxo de automação no painel ao lado.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="grid sm:grid-cols-2 xl:grid-cols-2 gap-4">
                   {items.map(rule => (
-                    <div key={rule.id} className="flex justify-between items-center p-4 border border-slate-100 rounded-lg shadow-sm bg-slate-50/50">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="outline" className="text-[10px] bg-white">{rule.event}</Badge>
-                          <span className="text-slate-400 text-xs">→</span>
-                          <Badge variant="default" className="text-[10px]"><Mail size={10} className="mr-1 inline" /> {rule.action}</Badge>
+                    <div key={rule.id} className="relative group bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100">
+                        <div className="w-6 h-6 rounded-md bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0">
+                          <Activity size={12} />
                         </div>
-                        <p className="text-sm font-medium text-slate-900">{rule.target}</p>
+                        <span className="text-xs font-semibold text-slate-700 truncate">{rule.event === "PAGAMENTO_APROVADO" ? "Pagamento Aprovado" : "Nova Inscrição"}</span>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(rule.id)}>
-                        <Trash2 size={16} />
-                      </Button>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-6 h-6 rounded-md bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                          <Zap size={12} />
+                        </div>
+                        <span className="text-xs font-medium text-slate-600">Enviar E-mail</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
+                          <Mail size={12} />
+                        </div>
+                        <span className="text-xs font-medium text-slate-900 truncate">{rule.target}</span>
+                      </div>
+
+                      <button onClick={() => handleDelete(rule.id)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 bg-white rounded-full p-1 shadow-sm border border-slate-100">
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   ))}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </>
