@@ -135,5 +135,18 @@ export const paymentService = {
         });
       } catch (e) {}
     }
+
+    if (paymentStatus === "REJECTED") {
+      try {
+        const { notificationService } = await import("@/modules/notification/notification.service");
+        await notificationService.notifyAdmin("PAGAMENTO_FALHOU", {
+          nome: paymentRecord.registration.name,
+          email: paymentRecord.registration.email,
+          codigo: paymentRecord.registration.registrationCode,
+          valor: (paymentRecord.amountCents / 100).toFixed(2),
+          motivo: mpPayment.statusDetail ?? "Recusado pelo cartão",
+        });
+      } catch (e) {}
+    }
   },
 };

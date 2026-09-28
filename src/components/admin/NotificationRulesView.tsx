@@ -89,6 +89,7 @@ export function NotificationRulesView() {
                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Quando acontecer (Gatilho)</label>
                   <select className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none" value={form.event} onChange={e => setForm({...form, event: e.target.value})}>
                     <option value="PAGAMENTO_APROVADO">Pagamento Aprovado</option>
+                    <option value="PAGAMENTO_FALHOU">Pagamento Recusado/Falhou</option>
                     <option value="NOVA_INSCRICAO">Nova Inscrição Criada</option>
                   </select>
                 </div>
@@ -100,19 +101,22 @@ export function NotificationRulesView() {
                 </div>
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Fazer isso (Ação)</label>
-                  <select className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-none" value={form.action} onChange={e => setForm({...form, action: e.target.value})}>
+                  <select className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-none" value={form.action} onChange={e => {
+                    setForm({...form, action: e.target.value, target: ""});
+                  }}>
                     <option value="SEND_EMAIL">Enviar E-mail</option>
+                    <option value="WEBHOOK">Disparar Webhook (POST)</option>
                   </select>
                 </div>
               </div>
 
               <div className="relative pl-12 pb-6">
                 <div className="absolute left-0 top-1 w-10 h-10 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center text-emerald-500 z-10 shadow-sm">
-                  <Mail size={18} />
+                  {form.action === "WEBHOOK" ? <Zap size={18} /> : <Mail size={18} />}
                 </div>
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Para este destino</label>
-                  <input type="email" placeholder="contato@exemplo.com" className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none placeholder:text-slate-300" value={form.target} onChange={e => setForm({...form, target: e.target.value})} />
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">{form.action === "WEBHOOK" ? "URL do Webhook" : "Para este destino"}</label>
+                  <input type={form.action === "WEBHOOK" ? "url" : "email"} placeholder={form.action === "WEBHOOK" ? "https://hooks.zapier.com/..." : "contato@exemplo.com"} className="w-full bg-slate-50 border-0 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none placeholder:text-slate-300" value={form.target} onChange={e => setForm({...form, target: e.target.value})} />
                 </div>
               </div>
 
@@ -152,17 +156,19 @@ export function NotificationRulesView() {
                         <div className="w-6 h-6 rounded-md bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0">
                           <Activity size={12} />
                         </div>
-                        <span className="text-xs font-semibold text-slate-700 truncate">{rule.event === "PAGAMENTO_APROVADO" ? "Pagamento Aprovado" : "Nova Inscrição"}</span>
+                        <span className="text-xs font-semibold text-slate-700 truncate">
+                          {rule.event === "PAGAMENTO_APROVADO" ? "Pagamento Aprovado" : rule.event === "PAGAMENTO_FALHOU" ? "Pagamento Recusado" : "Nova Inscrição"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 mb-1">
                         <div className="w-6 h-6 rounded-md bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
                           <Zap size={12} />
                         </div>
-                        <span className="text-xs font-medium text-slate-600">Enviar E-mail</span>
+                        <span className="text-xs font-medium text-slate-600">{rule.action === "WEBHOOK" ? "Disparar Webhook" : "Enviar E-mail"}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
-                          <Mail size={12} />
+                          {rule.action === "WEBHOOK" ? <Zap size={12} /> : <Mail size={12} />}
                         </div>
                         <span className="text-xs font-medium text-slate-900 truncate">{rule.target}</span>
                       </div>
