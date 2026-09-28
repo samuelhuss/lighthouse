@@ -1,4 +1,3 @@
-import { AdminShell } from "@/components/admin/AdminShell";
 import { NotificationRulesView } from "@/components/admin/NotificationRulesView";
 import { Metadata } from "next";
 
@@ -7,9 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminNotificacoesPage() {
-  return (
-    <AdminShell>
-      <NotificationRulesView />
-    </AdminShell>
-  );
+  return <NotificationRulesView />;
 }
