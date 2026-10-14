@@ -268,7 +268,7 @@ export function PaymentStatusPage({ kind }: { kind: PageKind }) {
 
                 {(view === "error" || view === "expired") && (
                   <Button asChild className="w-full sm:w-auto bg-white text-[#0e2043] font-bold h-12 rounded-2xl">
-                    <Link href="/inscricao">
+                    <Link href="/">
                       Tentar Novamente <ArrowRight className="h-4 w-4 ml-1" />
                     </Link>
                   </Button>
