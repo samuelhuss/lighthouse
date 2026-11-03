@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { errorResponse, getRequestId, parseJsonBody } from "@/lib/http";
@@ -28,6 +29,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       endsAt: body.endsAt ? new Date(body.endsAt) : undefined,
     });
 
+    revalidatePath("/");
     return NextResponse.json({ batch }, { status: 200, headers: { "x-request-id": requestId } });
   } catch (error) {
     return errorResponse(error, requestId);
