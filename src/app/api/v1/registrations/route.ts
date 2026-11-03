@@ -92,6 +92,7 @@ export async function POST(request: Request) {
           pending: `${getEnv().NEXT_PUBLIC_APP_URL}/pagamento/pendente?code=${encodeURIComponent(registrationCode)}`,
         },
         expiresAt: registration.paymentExpiresAt!,
+        maxInstallments: batch.maxInstallments,
       });
 
       const payment = await tx.payment.create({

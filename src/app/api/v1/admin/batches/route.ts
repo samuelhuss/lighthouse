@@ -9,6 +9,7 @@ const createBatchSchema = z.object({
   name: z.string().trim().min(1).max(100),
   priceCents: z.number().int().positive(),
   capacity: z.number().int().positive(),
+  maxInstallments: z.number().int().min(1).max(12).optional(),
   startsAt: z.string().datetime().optional(),
   endsAt: z.string().datetime().optional(),
 });
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
       name: body.name,
       priceCents: body.priceCents,
       capacity: body.capacity,
+      maxInstallments: body.maxInstallments,
       startsAt: body.startsAt ? new Date(body.startsAt) : undefined,
       endsAt: body.endsAt ? new Date(body.endsAt) : undefined,
     });

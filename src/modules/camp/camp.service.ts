@@ -65,6 +65,7 @@ export const campService = {
             id: currentBatch.id,
             name: currentBatch.name,
             priceCents: currentBatch.priceCents,
+            maxInstallments: currentBatch.maxInstallments,
           }
         : null,
       batches: allBatches.map((b) => ({

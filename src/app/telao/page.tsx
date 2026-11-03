@@ -7,11 +7,17 @@ import { HeroAmbience } from "@/components/landing/HeroAmbience";
 
 export default function TelaoPage() {
   const [siteUrl, setSiteUrl] = useState<string>("https://lighthouse27.com");
+  const [maxInstallments, setMaxInstallments] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setSiteUrl(`${window.location.origin}/#inscricao`);
     }
+
+    fetch("/api/v1/camp", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setMaxInstallments(data?.currentBatch?.maxInstallments ?? null))
+      .catch(() => setMaxInstallments(null));
   }, []);
 
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
@@ -69,7 +75,11 @@ export default function TelaoPage() {
             </div>
             <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white/90">
               <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-              <span>Pix ou até 5x no cartão</span>
+              <span>
+                {maxInstallments
+                  ? `Pix ou até ${maxInstallments}x no cartão`
+                  : "Pix ou cartão de crédito"}
+              </span>
             </div>
           </div>
 

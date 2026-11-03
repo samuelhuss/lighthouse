@@ -1,0 +1,1 @@
+ALTER TABLE "batches" ADD COLUMN "maxInstallments" INTEGER NOT NULL DEFAULT 5;

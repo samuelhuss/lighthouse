@@ -14,6 +14,6 @@ export type CampInfo = {
   startDate: Date | null;
   endDate: Date | null;
   availableSpots: number;
-  currentBatch: { name: string; priceCents: number } | null;
+  currentBatch: { name: string; priceCents: number; maxInstallments: number } | null;
   batches?: BatchInfo[];
 };

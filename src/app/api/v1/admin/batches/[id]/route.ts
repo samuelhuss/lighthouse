@@ -8,6 +8,7 @@ const updateBatchSchema = z.object({
   name: z.string().trim().min(1).max(100).optional(),
   priceCents: z.number().int().positive().optional(),
   capacity: z.number().int().positive().optional(),
+  maxInstallments: z.number().int().min(1).max(12).optional(),
   startsAt: z.string().datetime().optional(),
   endsAt: z.string().datetime().optional(),
   active: z.boolean().optional(),

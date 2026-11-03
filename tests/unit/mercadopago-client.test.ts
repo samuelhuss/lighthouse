@@ -61,11 +61,13 @@ describe("MercadoPagoClient", () => {
         pending: "https://example.com/pagamento/pendente?code=REG-123",
       },
       expiresAt: new Date("2030-01-01T00:00:00.000Z"),
+      maxInstallments: 3,
     });
 
     expect(createPreferenceMock).toHaveBeenCalledWith({
       body: expect.objectContaining({
         notification_url: "http://localhost:3000/api/v1/webhooks/mercadopago",
+        payment_methods: { installments: 3 },
       }),
     });
   });

@@ -19,6 +19,7 @@ export interface CreatePreferenceInput {
     pending: string;
   };
   expiresAt: Date;
+  maxInstallments: number;
 }
 
 export interface CreatePreferenceResult {

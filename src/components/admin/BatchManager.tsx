@@ -12,9 +12,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
-type Batch = { id: string; name: string; priceCents: number; capacity: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
-type BatchForm = { name: string; price: string; capacity: string; startsAt: string; endsAt: string; active: boolean };
-const emptyForm: BatchForm = { name: "", price: "", capacity: "", startsAt: "", endsAt: "", active: true };
+type Batch = { id: string; name: string; priceCents: number; capacity: number; maxInstallments: number; reservedCount: number; active: boolean; startsAt: string | null; endsAt: string | null };
+type BatchForm = { name: string; price: string; capacity: string; maxInstallments: string; startsAt: string; endsAt: string; active: boolean };
+const emptyForm: BatchForm = { name: "", price: "", capacity: "", maxInstallments: "5", startsAt: "", endsAt: "", active: true };
 const money = (cents: number) => (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 async function fetchBatches() {
@@ -55,6 +55,7 @@ export function BatchManager() {
       name: batch.name,
       price: String(batch.priceCents / 100),
       capacity: String(batch.capacity),
+      maxInstallments: String(batch.maxInstallments),
       startsAt: batch.startsAt?.slice(0, 16) ?? "",
       endsAt: batch.endsAt?.slice(0, 16) ?? "",
       active: batch.active,
@@ -74,6 +75,7 @@ export function BatchManager() {
       name: form.name,
       priceCents: Math.round(Number(form.price.replace(",", ".")) * 100),
       capacity: Number(form.capacity),
+      maxInstallments: Number(form.maxInstallments),
       startsAt: form.startsAt ? new Date(form.startsAt).toISOString() : undefined,
       endsAt: form.endsAt ? new Date(form.endsAt).toISOString() : undefined,
       active: form.active,
@@ -122,7 +124,7 @@ export function BatchManager() {
                 <Label htmlFor="batch-name">Nome</Label>
                 <Input id="batch-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1.5" placeholder="1º Lote" />
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <div>
                   <Label htmlFor="batch-price">Preço (R$)</Label>
                   <Input id="batch-price" required min="0.01" step="0.01" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="mt-1.5" placeholder="230,00" />
@@ -130,6 +132,10 @@ export function BatchManager() {
                 <div>
                   <Label htmlFor="batch-capacity">Capacidade</Label>
                   <Input id="batch-capacity" required min="1" type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} className="mt-1.5" placeholder="50" />
+                </div>
+                <div>
+                  <Label htmlFor="batch-installments">Máx. parcelas</Label>
+                  <Input id="batch-installments" required min="1" max="12" type="number" value={form.maxInstallments} onChange={(e) => setForm({ ...form, maxInstallments: e.target.value })} className="mt-1.5" placeholder="5" />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -228,7 +234,7 @@ export function BatchManager() {
                       </div>
                       <div className="flex justify-between items-center mt-4">
                         <div className="text-[11px] text-slate-400 font-mono">
-                          {batch.reservedCount} de {batch.capacity} vagas
+                          {batch.reservedCount} de {batch.capacity} vagas · até {batch.maxInstallments}x
                         </div>
                         <Button variant={batch.active ? "admin" : "adminOutline"} size="sm" onClick={() => edit(batch)} className={batch.active ? "bg-[var(--gold)] text-[#0e2043]" : ""}>
                           <Pencil size={14} className="mr-1" />

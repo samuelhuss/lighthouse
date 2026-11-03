@@ -203,8 +203,8 @@ export const campContent = {
   paymentConditionsTitle: "Condições de Pagamento",
   paymentConditions: [
     "Pagamento à Vista — Pix, débito ou crédito",
-    "Pagamento Parcelado em até 5x no Crédito",
   ],
+  paymentInstallmentsLabel: (maxInstallments: number) => `Pagamento Parcelado em até ${maxInstallments}x no Crédito`,
 
   faq: [
     {

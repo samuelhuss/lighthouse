@@ -53,12 +53,13 @@ model Camp {
 }
 
 model Batch {
-    id            String @id @default(uuid())
-    campId        String
-    name          String
-    priceCents    Int
-    capacity      Int
-    reservedCount Int    @default(0)
+    id              String @id @default(uuid())
+    campId          String
+    name            String
+    priceCents      Int
+    capacity        Int
+    reservedCount   Int    @default(0)
+    maxInstallments Int    @default(5)
 
     startsAt DateTime?
     endsAt   DateTime?
@@ -80,11 +81,11 @@ model Registration {
     batchId          String?
     registrationCode String  @unique
 
-    name      String
-    email     String
-    phone     String
-    cpf       String?
-    birthDate DateTime?
+    name                String
+    email               String
+    phone               String
+    cpf                 String?
+    birthDate           DateTime?
     address             String?
     zipCode             String?
     gender              String?
@@ -229,9 +230,9 @@ model AuditLog {
 
 model NotificationRule {
     id        String   @id @default(uuid())
-    event     String   // "REGISTRATION_CREATED", "PAYMENT_APPROVED", "PAYMENT_FAILED"
-    action    String   // "SEND_EMAIL", "WEBHOOK", "SMS"
-    target    String   // email address, url, phone
+    event     String // "REGISTRATION_CREATED", "PAYMENT_APPROVED", "PAYMENT_FAILED"
+    action    String // "SEND_EMAIL", "WEBHOOK", "SMS"
+    target    String // email address, url, phone
     active    Boolean  @default(true)
     createdAt DateTime @default(now())
 

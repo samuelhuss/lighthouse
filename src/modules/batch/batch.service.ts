@@ -5,6 +5,15 @@ import { batchRepository } from "@/modules/batch/batch.repository";
 
 type Client = Prisma.TransactionClient | typeof prisma;
 
+const MIN_INSTALLMENTS = 1;
+const MAX_INSTALLMENTS = 12;
+
+function assertValidInstallments(value: number) {
+  if (!Number.isInteger(value) || value < MIN_INSTALLMENTS || value > MAX_INSTALLMENTS) {
+    throw new ValidationError(`maxInstallments deve estar entre ${MIN_INSTALLMENTS} e ${MAX_INSTALLMENTS}.`);
+  }
+}
+
 export const batchService = {
   /**
    * Determines the batch currently open for registrations. If more than one
@@ -38,6 +47,7 @@ export const batchService = {
     name: string;
     priceCents: number;
     capacity: number;
+    maxInstallments?: number;
     startsAt?: Date;
     endsAt?: Date;
   }): Promise<Batch> {
@@ -47,12 +57,16 @@ export const batchService = {
     if (input.capacity <= 0) {
       throw new ValidationError("capacity deve ser maior que zero.");
     }
+    if (input.maxInstallments !== undefined) {
+      assertValidInstallments(input.maxInstallments);
+    }
 
     return batchRepository.create(prisma, {
       camp: { connect: { id: input.campId } },
       name: input.name,
       priceCents: input.priceCents,
       capacity: input.capacity,
+      maxInstallments: input.maxInstallments,
       startsAt: input.startsAt,
       endsAt: input.endsAt,
     });
@@ -64,11 +78,16 @@ export const batchService = {
       name: string;
       priceCents: number;
       capacity: number;
+      maxInstallments: number;
       startsAt: Date;
       endsAt: Date;
       active: boolean;
     }>
   ): Promise<Batch> {
+    if (input.maxInstallments !== undefined) {
+      assertValidInstallments(input.maxInstallments);
+    }
+
     return batchRepository.update(prisma, id, input);
   },
 };

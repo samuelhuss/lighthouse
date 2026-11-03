@@ -30,6 +30,11 @@ function formatDateRange(startsAt: Date | string | null, endsAt: Date | string |
 
 export function LandingPricingSection({ camp, price }: LandingPricingSectionProps) {
   const activeBatchName = camp?.currentBatch?.name ?? "1º Lote";
+  const maxInstallments = camp?.currentBatch?.maxInstallments ?? null;
+  const paymentConditions = [
+    ...campContent.paymentConditions,
+    ...(maxInstallments ? [campContent.paymentInstallmentsLabel(maxInstallments)] : []),
+  ];
 
   const dbBatches: BatchInfo[] = camp?.batches?.length
     ? camp.batches
@@ -179,7 +184,7 @@ export function LandingPricingSection({ camp, price }: LandingPricingSectionProp
                         {campContent.paymentConditionsTitle}
                       </h3>
                       <ul className="space-y-2">
-                        {campContent.paymentConditions.map((cond) => (
+                        {paymentConditions.map((cond) => (
                           <li key={cond} className="flex items-center gap-2.5 text-[12px] sm:text-[13px] text-white/85 font-medium">
                             <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 shrink-0" />
                             <span>{cond}</span>
