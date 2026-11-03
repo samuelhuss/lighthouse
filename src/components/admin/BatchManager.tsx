@@ -49,6 +49,11 @@ export function BatchManager() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  function toLocalInput(iso: string | null) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  }
   function edit(batch: Batch) {
     setEditingId(batch.id);
     setForm({
@@ -56,8 +61,8 @@ export function BatchManager() {
       price: String(batch.priceCents / 100),
       capacity: String(batch.capacity),
       maxInstallments: String(batch.maxInstallments),
-      startsAt: batch.startsAt?.slice(0, 16) ?? "",
-      endsAt: batch.endsAt?.slice(0, 16) ?? "",
+      startsAt: toLocalInput(batch.startsAt),
+      endsAt: toLocalInput(batch.endsAt),
       active: batch.active,
     });
     setDialogOpen(true);
